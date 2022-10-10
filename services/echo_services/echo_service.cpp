@@ -1,23 +1,53 @@
-#include <ctime>
-#include <string>
-#include <iostream>
+/*
+ *
+ * Copyright 2015 gRPC authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 
-#include "proto_messages/echo.h"
+#include <iostream>
+#include <memory>
+#include <string>
+
+#include <grpcpp/ext/proto_server_reflection_plugin.h>
+#include <grpcpp/grpcpp.h>
+#include <grpcpp/health_check_service_interface.h>
+
+#ifdef BAZEL_BUILD
+#include "proto_messages/echo_proto/echo.grpc.pb.h"
+#else
+#include "helloworld.grpc.pb.h"
+#endif
+
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::Status;
-class echoServiceServiceImpl final : public echoService::Service {
-    Status echo(ServerContext* context, const echoRequest* request,
-               echoResponse* reply) override {
-        reply->set_result(request.message());
+using namespace std;
+// Logic and data behind the server's behavior.
+class EchoServiceServiceImpl final : public EchoService::Service {
+    Status Echo(ServerContext* context, const EchoRequest* request,
+                    EchoResponse* reply) override {
+        std::string prefix("Hello ");
+        reply->set_message(prefix + request->message());
         return Status::OK;
     }
 };
 
 void RunServer() {
     std::string server_address("0.0.0.0:50051");
-    echoServiceServiceImpl service;
+    EchoServiceServiceImpl service;
 
     grpc::EnableDefaultHealthCheckService(true);
     grpc::reflection::InitProtoReflectionServerBuilderPlugin();
@@ -35,7 +65,9 @@ void RunServer() {
     // responsible for shutting down the server for this call to ever return.
     server->Wait();
 }
+
 int main(int argc, char** argv) {
     RunServer();
+
     return 0;
 }
