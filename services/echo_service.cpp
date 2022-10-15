@@ -20,25 +20,21 @@
 #include <memory>
 #include <string>
 
-#include <grpcpp/ext/proto_server_reflection_plugin.h>
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
+#include "proto/echo.grpc.pb.h"
 
-#ifdef BAZEL_BUILD
-#include "proto_messages/echo_proto/echo.grpc.pb.h"
-#else
-#include "helloworld.grpc.pb.h"
-#endif
-
+using echo::EchoService;
+using echo::EchoRequest;
+using echo::EchoResponse;
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::Status;
-using namespace std;
-// Logic and data behind the server's behavior.
-class EchoServiceServiceImpl final : public EchoService::Service {
-    Status Echo(ServerContext* context, const EchoRequest* request,
-                    EchoResponse* reply) override {
+
+class EchoServiceServiceImpl final: public EchoService::Service {
+    Status echo(ServerContext* context, const EchoRequest* request,
+               EchoResponse* reply) {
         std::string prefix("Hello ");
         reply->set_message(prefix + request->message());
         return Status::OK;
@@ -50,7 +46,6 @@ void RunServer() {
     EchoServiceServiceImpl service;
 
     grpc::EnableDefaultHealthCheckService(true);
-    grpc::reflection::InitProtoReflectionServerBuilderPlugin();
     ServerBuilder builder;
     // Listen on the given address without any authentication mechanism.
     builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());

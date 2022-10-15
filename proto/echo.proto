@@ -1,4 +1,6 @@
 syntax = "proto3";
+package echo;
+
 message EchoRequest {
     string message = 1;
 }
