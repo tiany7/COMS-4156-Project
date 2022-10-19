@@ -8,13 +8,13 @@ proto_library(
 
 cc_proto_library(
     name = "echo_cc_proto",
-    deps = ["//proto:echo_proto",],
+    deps = [":echo_proto",],
 )
 
 cc_grpc_library(
     name = "echo_cc_grpc",
-    srcs = ["//proto:echo_proto"],
+    srcs = [":echo_proto"],
     grpc_only = True,
-    deps = ["//proto:echo_cc_proto"],
+    deps = [":echo_cc_proto"],
     visibility = ["//visibility:public"]
 )

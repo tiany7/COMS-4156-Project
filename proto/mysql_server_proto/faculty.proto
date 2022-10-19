@@ -1,0 +1,53 @@
+syntax = "proto3";
+package faculty;
+
+enum SortOrder {
+    ASC = 0;
+    DESC = 1;
+    DEPT = 2;
+    COUNTRY = 3;
+}
+
+}
+message Faculty {
+    string name = 1;
+    string department = 2;
+    string uni = 3;
+    string country = 4;
+}
+
+message Option{
+    int32 limit = 1;
+    int32 offset = 2;
+    SortOrder order = 3;
+}
+message GetNameReq {
+    string name = 1;
+    Option option = 2;
+}
+
+message GetDepartmentReq {
+    string department = 1;
+    Option option = 2;
+}
+
+message GetEmailReq {
+    string email = 1;
+    Option option = 2;
+}
+
+message GetUniReq {
+    string phone = 1;
+    Option option = 2;
+}
+
+message FacultyRsp{
+    repeated Faculty faculty = 1;
+}
+
+service FacultyService {
+    rpc GetName(GetNameReq) returns (FacultyRsp);
+    rpc GetDepartment(GetDepartmentReq) returns (FacultyRsp);
+    rpc GetEmail(GetEmailReq) returns (FacultyRsp);
+    rpc GetUni(GetUniReq) returns (FacultyRsp);
+}
