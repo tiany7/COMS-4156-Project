@@ -22,7 +22,7 @@
 
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
-#include "proto/echo.grpc.pb.h"
+#include "proto/echo_proto/echo.grpc.pb.h"
 
 using echo::EchoService;
 using echo::EchoRequest;
