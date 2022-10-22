@@ -13,6 +13,47 @@ cc_binary(
     copts = ["-std=c++17"],
 )
 
+cc_library(
+    name = "db_service",
+    srcs = ["DB.cpp"],
+    hdrs = ["DB.h"],
+    deps = ["@comm_github_mysql_cpp_connector//:mysql_lib"],
+    linkopts = ["-L/usr/lib/mysql",
+                "-lmysqlcppconn",],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "faculty_db_service",
+    srcs = ["faculty_service.cpp"],
+    hdrs = ["faculty_service.h"],
+    deps = ["//proto/mysql_server_proto:faculty_cc_grpc",
+                "@com_github_grpc_grpc//:grpc++",
+                "@com_github_grpc_grpc//:grpc++_reflection",
+                "@comm_github_mysql_cpp_connector//:mysql_lib",
+                ":db_service"],
+    linkopts = ["-L/usr/lib/mysql",
+                "-lmysqlcppconn",],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "mysql_server",
+    srcs = ["mysql_server.cpp"],
+    hdrs = ["mysql_server.h"],
+    deps = ["//proto/mysql_server_proto:faculty_cc_grpc",
+            "@com_github_grpc_grpc//:grpc++",
+            "@com_github_grpc_grpc//:grpc++_reflection",
+            "@comm_github_mysql_cpp_connector//:mysql_lib",
+            ":faculty_db_service"],
+)
+
+cc_binary(
+    name = "db_server",
+    srcs = ["db_service_main.cpp"],
+    deps = [":mysql_server"],
+)
+
 cc_test(
   name = "hello_test",
   size = "small",
