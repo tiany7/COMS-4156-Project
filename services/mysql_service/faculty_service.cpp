@@ -7,7 +7,7 @@
 #include <cppconn/exception.h>
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
-#include "mysql_connection.h"
+#include <mysql_connection.h>
 
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
@@ -69,7 +69,6 @@ class FacultyServiceServiceImpl final: public FacultyService::Service {
     Status GetFaculty(ServerContext* context, const GetFacultyReq* request,
                       FacultyRsp* reply) {
         auto dept = request->department();
-        cout<<dept<<endl;
         int success = dal().GetFacultyDept(dept, reply);
         cout<<"Send Back"<<endl;
         return Status::OK;

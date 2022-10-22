@@ -29,5 +29,10 @@ grpc_deps()
 load("@com_github_grpc_grpc//bazel:grpc_extra_deps.bzl", "grpc_extra_deps")
 grpc_extra_deps()
 
-
+load('@bazel_tools//tools/build_defs/repo:git.bzl', 'git_repository')
+git_repository(
+    name = "comm_github_mysql_cpp_connector",
+    remote = "https://github.com/tiany7/mysql_dependencies.git",
+    commit = "c0b0dda37525f736340b129062d3226027cfce08",
+)
 
