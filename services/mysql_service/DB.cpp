@@ -6,9 +6,6 @@ DB::DB(const string &schema = "faculty"){
     con->setSchema(schema.c_str());
 }
 
-sql::Connection* DB::operator->(){
-    return con;
-}
 DB::~DB() {
     if(con) delete con, con = nullptr;
     if(driver) delete driver, driver = nullptr;

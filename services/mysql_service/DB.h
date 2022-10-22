@@ -14,9 +14,9 @@
 class DB{
 public:
     DB(const string & schema);
-    sql::Connection operator->();
+    sql::Connection* operator->();
     virtual ~DB();
-private:
+protected:
     sql::Driver *driver;
     sql::Connection *con;
 };
