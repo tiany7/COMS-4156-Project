@@ -17,5 +17,8 @@ cc_test(
   name = "hello_test",
   size = "small",
   srcs = ["faculty_service_test.cpp"],
-  deps = ["@com_google_googletest//:gtest_main"],
+  deps = ["@com_google_googletest//:gtest_main",
+          "//proto/mysql_server_proto:faculty_cc_grpc",
+          "@com_github_grpc_grpc//:grpc++",
+          "@com_github_grpc_grpc//:grpc++_reflection",],
 )
