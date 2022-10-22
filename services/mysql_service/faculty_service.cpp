@@ -34,20 +34,18 @@ public:
     virtual ~DB() {
         if(con) delete con, con = nullptr;
     }
-private:
+protected:
     sql::Driver *driver;
     sql::Connection *con;
 };
 
-class FacultyDBService{
-private:
-    DB db;
+class FacultyDBService : public DB{
 public:
-    FacultyDBService():db("faculty"){}
+    FacultyDBService():DB("faculty"){}
     int GetFacultyDept(const string & dept_name, FacultyRsp* reply) {
     try {
-        auto stmt = db->createStatement();
-        char buffer[55] = {0};
+        auto stmt = con->createStatement();
+        char buffer[105] = {0};
         string sql = "SELECT * FROM faculty WHERE department = '%s'";
         sprintf(buffer, sql.c_str(), dept_name.c_str());
         auto res = stmt->executeQuery(buffer);

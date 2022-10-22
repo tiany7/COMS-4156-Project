@@ -11,16 +11,13 @@
 #include "mysql_connection.h"
 
 #include "proto/mysql_server_proto/faculty.grpc.pb.h"
-class dal{
+class DB{
 public:
-    dal();
-
-    int GetFacultyDept(const string & dept_name, FacultyRsp* reply);
-    virtual ~dal();
+    DB(const string & schema);
+    sql::Connection operator->();
+    virtual ~DB();
 private:
     sql::Driver *driver;
     sql::Connection *con;
-    sql::Statement *stmt;
-    sql::ResultSet *res;
 };
 #endif //DAL_H
