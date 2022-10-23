@@ -1,0 +1,78 @@
+syntax = "proto3";
+package person;
+
+enum Affiliation {
+    Computer_Science = 0;
+    Chemical_Engineering = 1;
+}
+
+enum School {
+    Columbia_Engineering = 0;
+    Teachers_College = 1;
+}
+
+message Student {
+    string uni = 1;
+    string name = 2;
+    string email = 3;
+    string affiliation = 4;
+    string school = 5;
+    string advisor = 6;
+}
+
+message StudentReadRequest {
+    string table = 1;
+    string uni = 2;
+}
+
+message StudentReadResponse {
+    Student student = 1;
+}
+
+message Faculty {
+    string uni = 1;
+    string name = 2;
+    string email = 3;
+    string school = 4;
+}
+
+message FacultyReadRequest {
+    string table = 1;
+    string uni = 2;
+}
+
+message FacultyReadResponse {
+    Faculty faculty = 1;
+}
+
+message Administrator {
+    string uni = 1;
+    string name = 2;
+    string email = 3;
+}
+
+message AdministratorReadRequest {
+    string table = 1;
+    string uni = 2;
+}
+
+message AdministratorReadResponse {
+    Administrator administrator = 1;
+}
+
+message UpdateEmailRequest {
+    string table = 1;
+    string uni = 2;
+    string email = 3;
+}
+
+message UpdateEmailResponse {
+    string message = 1;
+}
+
+service PersonService {
+    rpc ReadStudentInfo(StudentReadRequest) returns (StudentReadResponse);
+    rpc ReadFacultyInfo(FacultyReadRequest) returns (FacultyReadResponse);
+    rpc ReadAdministratorInfo(AdministratorReadRequest) returns (AdministratorReadResponse);
+    rpc UpdateEmail(UpdateEmailRequest) returns (UpdateEmailResponse);
+}
