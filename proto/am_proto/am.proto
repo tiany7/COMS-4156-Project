@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+enum IdentityType {
+    Administrator = 0;
+    Faculty = 1;
+    Student = 2;
+    Null = 3;
+}
+
+message GetIdentityReq {
+    string uni = 1;
+    string password = 2;
+}
+
+
+message IdentityRsp{
+    IdentityType identity = 1;
+}
+
+service IdentityService {
+    rpc GetIdentity(GetIdentityReq) returns (IdentityRsp);
+}
