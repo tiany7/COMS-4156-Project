@@ -51,7 +51,10 @@ cc_library(
 cc_binary(
     name = "db_server",
     srcs = ["db_service_main.cpp"],
-    deps = [":mysql_server"],
+    defines= ["CPPHTTPLIB_OPENSSL_SUPPORT"],
+    deps = [":mysql_server",
+            "@comm_github_mysql_cpp_connector//:httplib"],
+    linkopts = ["-lpthread"],
 )
 
 cc_test(
