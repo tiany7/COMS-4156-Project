@@ -1,5 +1,3 @@
-
-
 #include "faculty_service.h"
 
 FacultyDBService::FacultyDBService() :DB("faculty")

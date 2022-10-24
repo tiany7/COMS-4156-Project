@@ -1,6 +1,7 @@
 #ifndef BUILDING_LIBRARY
 #define BUILDING_LIBRARY
 #include <stdlib.h>
+#include <string>
 #include <iostream>
 
 #include <cppconn/driver.h>

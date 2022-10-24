@@ -1,18 +1,12 @@
+#include "faculty_service.h"
+
 #include <gtest/gtest.h>
 #include "proto/mysql_server_proto/faculty_mock.grpc.pb.h"
-#include <grpcpp/grpcpp.h>
-#include <grpcpp/health_check_service_interface.h>
-#include <grpcpp/ext/proto_server_reflection_plugin.h>
-#include <string>
-using grpc::Server;
-using grpc::ServerBuilder;
-using grpc::ServerContext;
-using grpc::Status;
+
 using grpc::Channel;
 using grpc::ClientContext;
-using grpc::Status;
 using namespace testing;
-using std::string;
+
 TEST(HelloTest, PP) {
     // Expect two strings not to be equal.
     EXPECT_STRNE("hello", "world");
