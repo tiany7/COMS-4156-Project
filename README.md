@@ -145,6 +145,11 @@ Response code: 200 (OK); Time: 193ms; Content length: 140 bytes
 
 All referencees are mentioned in the previous paragraphs
 
+# Make Life Easier
+
+When booting up the service, you can use the bootstrap.sh to boot up mysql_service and its http server. It restarts the server.
+
+'sh bootstrap.sh'
 
 ## Table Schema
 
