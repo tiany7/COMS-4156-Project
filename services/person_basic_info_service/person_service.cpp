@@ -24,8 +24,8 @@ using ::person::FacultyReadRequest;
 using ::person::FacultyReadResponse;
 using ::person::AdministratorReadRequest;
 using ::person::AdministratorReadResponse;
-using ::person::UpdateStudentRequest;
-using ::person::UpdateStudentResponse;
+using ::person::UpdateEmailRequest;
+using ::person::UpdateEmailResponse;
 
 using ::grpc::ServerBuilder;
 using ::grpc::ServerContext;
@@ -143,7 +143,7 @@ private:
     sql::Connection *con;
     sql::Statement *stmt;
     sql::ResultSet *res;
-}
+};
 
 class PersonServiceImpl final : public PersonService::Service {
     Status ReadStudentInfo(ServerContext* context, const StudentReadRequest* request, StudentReadResponse* response) override {
@@ -177,7 +177,7 @@ class PersonServiceImpl final : public PersonService::Service {
         }
         return Status::OK;
     }
-}
+};
 
 void RunServer() {
     std::string server_address("0.0.0.0:50052");
