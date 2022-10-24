@@ -118,7 +118,7 @@ Or
 
 Use commandline or other api testing tools(We used jetbrain native http client tool to test it)
 
-`curl `<IP>:<PORT>/query_sq`
+`curl <IP>:<PORT>/query_sql`
 
 Remember to open the port of the port which you are deploying service at.
 
