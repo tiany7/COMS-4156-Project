@@ -145,3 +145,20 @@ Response code: 200 (OK); Time: 193ms; Content length: 140 bytes
 
 All referencees are mentioned in the previous paragraphs
 
+
+#Table Schema
+
+# Database Faculty
+
+# Table: faculty
+
+# Table definition
+
+```mysql
+CREATE TABLE faculty (
+        name VARCHAR(50), 
+        department VARCHAR(50), 
+        uni(VARCHAR(50), 
+        country VARCHAR(50)
+));
+```
