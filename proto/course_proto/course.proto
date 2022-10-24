@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+enum SortOrder {
+    ASC = 0;
+    DESC = 1;
+    DEPT = 2;
+}
+
+// currently not used
+// message CourseBasic {
+//     string department = 1; // CS EE 
+//     string course_name = 2; // CS 4156 can have different cid (different profs)
+//     string semester = 3; // 2022 Fall
+//     string course_id = 4; 
+//     string faculty_uni = 5; //fid  
+// }
+
+message CourseInfo {
+    string department = 1; // CS
+    string course = 2; // CS4156
+    string course_title = 3; // Advanced Software Engineering
+    string semester = 4; // 2022 Fall
+    string course_id = 5; // a hash
+    string faculty_name = 6;  
+    string faculty_uni = 7; // this should not be in response, see how to exclude later
+
+    // complete info later will be on
+    // int32 points = 8; //3
+    // int32 maxsize = 9; // 120
+    // int32 enrolled = 10; // 37
+    //         // repeated string = 8;  //由于mysql table设置，不适用repeated
+    string prereq1 = 12; // same as course_name
+    string prereq2 = 13;
+    string prereq3 = 14;
+    // string further = 15; // the sequential course for this one
+    
+    // // time info
+    // string classtime = 16; // "MW|15:00|17:00"
+    // string startdate = 17;
+    // string enddate = 18;
+
+}
+
+
+// Reqest & Response
+message GetCourseListRequest {
+    string department = 1;
+    string semester = 2;
+}
+
+message CourseListResponse {
+    repeated CourseInfo course = 1;
+}
+
+message GetCourseInfoRequest {
+    int32 cid = 1;
+    string semester = 2;
+}
+
+message CourseInfoResponse{ // single
+    CourseInfo course = 1;
+}
+
+message GetCoursePrereqRequest {
+    string course = 1;
+}
+
+message CoursePrereqResponse {
+    repeated string course = 1; // just string
+}
+
+message DeleteCourseRequest {
+    int32 cid = 1;
+    string semester = 2;
+}
+message DeleteCourseResponse {
+    string message = 1;
+}
+
+service CourseService {
+    rpc GetCourseList(GetCourseListRequest) returns (CourseListResponse);
+    rpc GetCourseInfo(GetCourseInfoRequest) returns (CourseInfoResponse);
+    rpc GetCoursePrereq(GetCoursePrereqRequest) returns (CoursePrereqResponse);
+    rpc DeleteCourse(DeleteCourseRequest) returns (DeleteCourseResponse);
+}
