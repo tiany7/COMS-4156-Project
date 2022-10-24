@@ -1,6 +1,15 @@
 #! /bin/shell
 # 杀死进程
 
+work_dir=/home/azureuser/COMS-4156-Project/services/mysql_service/
+
+cd $work_dir
+bazel build :db_server
+
+http_dir=/home/azureuser/COMS-4156-Project/http_server/
+cd $http_dir
+bazel build :mysql_http_server
+
 base_dir=/home/azureuser/COMS-4156-Project/bazel-bin
 
 PORT=50051
