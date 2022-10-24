@@ -31,7 +31,7 @@ public:
     sql::ResultSet *res;
     dal() :stmt(nullptr), res(nullptr) {
         driver = get_driver_instance();
-        con = driver->connect("tcp://127.0.0.1:3306", "root", "");
+        con = driver->connect("coms4156-rds.cnxeqkxjuxbw.us-east-1.rds.amazonaws.com", "admin", "12345678");
         con->setSchema("coms4156_db");
     }
 
