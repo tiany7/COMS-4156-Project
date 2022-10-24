@@ -15,6 +15,7 @@ cc_grpc_library(
     name = "echo_cc_grpc",
     srcs = [":echo_proto"],
     grpc_only = True,
+    generate_mocks = True,
     deps = [":echo_cc_proto"],
     visibility = ["//visibility:public"]
 )

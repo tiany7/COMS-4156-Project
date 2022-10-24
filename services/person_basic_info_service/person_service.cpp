@@ -132,10 +132,6 @@ public:
             delete stmt;
             stmt = nullptr;
         }
-        if (pstmt) {
-            delete pstmt;
-            pstmt = nullptr;
-        }
         if (res) {
             delete res;
             res = nullptr;
@@ -146,12 +142,11 @@ private:
     sql::Driver *driver;
     sql::Connection *con;
     sql::Statement *stmt;
-    sql::PreparedStatement *pstmt;
     sql::ResultSet *res;
 }
 
 class PersonServiceImpl final : public PersonService::Service {
-    Status ReadStudentInfo(ServerContext* context, const StudentReadRequest* request, StudentReadResponse* response) {
+    Status ReadStudentInfo(ServerContext* context, const StudentReadRequest* request, StudentReadResponse* response) override {
         ErrorCode error_code = PersonDB().GetStudentInfo(request->table(), request->uni(), response);
         if (error_code == ErrorCode::ERROR) {
             return Status::UNKNOWN;
@@ -159,7 +154,7 @@ class PersonServiceImpl final : public PersonService::Service {
         return Status::OK;
     }
 
-    Status ReadFacultyInfo(ServerContext* context, FacultyReadRequest* request, FacultyReadResponse* response) {
+    Status ReadFacultyInfo(ServerContext* context, FacultyReadRequest* request, FacultyReadResponse* response) override {
         ErrorCode error_code = PersonDB().GetGetFacultyInfo(request->table(), request->uni(), response);
         if (error_code == ErrorCode::ERROR) {
             return Status::UNKNOWN;
@@ -167,7 +162,7 @@ class PersonServiceImpl final : public PersonService::Service {
         return Status::OK;
     }
 
-    Status ReadAdministratorInfo(ServerContext* context, AdministratorReadRequest* request, AdministratorReadResponse* response) {
+    Status ReadAdministratorInfo(ServerContext* context, AdministratorReadRequest* request, AdministratorReadResponse* response) override {
         ErrorCode error_code = PersonDB().GetAdministratorInfo(request->table(), request->uni(), response);
         if (error_code == ErrorCode::ERROR) {
             return Status::UNKNOWN;
@@ -175,7 +170,7 @@ class PersonServiceImpl final : public PersonService::Service {
         return Status::OK;
     }
 
-    Status UpdateEmail(ServerContext* context, UpdateEmailRequest* request, UpdateEmailResponse* response) {
+    Status UpdateEmail(ServerContext* context, UpdateEmailRequest* request, UpdateEmailResponse* response) override {
         ErrorCode error_code = PersonDB().UpdateEmail(request->table(), request->uni(), request->email(),response);
         if (error_code == ErrorCode::ERROR) {
             return Status::UNKNOWN;

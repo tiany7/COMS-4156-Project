@@ -68,6 +68,7 @@ message UpdateEmailRequest {
 
 message UpdateEmailResponse {
     string message = 1;
+    string email = 2;
 }
 
 service PersonService {
