@@ -26,6 +26,9 @@ using ::person::AdministratorReadRequest;
 using ::person::AdministratorReadResponse;
 using ::person::UpdateEmailRequest;
 using ::person::UpdateEmailResponse;
+using ::person::Student;
+using ::person::Faculty;
+using ::person::Administrator;
 
 using ::grpc::ServerBuilder;
 using ::grpc::ServerContext;
@@ -65,12 +68,13 @@ public:
         }
 
         while (res->next()) {
-            response->set_uni(string(res->getString(1)));
-            response->set_name(string(res->getString(2)));
-            response->set_email(string(res->getString(3)));
-            response->set_affiliation(string(res->getString(4)));
-            response->set_school(string(res->getString(5)));
-            response->set_advisor(string(res->getString(6)));
+            Student* student = response->mutable_student();
+            student->set_uni(string(res->getString(1)));
+            student->set_name(string(res->getString(2)));
+            student->set_email(string(res->getString(3)));
+            student->set_affiliation(string(res->getString(4)));
+            student->set_school(string(res->getString(5)));
+            student->set_advisor(string(res->getString(6)));
         }
         return ErrorCode::NO_ERROR;
     }
@@ -85,10 +89,11 @@ public:
         }
 
         while (res->next()) {
-            response->set_uni(string(res->getString(1)));
-            response->set_name(string(res->getString(2)));
-            response->set_email(string(res->getString(3)));
-            response->set_school(string(res->getString(4)));
+            Faculty* faculty = response->mutable_faculty();
+            faculty->set_uni(string(res->getString(1)));
+            faculty->set_name(string(res->getString(2)));
+            faculty->set_email(string(res->getString(3)));
+            faculty->set_school(string(res->getString(4)));
         }
         return ErrorCode::NO_ERROR;
     }
@@ -103,9 +108,10 @@ public:
         }
 
         while (res->next()) {
-            response->set_uni(string(res->getString(1)));
-            response->set_name(string(res->getString(2)));
-            response->set_email(string(res->getString(3)));
+            Administrator* administrator = response->mutable_administrator();
+            administrator->set_uni(string(res->getString(1)));
+            administrator->set_name(string(res->getString(2)));
+            administrator->set_email(string(res->getString(3)));
         }
         return ErrorCode::NO_ERROR;
     }
@@ -115,6 +121,7 @@ public:
         string sql = "UPDATE " + table + " SET email='%s' WHERE uni='%s'";
         sprintf(buffer, sql.c_str(), email.c_str(), uni.c_str());
         ErrorCode sql_error_code = execute(string(buffer));
+        response->set_email(email);
         if (sql_error_code == ErrorCode::ERROR) {
             response->set_message("UPDATE FAILED!")
             return sql_error_code;
