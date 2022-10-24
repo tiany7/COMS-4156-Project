@@ -58,7 +58,7 @@ cc_binary(
 )
 
 cc_test(
-  name = "hello_test",
+  name = "faculty_service_test",
   size = "small",
   srcs = ["faculty_service_test.cpp"],
   deps = ["@com_google_googletest//:gtest_main",
