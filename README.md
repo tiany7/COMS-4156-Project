@@ -90,13 +90,7 @@ Then enter the `bazel-bin` to execute the binary executables in the order of rpc
 
 ### Unit Testing
 
-Enter the folder
-
-`cd services/mysql_service/`
-
-Execute the test command
-
-`bazel test :hello_test`
+Execute `./unit-test.sh`
 
 Then you will see the output of the test result on the screen.
 
