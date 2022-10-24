@@ -12,6 +12,19 @@ using grpc::Channel;
 using grpc::ClientContext;
 using grpc::Status;
 using namespace std;
+
+void printIdentity(IdentityType identity) {
+    if (identity == Administrator) {
+        cout << "Administrator" << endl;
+    } else if (identity == Faculty) {
+        cout << "Faculty" << endl;
+    } else if (identity == Student) {
+        cout << "Student" << endl;
+    } else if (identity == Null) {
+        cout << "Null" << endl;
+    }
+}
+
 class IdentityServiceClient {
 public:
     IdentityServiceClient(std::shared_ptr<Channel> channel)
@@ -46,43 +59,16 @@ int main(int argc, char** argv) {
     IdentityServiceClient mysqlsvc(
             grpc::CreateChannel("localhost:10086", grpc::InsecureChannelCredentials()));
     auto identity = mysqlsvc.GetIdentity("hn2387", "123456");
-    if (identity == Administrator) {
-        cout << "Administrator" << endl;
-    } else if (identity == Faculty) {
-        cout << "Faculty" << endl;
-    }
-    else if (identity == Student) {
-        cout << "Student" << endl;
-    }
-    else if (identity == Null) {
-        cout << "Null" << endl;
-    }
+    printIdentity(identity);
+    
+    identity = mysqlsvc.GetIdentity("hn2387", "1234");
+    printIdentity(identity);
 
-    identity = mysqlsvc.GetIdentity("hn2387", "swzy");
-    if (identity == Administrator) {
-        cout << "Administrator" << endl;
-    } else if (identity == Faculty) {
-        cout << "Faculty" << endl;
-    }
-    else if (identity == Student) {
-        cout << "Student" << endl;
-    }
-    else if (identity == Null) {
-        cout << "Null" << endl;
-    }
+    identity = mysqlsvc.GetIdentity("yt2825", "yt2825");
+    printIdentity(identity);
 
-    identity = mysqlsvc.GetIdentity("hn2387", "123456");
-    if (identity == Administrator) {
-        cout << "Administrator" << endl;
-    } else if (identity == Faculty) {
-        cout << "Faculty" << endl;
-    }
-    else if (identity == Student) {
-        cout << "Student" << endl;
-    }
-    else if (identity == Null) {
-        cout << "Null" << endl;
-    }
+    identity = mysqlsvc.GetIdentity("sx2293", "cooooooder");
+    printIdentity(identity);
 
     return 0;
 }

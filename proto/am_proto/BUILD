@@ -15,6 +15,7 @@ cc_grpc_library(
     name = "am_cc_grpc",
     srcs = [":am_proto"],
     grpc_only = True,
+    generate_mocks = True,
     deps = [":am_cc_proto"],
     visibility = ["//visibility:public"]
 )
