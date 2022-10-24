@@ -154,7 +154,7 @@ private:
 };
 
 class PersonServiceImpl final : public PersonService::Service {
-    Status ReadStudentInfo(ServerContext* context, const StudentReadRequest* request, StudentReadResponse* response) {
+    Status ReadStudentInfo(ServerContext* context, const StudentReadRequest* request, StudentReadResponse* response) override {
         ErrorCode error_code = PersonDB().GetStudentInfo(request->table(), request->uni(), response);
         if (error_code == ErrorCode::ERROR) {
             return Status::CANCELLED;
@@ -162,7 +162,7 @@ class PersonServiceImpl final : public PersonService::Service {
         return Status::OK;
     }
 
-    Status ReadFacultyInfo(ServerContext* context, FacultyReadRequest* request, FacultyReadResponse* response) {
+    Status ReadFacultyInfo(ServerContext* context, const FacultyReadRequest* request, FacultyReadResponse* response) override {
         ErrorCode error_code = PersonDB().GetFacultyInfo(request->table(), request->uni(), response);
         if (error_code == ErrorCode::ERROR) {
             return Status::CANCELLED;
@@ -170,7 +170,7 @@ class PersonServiceImpl final : public PersonService::Service {
         return Status::OK;
     }
 
-    Status ReadAdministratorInfo(ServerContext* context, AdministratorReadRequest* request, AdministratorReadResponse* response) {
+    Status ReadAdministratorInfo(ServerContext* context, const AdministratorReadRequest* request, AdministratorReadResponse* response) override {
         ErrorCode error_code = PersonDB().GetAdministratorInfo(request->table(), request->uni(), response);
         if (error_code == ErrorCode::ERROR) {
             return Status::CANCELLED;
@@ -178,7 +178,7 @@ class PersonServiceImpl final : public PersonService::Service {
         return Status::OK;
     }
 
-    Status UpdateEmail(ServerContext* context, UpdateEmailRequest* request, UpdateEmailResponse* response) {
+    Status UpdateEmail(ServerContext* context, const UpdateEmailRequest* request, UpdateEmailResponse* response) override {
         ErrorCode error_code = PersonDB().UpdateEmail(request->table(), request->uni(), request->email(),response);
         if (error_code == ErrorCode::ERROR) {
             return Status::CANCELLED;
