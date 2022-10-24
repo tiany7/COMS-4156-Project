@@ -19,7 +19,7 @@ Student information (e.g. UNI, name, grade, enrollment status): students can che
 
 Administrator information (e.g. UNI, name): support read, modification, insertion and update of their personal information.
 
-## Install & Run the Server
+## Installation & Running the Server
 
 Install Bazel and its dependencies(Please refer to the link below, please choose the 4.0.0 version in order to successfully compile our work)
 
@@ -31,25 +31,25 @@ Install google-rpc and its dependencies
 
 ### Alternative
 
-Taking advantage of bazel's online compilation functionality(i.e. http_archive and git_repositories ), we can include grpc as a library link instead of downloading the whole stuff. Mysql C++ drivers are also included in the git set up of WORKSPACE page.
+Taking advantage of bazel's online compilation functionality(i.e. http_archive and git_repositories ), we can include grpc as a library link instead of downloading the whole stuff. MySQL C++ drivers are also included in the git set up of WORKSPACE page.
 
 `See /WORKSPACE`
 
-Remote mysql repository link: 
+Remote MySQL repository link: 
 `https://github.com/tiany7/mysql_dependencies`
 
-#Install the Mysql libraries. 
+#Install the MySQL libraries. 
 
 `sudo apt-get update && sudo apt-get install libmysqlclient-dev`
 
-#install the mysql and boot up the mysql server on the same machine which you are using.
+#install the MySQL and boot up the MySQL server on the same machine which you are using.
 
 Follow this link.
 
 `https://dev.mysql.com/doc/refman/8.0/en/linux-installation.html`
 
 
-After this step, try to compile a simple mysql rpc-http client
+After this step, try to compile a simple MySQL rpc-http client
 
 ## Compilation
 
@@ -127,7 +127,7 @@ Remember to open the port of the port which you are deploying service at.
 #Example 
 
 ```Perl
-GET http://xxxxxx:8080/query_sql
+GET http://34.162.75.2:8080/query_sql
 
 HTTP/1.1 200 OK
 Content-Length: 140
