@@ -143,7 +143,7 @@ All referencees are mentioned in the previous paragraphs
 
 When booting up the service, you can use the bootstrap.sh to boot up mysql_service and its http server. It restarts the server.
 
-'sh bootstrap.sh'
+`sh bootstrap.sh`
 
 ## Table Schema
 
