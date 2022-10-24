@@ -25,8 +25,8 @@ cc_library(
 
 cc_library(
     name = "faculty_db_service",
-    srcs = ["faculty_service.cpp"],
     hdrs = ["faculty_service.h"],
+    srcs = ["faculty_service.cpp"],
     deps = ["//proto/mysql_server_proto:faculty_cc_grpc",
                 "@com_github_grpc_grpc//:grpc++",
                 "@com_github_grpc_grpc//:grpc++_reflection",
@@ -60,6 +60,7 @@ cc_test(
   srcs = ["faculty_service_test.cpp"],
   deps = ["@com_google_googletest//:gtest_main",
           "//proto/mysql_server_proto:faculty_cc_grpc",
+          ":faculty_db_service",
           "@com_github_grpc_grpc//:grpc++",
           "@com_github_grpc_grpc//:grpc++_reflection",],
 )

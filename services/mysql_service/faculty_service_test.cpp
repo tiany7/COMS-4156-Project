@@ -21,30 +21,44 @@ TEST(HelloTest, PP) {
 }
 
 TEST(TestMysqlClient, CanSearch) {
-    // Expect two strings not to be equal.
     MockFacultyServiceStub stub;
-    EXPECT_CALL(stub, GetFaculty(_, _, _))
-        .Times(1)
-        .WillOnce(Invoke([](grpc::ClientContext* context, const GetFacultyReq* request, FacultyRsp* response) {
-            int m = 20;
-            while (m--) {
-                auto faculty = response->add_faculty();
-                //一定要用string封装一层！！！！不然会core！！！
-                faculty->set_name(string("Yuanhan"));
-                faculty->set_department(string("CS"));
-                faculty->set_uni(string("BUAA"));
-                faculty->set_country(string("China"));
-            }
-        return Status::OK;
-    }));
     GetFacultyReq request;
     FacultyRsp reply;
     ClientContext context;
-    Status status = stub.GetFaculty(&context, request, &reply);
-    EXPECT_TRUE(status.ok());
-    EXPECT_EQ(reply.faculty_size(), 20);
-    
+    auto f = [](::grpc::ClientContext* context, const ::GetFacultyReq& request, ::FacultyRsp* response){
+        for(int i = 4; i--;){
+            auto it = response->add_faculty();
+            it->set_name("Yuanhan");
+            it->set_department("CS");
+            it->set_uni("yt2825");
+            it->set_country("China");
+        }
+        return Status::OK;
+    };
+    EXPECT_CALL(stub, GetFaculty)
+    .WillRepeatedly(DoAll(Invoke(f), Return(Status::OK)));
+    stub.GetFaculty(&context, request, &reply);
+    EXPECT_EQ(reply.faculty_size(), 4);
+    for(auto it : *reply.mutable_faculty()){
+        EXPECT_EQ(it.name(), "Yuanhan");
+        EXPECT_EQ(it.department(), "CS");
+        EXPECT_EQ(it.uni(), "yt2825");
+        EXPECT_EQ(it.country(), "China");
+    }
+
 }
+
+TEST(TestMySQLServer, ErrorCodeCheck) {
+    MockFacultyServiceStub stub;
+    GetFacultyReq request;
+    FacultyRsp reply;
+    ClientContext context;
+    stub.GetFaculty(&context, request, &reply);
+    auto ret = stub.GetFaculty(&context, request, &reply);
+    EXPECT_EQ(ret.error_code(), grpc::StatusCode::OK);
+}
+
+
 
 int main(int argc, char** argv) {
     // The following line must be executed to initialize Google Mock

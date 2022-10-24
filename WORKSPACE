@@ -36,3 +36,8 @@ git_repository(
     commit = "c0b0dda37525f736340b129062d3226027cfce08",
 )
 
+git_repository(
+    name = "http_lib",
+    remote = "https://github.com/yhirose/cpp-httplib.git",
+    commit = "27cd4e6ffeca2c9978ec1df7de3d22b9303a71b4",
+)
