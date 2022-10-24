@@ -1,25 +1,25 @@
 # COMS-4156-Project
 
-# Introduction
+## Introduction
 
-# What will the server do?
+### What will the server do?
 
 Our project is an open enrollment service system. The system will provide the service to both the students and the faculties. On the student’s side, the server will support searching courses, browsing course information, adding courses to the shopping cart, checking the fulfillment of prerequisites, enrolling the waitlists and acquiring enrollment-related information. On the faculty’s side, the server will support posting courses, modifying the course information(capacity, date and time, instructor info…), and enrolling students from waitlists. 
 
 
-# Who or what will be its users?
+### Who or what will be its users?
 
 Its users have two types. One type is student, and the other is administrator (e.g. instructor). 
 
 
-# What kind of data will your service create or accumulate? What will the data be used for?
+### What kind of data will your service create or accumulate? What will the data be used for?
 Course information (e.g. call number, points, day & time, location, enrollment, instructor): students and instructors can check course information and related enrollment status (e.g. the number of enrolled students, max capacity of the course). Instructors can also insert and modify their own course information.
 
 Student information (e.g. UNI, name, grade, enrollment status): students can check and update their own enrollment status. And administrators can look for all students' information and update enrollment status of students.
 
 Administrator information (e.g. UNI, name): support read, modification, insertion and update of their personal information.
 
-# Install & Run the Server
+## Install & Run the Server
 
 Install Bazel and its dependencies(Please refer to the link below, please choose the 4.0.0 version in order to successfully compile our work)
 
@@ -29,7 +29,7 @@ Install google-rpc and its dependencies
 
 `https://grpc.io/blog/installation/ `
 
-# OR
+### Alternative
 
 Taking advantage of bazel's online compilation functionality(i.e. http_archive and git_repositories ), we can include grpc as a library link instead of downloading the whole stuff. Mysql C++ drivers are also included in the git set up of WORKSPACE page.
 
@@ -51,7 +51,7 @@ Follow this link.
 
 After this step, try to compile a simple mysql rpc-http client
 
-# Compilation
+## Compilation
 
 `cd services/mysql_service/`
 
@@ -86,9 +86,9 @@ Then build the HTTP server
 
 Then enter the `bazel-bin` to execute the binary executables in the order of rpc server -> http server.
 
-# Testing the server
+## Testing the server
 
-# Unit Testing
+### Unit Testing
 
 Enter the folder
 
@@ -110,7 +110,7 @@ INFO: Build completed successfully, 415 total actions
 
 ```
 
-# API Testing
+### API Testing
 
 You can enter the `<IP>:<PORT>/query_sql`
 
@@ -146,13 +146,13 @@ Response code: 200 (OK); Time: 193ms; Content length: 140 bytes
 All referencees are mentioned in the previous paragraphs
 
 
-#Table Schema
+## Table Schema
 
-# Database Faculty
+### Database Faculty
 
-# Table: faculty
+### Table: faculty
 
-# Table definition
+### Table definition
 
 ```mysql
 CREATE TABLE faculty (
