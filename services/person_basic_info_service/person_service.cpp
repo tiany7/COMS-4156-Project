@@ -33,6 +33,7 @@ using ::person::Administrator;
 using ::grpc::ServerBuilder;
 using ::grpc::ServerContext;
 using ::grpc::Status;
+using ::grpc::Server;
 
 enum ErrorCode {
     NO_ERROR = 0,
@@ -123,10 +124,10 @@ public:
         ErrorCode sql_error_code = execute(string(buffer));
         response->set_email(email);
         if (sql_error_code == ErrorCode::ERROR) {
-            response->set_message("UPDATE FAILED!")
+            response->set_message("UPDATE FAILED!");
             return sql_error_code;
         }
-        response->set_message("UPDATE SUCCESS!")
+        response->set_message("UPDATE SUCCESS!");
         return ErrorCode::NO_ERROR;
     }
 
@@ -153,34 +154,34 @@ private:
 };
 
 class PersonServiceImpl final : public PersonService::Service {
-    Status ReadStudentInfo(ServerContext* context, const StudentReadRequest* request, StudentReadResponse* response) override {
+    Status ReadStudentInfo(ServerContext* context, const StudentReadRequest* request, StudentReadResponse* response) {
         ErrorCode error_code = PersonDB().GetStudentInfo(request->table(), request->uni(), response);
         if (error_code == ErrorCode::ERROR) {
-            return Status::UNKNOWN;
+            return Status::CANCELLED;
         }
         return Status::OK;
     }
 
-    Status ReadFacultyInfo(ServerContext* context, FacultyReadRequest* request, FacultyReadResponse* response) override {
-        ErrorCode error_code = PersonDB().GetGetFacultyInfo(request->table(), request->uni(), response);
+    Status ReadFacultyInfo(ServerContext* context, FacultyReadRequest* request, FacultyReadResponse* response) {
+        ErrorCode error_code = PersonDB().GetFacultyInfo(request->table(), request->uni(), response);
         if (error_code == ErrorCode::ERROR) {
-            return Status::UNKNOWN;
+            return Status::CANCELLED;
         }
         return Status::OK;
     }
 
-    Status ReadAdministratorInfo(ServerContext* context, AdministratorReadRequest* request, AdministratorReadResponse* response) override {
+    Status ReadAdministratorInfo(ServerContext* context, AdministratorReadRequest* request, AdministratorReadResponse* response) {
         ErrorCode error_code = PersonDB().GetAdministratorInfo(request->table(), request->uni(), response);
         if (error_code == ErrorCode::ERROR) {
-            return Status::UNKNOWN;
+            return Status::CANCELLED;
         }
         return Status::OK;
     }
 
-    Status UpdateEmail(ServerContext* context, UpdateEmailRequest* request, UpdateEmailResponse* response) override {
+    Status UpdateEmail(ServerContext* context, UpdateEmailRequest* request, UpdateEmailResponse* response) {
         ErrorCode error_code = PersonDB().UpdateEmail(request->table(), request->uni(), request->email(),response);
         if (error_code == ErrorCode::ERROR) {
-            return Status::UNKNOWN;
+            return Status::CANCELLED;
         }
         return Status::OK;
     }

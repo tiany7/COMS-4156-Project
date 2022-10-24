@@ -9,6 +9,7 @@ cc_binary(
             "@com_github_grpc_grpc//:grpc++_reflection",
             "@comm_github_mysql_cpp_connector//:mysql_lib"],
     linkopts = ["-L/usr/local/mysql/lib",
+                "-L/usr/local/lib64",
                 "-lmysqlcppconn",],
     copts = ["-std=c++17"],
 )
