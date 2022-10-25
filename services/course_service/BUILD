@@ -8,8 +8,8 @@ cc_binary(
 )
 
 cc_library(
-    name = "course_service",
-    hrds = ["course_service.h"]
+    name = "course_lib",
+    hdrs = ["course_service.h"],
     srcs = ["course_service.cpp"],
     visibility = ["//visibility:public"],
         deps = ["//proto/course_proto:course_cc_grpc",
