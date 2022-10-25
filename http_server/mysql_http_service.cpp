@@ -58,6 +58,11 @@ int main(int argc, char** argv) {
     svr.Get("/query_sql", [&](const httplib::Request & /*req*/, httplib::Response &res) {
         res.set_content(os.str().c_str(), "text/plain");
     });
+    svr.Post("/query_sql", [&](const httplib::Request & req, httplib::Response &res) {
+        auto body = req.get_param_value("person");
+        os<< body<<std::endl;
+        res.set_content(os.str().c_str(), "text/plain");
+    });
     std::cout << "Server started" << std::endl;
     svr.listen("0.0.0.0", 8080);
     return 0;
