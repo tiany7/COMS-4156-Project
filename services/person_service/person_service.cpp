@@ -169,7 +169,6 @@ private:
 class PersonServiceImpl final : public PersonService::Service {
     Status ReadStudentInfo(ServerContext* context, const StudentReadRequest* request, StudentReadResponse* response) override {
         ErrorCode error_code = PersonDB().GetStudentInfo(request->table(), request->uni(), response);
-        std::cout << "error_message: " << response->message() << std::endl;
         if (error_code == ErrorCode::ERROR || response->message() == "ERROR") {
             return Status::CANCELLED;
         }
