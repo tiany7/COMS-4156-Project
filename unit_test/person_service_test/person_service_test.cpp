@@ -64,7 +64,8 @@ public:
         Status status = stub_->ReadStudentInfo(&context, request, &response);
         EXPECT_FALSE(response.has_student());
         EXPECT_EQ(response.message(), "ERROR");
-        EXPECT_EQ(status.error_code(), grpc::StatusCode::CANCELLED);
+        EXPECT_EQ(status.error_code(), grpc::StatusCode::OK);
+        EXPECT_EQ(status.error_message(), "Read student info failed!");
     }
 
     void DoReadFacultyInfo() {
