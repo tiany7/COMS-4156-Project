@@ -28,14 +28,3 @@ bool TimeDB::checkTime()const{
     }
     return false;
 }
-
-int main(){
-    TimeDB tdb;
-    tdb.addAppt("2022-10-10 08:00:00", "2022-10-20 20:00:00");
-    cout << (tdb.checkTime() ? "Good" : "Bad") << "\n";
-    tdb.addAppt("2022-10-21 08:00:00", "2022-11-30 20:00:00");
-    cout << (tdb.checkTime() ? "Good" : "Bad") << "\n";
-    tdb.resetAppt();
-    cout << (tdb.checkTime() ? "Good" : "Bad") << "\n";
-    return 0;
-}
