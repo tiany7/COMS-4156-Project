@@ -31,6 +31,7 @@ using ::person::UpdateEmailResponse;
 using ::person::Student;
 using ::person::Faculty;
 using ::person::Administrator;
+using ::person::MockPersonServiceStub;
 
 class FakeClient {
 public:
