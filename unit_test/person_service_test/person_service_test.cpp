@@ -61,11 +61,9 @@ public:
         StudentReadResponse response;
         request.set_table("student");
         request.set_uni("qw1234");
-        Status status = stub_->ReadStudentInfo(&context, request, &response);
+        stub_->ReadStudentInfo(&context, request, &response);
         EXPECT_FALSE(response.has_student());
         EXPECT_EQ(response.message(), "ERROR");
-        EXPECT_EQ(status.error_code(), ::grpc::StatusCode::OK);
-        EXPECT_EQ(status.error_message(), response.message());
     }
 
     void DoReadFacultyInfo() {
@@ -84,6 +82,17 @@ public:
         EXPECT_EQ(faculty.school(), "SEAS");
     }
 
+    void DoReadFacultyInfoFailed() {
+        ClientContext context;
+        FacultyReadRequest request;
+        FacultyReadResponse response;
+        request.set_table("faculty");
+        request.set_uni("as1234");
+        stub_->ReadFacultyInfo(&context, request, &response);
+        EXPECT_FALSE(response.has_faculty());
+        EXPECT_EQ(response.message(), "ERROR");
+    }
+
     void DoReadAdministratorInfo() {
         ClientContext context;
         AdministratorReadRequest request;
@@ -99,6 +108,17 @@ public:
         EXPECT_EQ(administrator.email(), "zx1234@columbia.edu");
     }
 
+    void DoReadAdministratorInfoFailed() {
+        ClientContext context;
+        AdministratorReadRequest request;
+        AdministratorReadResponse response;
+        request.set_table("administrator");
+        request.set_uni("zx1234");
+        stub_->ReadAdministratorInfo(&context, request, &response);
+        EXPECT_FALSE(response.has_administrator());
+        EXPECT_EQ(response.message(), "ERROR");
+    }
+
     void DoUpdateEmail() {
         ClientContext context;
         UpdateEmailRequest request;
@@ -109,6 +129,18 @@ public:
         Status status = stub_->UpdateEmail(&context, request, &response);
         EXPECT_TRUE(status.ok());
         EXPECT_EQ(request.email(), response.email());
+    }
+
+    void  DoUpdateEmailFailed() {
+        ClientContext context;
+        UpdateEmailRequest request;
+        UpdateEmailResponse response;
+        request.set_table("student");
+        request.set_uni("qw1234");
+        request.set_email("qw5678@columbia.edu");
+        stub_->UpdateEmail(&context, request, &response);
+        EXPECT_FALSE(response.has_email());
+        EXPECT_EQ(response.message(), "ERROR");
     }
 
 private:
@@ -153,6 +185,15 @@ TEST(MockPersonService, CheckReadFacultyInfo) {
     client.DoReadFacultyInfo();
 }
 
+TEST(MockPersonService, CheckReadFacultyInfoFailed) {
+    MockPersonServiceStub stub;
+    FacultyReadResponse response;
+    response.set_message("ERROR");
+    EXPECT_CALL(stub, ReadFacultyInfo(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoReadFacultyInfoFailed();
+}
+
 TEST(MockPersonService, CheckReadAdministratorInfo) {
     MockPersonServiceStub stub;
     AdministratorReadResponse response;
@@ -165,6 +206,15 @@ TEST(MockPersonService, CheckReadAdministratorInfo) {
     client.DoReadAdministratorInfo();
 }
 
+TEST(MockPersonService, CheckReadAdministratorInfoFailed) {
+    MockPersonServiceStub stub;
+    AdministratorReadResponse response;
+    resonse.set_message("ERROR");
+    EXPECT_CALL(stub, ReadAdministratorInfo(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoReadAdministratorInfoFailed();
+}
+
 TEST(MockPersonService, CheckUpdateEmail) {
     MockPersonServiceStub stub;
     UpdateEmailResponse response;
@@ -172,6 +222,15 @@ TEST(MockPersonService, CheckUpdateEmail) {
     EXPECT_CALL(stub, UpdateEmail(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
     FakeClient client(&stub);
     client.DoUpdateEmail();
+}
+
+TEST(MockPersonService, CheckUpdateEmailFailed) {
+    MockPersonServiceStub stub;
+    UpdateEmailResponse response;
+    response.set_message("ERROR");
+    EXPECT_CALL(stub, UpdateEmail(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoUpdateEmailFailed();
 }
 
 int main(int argc, char** argv) {
