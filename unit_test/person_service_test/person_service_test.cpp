@@ -84,10 +84,6 @@ public:
         EXPECT_EQ(faculty.school(), "SEAS");
     }
 
-    void DoReadFacultyInfo() {
-
-    }
-
     void DoReadAdministratorInfo() {
         ClientContext context;
         AdministratorReadRequest request;
