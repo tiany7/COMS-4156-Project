@@ -54,6 +54,18 @@ public:
         EXPECT_EQ(student.school(), "SEAS");
         EXPECT_EQ(student.advisor(), "None on file");
     }
+    
+    void DoReadStudentInfoFailed() {
+        ClientContext context;
+        StudentReadRequest request;
+        StudentReadResponse response;
+        request.set_table("student");
+        request.set_uni("qw1234");
+        Status status = stub_->ReadStudentInfo(&context, request, &response);
+        EXPECT_FALSE(status.ok());
+        EXPECT_FALSE(response.has_student());
+        EXPECT_EQ(response.message(), "ERROR");
+    }
 
     void DoReadFacultyInfo() {
         ClientContext context;
@@ -115,6 +127,16 @@ TEST(MockPersonService, CheckReadStudentInfo) {
     EXPECT_CALL(stub, ReadStudentInfo(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
     FakeClient client(&stub);
     client.DoReadStudentInfo();
+}
+
+
+TEST(MockPersonService, CheckReadStudentInfoFailed) {
+    MockPersonServiceStub stub;
+    StudentReadResponse response;
+    response.set_message("ERROR");
+    EXPECT_CALL(stub, ReadStudentInfo(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoReadStudentInfoFailed();
 }
 
 TEST(MockPersonService, CheckReadFacultyInfo) {

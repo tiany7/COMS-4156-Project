@@ -43,9 +43,13 @@ enum ErrorCode {
 class PersonDB {
 public:
     PersonDB() {
-        driver = get_driver_instance();
-        con = driver->connect("tcp://127.0.0.1:3306", "root", "");
-        con->setSchema("enrollment"); // change schema name
+        try {
+            driver = get_driver_instance();
+            con = driver->connect("tcp://127.0.0.1:3306", "root", "");
+            con->setSchema("enrollment"); // change schema name
+        } catch (sql::SQLException& e) {
+            std::cout << "Could not connect to server. Error message: " << e.what() << std::endl;
+        }
     }
 
     ErrorCode execute(const std::string& query) {
@@ -53,6 +57,7 @@ public:
             stmt = con->createStatement();
             res = stmt->executeQuery(query);
         } catch(sql::SQLException &e) {
+            std::cout << "Could not execute query successfully. Error message: " << e.what() << std::endl;
             return ErrorCode::ERROR;
         }
 
@@ -127,12 +132,14 @@ public:
         char buffer[BUFFER_SIZE] = {0};
         string sql = "UPDATE " + table + " SET email='%s' WHERE uni='%s'";
         sprintf(buffer, sql.c_str(), email.c_str(), uni.c_str());
-        ErrorCode sql_error_code = execute(string(buffer));
-        response->set_email(email);
-        if (sql_error_code == ErrorCode::ERROR) {
+        try {
+            stmt = con->createStatement();
+            stmt->execute(query);
+        } catch (sql::SQLException &e) {
             response->set_message("ERROR");
-            return sql_error_code;
+            return ErrorCode::ERROR;
         }
+
         response->set_message("OK");
         return ErrorCode::NO_ERROR;
     }
@@ -153,16 +160,16 @@ public:
     }
 
 private:
-    sql::Driver *driver;
-    sql::Connection *con;
-    sql::Statement *stmt;
-    sql::ResultSet *res;
+    sql::Driver* driver;
+    sql::Connection* con;
+    sql::Statement* stmt;
+    sql::ResultSet* res;
 };
 
 class PersonServiceImpl final : public PersonService::Service {
     Status ReadStudentInfo(ServerContext* context, const StudentReadRequest* request, StudentReadResponse* response) override {
         ErrorCode error_code = PersonDB().GetStudentInfo(request->table(), request->uni(), response);
-        if (error_code == ErrorCode::ERROR) {
+        if (error_code == ErrorCode::ERROR || response->message() == "ERROR") {
             return Status::CANCELLED;
         }
         return Status::OK;
@@ -170,7 +177,7 @@ class PersonServiceImpl final : public PersonService::Service {
 
     Status ReadFacultyInfo(ServerContext* context, const FacultyReadRequest* request, FacultyReadResponse* response) override {
         ErrorCode error_code = PersonDB().GetFacultyInfo(request->table(), request->uni(), response);
-        if (error_code == ErrorCode::ERROR) {
+        if (error_code == ErrorCode::ERROR || response->message() == "ERROR") {
             return Status::CANCELLED;
         }
         return Status::OK;
@@ -178,7 +185,7 @@ class PersonServiceImpl final : public PersonService::Service {
 
     Status ReadAdministratorInfo(ServerContext* context, const AdministratorReadRequest* request, AdministratorReadResponse* response) override {
         ErrorCode error_code = PersonDB().GetAdministratorInfo(request->table(), request->uni(), response);
-        if (error_code == ErrorCode::ERROR) {
+        if (error_code == ErrorCode::ERROR || response->message() == "ERROR") {
             return Status::CANCELLED;
         }
         return Status::OK;
@@ -186,7 +193,7 @@ class PersonServiceImpl final : public PersonService::Service {
 
     Status UpdateEmail(ServerContext* context, const UpdateEmailRequest* request, UpdateEmailResponse* response) override {
         ErrorCode error_code = PersonDB().UpdateEmail(request->table(), request->uni(), request->email(),response);
-        if (error_code == ErrorCode::ERROR) {
+        if (error_code == ErrorCode::ERROR || response->message() == "ERROR") {
             return Status::CANCELLED;
         }
         return Status::OK;
