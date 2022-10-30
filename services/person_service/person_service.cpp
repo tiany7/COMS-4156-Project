@@ -134,7 +134,7 @@ public:
         sprintf(buffer, sql.c_str(), email.c_str(), uni.c_str());
         try {
             stmt = con->createStatement();
-            stmt->execute(query);
+            stmt->execute(string(buffer));
         } catch (sql::SQLException &e) {
             response->set_message("ERROR");
             return ErrorCode::ERROR;
