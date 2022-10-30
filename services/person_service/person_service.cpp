@@ -172,15 +172,15 @@ private:
 class PersonServiceImpl final : public PersonService::Service {
     Status ReadStudentInfo(ServerContext* context, const StudentReadRequest* request, StudentReadResponse* response) override {
         ErrorCode error_code = PersonDB().GetStudentInfo(request->table(), request->uni(), response);
-        if (error_code == ErrorCode::ERROR || response->message() == "ERROR") {
+        if (error_code == ErrorCode::ERROR) {
             return Status(StatusCode::CANCELLED, kReadStudentInfoErrorMessage);
         }
-        return Status::OK;
+        return Status(StatusCode::OK, response->message());
     }
 
     Status ReadFacultyInfo(ServerContext* context, const FacultyReadRequest* request, FacultyReadResponse* response) override {
         ErrorCode error_code = PersonDB().GetFacultyInfo(request->table(), request->uni(), response);
-        if (error_code == ErrorCode::ERROR || response->message() == "ERROR") {
+        if (error_code == ErrorCode::ERROR) {
             return Status(StatusCode::CANCELLED, "Read faculty info failed!");
         }
         return Status::OK;
@@ -188,7 +188,7 @@ class PersonServiceImpl final : public PersonService::Service {
 
     Status ReadAdministratorInfo(ServerContext* context, const AdministratorReadRequest* request, AdministratorReadResponse* response) override {
         ErrorCode error_code = PersonDB().GetAdministratorInfo(request->table(), request->uni(), response);
-        if (error_code == ErrorCode::ERROR || response->message() == "ERROR") {
+        if (error_code == ErrorCode::ERROR) {
             return Status(StatusCode::CANCELLED, "Read administrator info failed!");
         }
         return Status::OK;
@@ -196,7 +196,7 @@ class PersonServiceImpl final : public PersonService::Service {
 
     Status UpdateEmail(ServerContext* context, const UpdateEmailRequest* request, UpdateEmailResponse* response) override {
         ErrorCode error_code = PersonDB().UpdateEmail(request->table(), request->uni(), request->email(),response);
-        if (error_code == ErrorCode::ERROR || response->message() == "ERROR") {
+        if (error_code == ErrorCode::ERROR) {
             return Status(StatusCode::CANCELLED, "Update email failed!");
         }
         return Status::OK;

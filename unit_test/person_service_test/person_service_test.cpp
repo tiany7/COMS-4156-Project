@@ -64,8 +64,8 @@ public:
         Status status = stub_->ReadStudentInfo(&context, request, &response);
         EXPECT_FALSE(response.has_student());
         EXPECT_EQ(response.message(), "ERROR");
-        EXPECT_EQ(status.error_code(), grpc::StatusCode::OK);
-        EXPECT_EQ(status.error_message(), "Read student info failed!");
+        EXPECT_EQ(status.error_code(), ::grpc::StatusCode::OK);
+        EXPECT_EQ(status.error_message, response.message());
     }
 
     void DoReadFacultyInfo() {
@@ -82,6 +82,10 @@ public:
         EXPECT_EQ(faculty.name(), "Bob");
         EXPECT_EQ(faculty.email(), "as1234@columbia.edu");
         EXPECT_EQ(faculty.school(), "SEAS");
+    }
+
+    void DoReadFacultyInfo() {
+
     }
 
     void DoReadAdministratorInfo() {
