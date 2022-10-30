@@ -13,16 +13,17 @@ using grpc::ClientContext;
 using grpc::Status;
 using namespace std;
 
-void printIdentity(IdentityType identity) {
+string getIdentityStr(IdentityType identity) {
     if (identity == Administrator) {
-        cout << "Administrator" << endl;
+        return "Administrator";
     } else if (identity == Faculty) {
-        cout << "Faculty" << endl;
+        return "Faculty";
     } else if (identity == Student) {
-        cout << "Student" << endl;
+        return "Student";
     } else if (identity == Null) {
-        cout << "Null" << endl;
+        return "Null";
     }
+    return "";
 }
 
 class IdentityServiceClient {
@@ -59,16 +60,16 @@ int main(int argc, char** argv) {
     IdentityServiceClient mysqlsvc(
             grpc::CreateChannel("localhost:10086", grpc::InsecureChannelCredentials()));
     auto identity = mysqlsvc.GetIdentity("hn2387", "123456");
-    printIdentity(identity);
+    cout << getIdentityStr(identity) << endl;
     
     identity = mysqlsvc.GetIdentity("hn2387", "1234");
-    printIdentity(identity);
+    cout << getIdentityStr(identity) << endl;
 
     identity = mysqlsvc.GetIdentity("yt2825", "yt2825");
-    printIdentity(identity);
+    cout << getIdentityStr(identity) << endl;
 
     identity = mysqlsvc.GetIdentity("sx2293", "cooooooder");
-    printIdentity(identity);
+    cout << getIdentityStr(identity) << endl;
 
     return 0;
 }

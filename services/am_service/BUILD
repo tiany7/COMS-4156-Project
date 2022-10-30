@@ -15,13 +15,13 @@ cc_binary(
     copts = ["-std=c++17"],
 )
 
-cc_test(
-  name = "am_service_test",
-  size = "small",
-  srcs = ["am_service_test.cpp"],
-  deps = ["@com_google_googletest//:gtest_main",
-          "//proto/am_proto:am_cc_grpc",
-          ":am_service",
-          "@com_github_grpc_grpc//:grpc++",
-          "@com_github_grpc_grpc//:grpc++_reflection",],
+cc_binary(
+    name = "am_http_service",
+    srcs = ["am_http_service.cpp"],
+    defines= ["CPPHTTPLIB_OPENSSL_SUPPORT"],
+    visibility = ["//visibility:public"],
+    deps = ["//proto/am_proto:am_cc_grpc",
+                "@com_github_grpc_grpc//:grpc++",
+                "@com_github_grpc_grpc//:grpc++_reflection"],
+    linkopts = ["-lpthread",],
 )
