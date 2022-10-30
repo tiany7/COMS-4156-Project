@@ -65,7 +65,7 @@ public:
         EXPECT_FALSE(response.has_student());
         EXPECT_EQ(response.message(), "ERROR");
         EXPECT_EQ(status.error_code(), ::grpc::StatusCode::OK);
-        EXPECT_EQ(status.error_message, response.message());
+        EXPECT_EQ(status.error_message(), response.message());
     }
 
     void DoReadFacultyInfo() {
