@@ -139,8 +139,8 @@ public:
         request.set_uni("qw1234");
         request.set_email("qw5678@columbia.edu");
         stub_->UpdateEmail(&context, request, &response);
-        EXPECT_FALSE(response.has_email());
         EXPECT_EQ(response.message(), "ERROR");
+        EXPECT_EQ(response.email(), "");
     }
 
 private:
@@ -161,7 +161,6 @@ TEST(MockPersonService, CheckReadStudentInfo) {
     FakeClient client(&stub);
     client.DoReadStudentInfo();
 }
-
 
 TEST(MockPersonService, CheckReadStudentInfoFailed) {
     MockPersonServiceStub stub;
@@ -209,7 +208,7 @@ TEST(MockPersonService, CheckReadAdministratorInfo) {
 TEST(MockPersonService, CheckReadAdministratorInfoFailed) {
     MockPersonServiceStub stub;
     AdministratorReadResponse response;
-    resonse.set_message("ERROR");
+    response.set_message("ERROR");
     EXPECT_CALL(stub, ReadAdministratorInfo(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
     FakeClient client(&stub);
     client.DoReadAdministratorInfoFailed();
