@@ -27,6 +27,7 @@ message StudentReadRequest {
 
 message StudentReadResponse {
     Student student = 1;
+    string message = 2;
 }
 
 message Faculty {
@@ -43,6 +44,7 @@ message FacultyReadRequest {
 
 message FacultyReadResponse {
     Faculty faculty = 1;
+    string message = 2;
 }
 
 message Administrator {
@@ -58,6 +60,7 @@ message AdministratorReadRequest {
 
 message AdministratorReadResponse {
     Administrator administrator = 1;
+    string message = 2;
 }
 
 message UpdateEmailRequest {

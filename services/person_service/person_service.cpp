@@ -65,9 +65,11 @@ public:
         sprintf(buffer, sql.c_str(), uni.c_str());
         ErrorCode sql_error_code = execute(string(buffer));
         if (sql_error_code == ErrorCode::ERROR) {
+            response->set_message("ERROR");
             return sql_error_code;
         }
-
+        
+        response->set_message("OK");
         while (res->next()) {
             Student* student = response->mutable_student();
             student->set_uni(string(res->getString(1)));
@@ -86,9 +88,11 @@ public:
         sprintf(buffer, sql.c_str(), uni.c_str());
         ErrorCode sql_error_code = execute(string(buffer));
         if (sql_error_code == ErrorCode::ERROR) {
+            response->set_message("ERROR");
             return sql_error_code;
         }
 
+        response->set_message("OK");
         while (res->next()) {
             Faculty* faculty = response->mutable_faculty();
             faculty->set_uni(string(res->getString(1)));
@@ -105,9 +109,11 @@ public:
         sprintf(buffer, sql.c_str(), uni.c_str());
         ErrorCode sql_error_code = execute(string(buffer));
         if (sql_error_code == ErrorCode::ERROR) {
+            response->set_message("ERROR");
             return sql_error_code;
         }
 
+        response->set_message("OK");
         while (res->next()) {
             Administrator* administrator = response->mutable_administrator();
             administrator->set_uni(string(res->getString(1)));
@@ -124,10 +130,10 @@ public:
         ErrorCode sql_error_code = execute(string(buffer));
         response->set_email(email);
         if (sql_error_code == ErrorCode::ERROR) {
-            response->set_message("UPDATE FAILED!");
+            response->set_message("ERROR");
             return sql_error_code;
         }
-        response->set_message("UPDATE SUCCESS!");
+        response->set_message("OK");
         return ErrorCode::NO_ERROR;
     }
 
