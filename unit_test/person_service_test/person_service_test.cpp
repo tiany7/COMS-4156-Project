@@ -41,7 +41,6 @@ public:
         ClientContext context;
         StudentReadRequest request;
         StudentReadResponse response;
-        request.set_table("student");
         request.set_uni("qw1234");
         Status status = stub_->ReadStudentInfo(&context, request, &response);
         EXPECT_TRUE(status.ok());
@@ -59,7 +58,6 @@ public:
         ClientContext context;
         StudentReadRequest request;
         StudentReadResponse response;
-        request.set_table("student");
         request.set_uni("qw1234");
         stub_->ReadStudentInfo(&context, request, &response);
         EXPECT_FALSE(response.has_student());
@@ -70,7 +68,6 @@ public:
         ClientContext context;
         FacultyReadRequest request;
         FacultyReadResponse response;
-        request.set_table("faculty");
         request.set_uni("as1234");
         Status status = stub_->ReadFacultyInfo(&context, request, &response);
         EXPECT_TRUE(status.ok());
@@ -97,7 +94,6 @@ public:
         ClientContext context;
         AdministratorReadRequest request;
         AdministratorReadResponse response;
-        request.set_table("administrator");
         request.set_uni("zx1234");
         Status status = stub_->ReadAdministratorInfo(&context, request, &response);
         EXPECT_TRUE(status.ok());
@@ -123,7 +119,6 @@ public:
         ClientContext context;
         UpdateEmailRequest request;
         UpdateEmailResponse response;
-        request.set_table("student");
         request.set_uni("qw1234");
         request.set_email("qw5678@columbia.edu");
         Status status = stub_->UpdateEmail(&context, request, &response);
@@ -135,7 +130,6 @@ public:
         ClientContext context;
         UpdateEmailRequest request;
         UpdateEmailResponse response;
-        request.set_table("student");
         request.set_uni("qw1234");
         request.set_email("qw5678@columbia.edu");
         stub_->UpdateEmail(&context, request, &response);

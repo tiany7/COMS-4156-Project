@@ -41,7 +41,12 @@ enum ErrorCode {
     ERROR = 1,
 };
 
+
 const std::string kReadStudentInfoErrorMessage = "Read student info failed!";
+const std::string kSchemaName = "enrollment";
+const std::string kStudentInfoTable = "student";
+const std::string kFacultyInfoTable = "student";
+const std::string kAdministratorInfoTable = "administrator";
 
 class PersonDB {
 public:
@@ -49,7 +54,7 @@ public:
         try {
             driver = get_driver_instance();
             con = driver->connect("tcp://127.0.0.1:3306", "root", "");
-            con->setSchema("enrollment"); // change schema name
+            con->setSchema(kSchemaName);
         } catch (sql::SQLException& e) {
             std::cout << "Could not connect to server. Error message: " << e.what() << std::endl;
         }
@@ -67,9 +72,9 @@ public:
         return ErrorCode::NO_ERROR;
     }
 
-    ErrorCode GetStudentInfo(const std::string &table, const std::string& uni, StudentReadResponse* response) {
+    ErrorCode GetStudentInfo(const std::string& uni, StudentReadResponse* response) {
         char buffer[BUFFER_SIZE] = {0};
-        string sql = "SELECT * from " + table + " WHERE uni='%s'";
+        string sql = "SELECT * from " + kStudentInfoTable + " WHERE uni='%s'";
         sprintf(buffer, sql.c_str(), uni.c_str());
         ErrorCode sql_error_code = execute(string(buffer));
         if (sql_error_code == ErrorCode::ERROR) {
@@ -90,9 +95,9 @@ public:
         return ErrorCode::NO_ERROR;
     }
 
-    ErrorCode GetFacultyInfo(const std::string& table, const std::string& uni, FacultyReadResponse* response) {
+    ErrorCode GetFacultyInfo(const std::string& uni, FacultyReadResponse* response) {
         char buffer[BUFFER_SIZE] = {0};
-        string sql = "SELECT * from " + table + " WHERE uni='%s'";
+        string sql = "SELECT * from " + kFacultyInfoTable + " WHERE uni='%s'";
         sprintf(buffer, sql.c_str(), uni.c_str());
         ErrorCode sql_error_code = execute(string(buffer));
         if (sql_error_code == ErrorCode::ERROR) {
@@ -111,9 +116,9 @@ public:
         return ErrorCode::NO_ERROR;
     }
 
-    ErrorCode GetAdministratorInfo(const std::string& table, const std::string& uni, AdministratorReadResponse* response) {
+    ErrorCode GetAdministratorInfo(const std::string& uni, AdministratorReadResponse* response) {
         char buffer[BUFFER_SIZE] = {0};
-        string sql = "SELECT * from " + table + " WHERE uni='%s'";
+        string sql = "SELECT * from " + kAdministratorInfoTable + " WHERE uni='%s'";
         sprintf(buffer, sql.c_str(), uni.c_str());
         ErrorCode sql_error_code = execute(string(buffer));
         if (sql_error_code == ErrorCode::ERROR) {
@@ -131,9 +136,9 @@ public:
         return ErrorCode::NO_ERROR;
     }
 
-    ErrorCode UpdateEmail(const std::string& table, const std::string& uni, const std::string& email, UpdateEmailResponse* response) {
+    ErrorCode UpdateEmail(const std::string& uni, const std::string& email, UpdateEmailResponse* response) {
         char buffer[BUFFER_SIZE] = {0};
-        string sql = "UPDATE " + table + " SET email='%s' WHERE uni='%s'";
+        string sql = "UPDATE " + kStudentInfoTable + " SET email='%s' WHERE uni='%s'";
         sprintf(buffer, sql.c_str(), email.c_str(), uni.c_str());
         try {
             stmt = con->createStatement();
@@ -171,7 +176,7 @@ private:
 
 class PersonServiceImpl final : public PersonService::Service {
     Status ReadStudentInfo(ServerContext* context, const StudentReadRequest* request, StudentReadResponse* response) override {
-        ErrorCode error_code = PersonDB().GetStudentInfo(request->table(), request->uni(), response);
+        ErrorCode error_code = PersonDB().GetStudentInfo(request->uni(), response);
         if (error_code == ErrorCode::ERROR) {
             return Status(StatusCode::CANCELLED, kReadStudentInfoErrorMessage);
         }
@@ -179,7 +184,7 @@ class PersonServiceImpl final : public PersonService::Service {
     }
 
     Status ReadFacultyInfo(ServerContext* context, const FacultyReadRequest* request, FacultyReadResponse* response) override {
-        ErrorCode error_code = PersonDB().GetFacultyInfo(request->table(), request->uni(), response);
+        ErrorCode error_code = PersonDB().GetFacultyInfo(request->uni(), response);
         if (error_code == ErrorCode::ERROR) {
             return Status(StatusCode::CANCELLED, "Read faculty info failed!");
         }
@@ -187,7 +192,7 @@ class PersonServiceImpl final : public PersonService::Service {
     }
 
     Status ReadAdministratorInfo(ServerContext* context, const AdministratorReadRequest* request, AdministratorReadResponse* response) override {
-        ErrorCode error_code = PersonDB().GetAdministratorInfo(request->table(), request->uni(), response);
+        ErrorCode error_code = PersonDB().GetAdministratorInfo(request->uni(), response);
         if (error_code == ErrorCode::ERROR) {
             return Status(StatusCode::CANCELLED, "Read administrator info failed!");
         }
@@ -195,7 +200,7 @@ class PersonServiceImpl final : public PersonService::Service {
     }
 
     Status UpdateEmail(ServerContext* context, const UpdateEmailRequest* request, UpdateEmailResponse* response) override {
-        ErrorCode error_code = PersonDB().UpdateEmail(request->table(), request->uni(), request->email(),response);
+        ErrorCode error_code = PersonDB().UpdateEmail(request->uni(), request->email(),response);
         if (error_code == ErrorCode::ERROR) {
             return Status(StatusCode::CANCELLED, "Update email failed!");
         }
