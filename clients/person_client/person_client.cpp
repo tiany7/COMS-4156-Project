@@ -167,6 +167,7 @@ int main(int argc, char** argv) {
         }
     });
 
+    std::cout << "Server listening on 0.0.0.0:8083" << std::endl;
     svr.listen("0.0.0.0", 8083);
     return 0;
 }
