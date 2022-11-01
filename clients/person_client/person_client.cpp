@@ -174,17 +174,17 @@ int main(int argc, char** argv) {
             uni = req.get_param_value("uni");
         }
         if (req.has_param("email")) {
-            uni = req.get_param_value("email");
+            email = req.get_param_value("email");
         }
-        ErrorCode error_code = person_service_client.UpdateEmail(uni, email);
-        if (error_code == ErrorCode::ERROR) {
-            if (uni.empty()) {
-                res.set_content("Empty UNI", "text/plain");
-            } else {
-                res.set_content("Internal Error", "text/plain");
-            }
+        if (uni.empty() || email.empty()) {
+            res.set_content("Empty UNI/Email", "text/plain");
         } else {
-            res.set_content("Update succ!", "text/plain");
+            ErrorCode error_code = person_service_client.UpdateEmail(uni, email);
+            if (error_code == ErrorCode::ERROR) {
+                res.set_content("Internal Error", "text/plain");
+            } else {
+                res.set_content("Update student email successfully!", "text/plain");
+            }
         }
     });
 
