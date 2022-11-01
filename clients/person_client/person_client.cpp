@@ -102,7 +102,7 @@ int main(int argc, char** argv) {
     PersonServiceClient person_service_client(grpc::CreateChannel(target_str, grpc::InsecureChannelCredentials()));
 
     httplib::Server svr;
-    svr.Get("/get_student_info", [](const httplib::Request &req, httplib::Response &res) {
+    svr.Get("/get_student_info", [&](const httplib::Request &req, httplib::Response &res) {
         std::string uni("");
         if (req.has_param("uni")) {
             uni = req.get_param_value("uni");
@@ -124,7 +124,7 @@ int main(int argc, char** argv) {
         }
     });
 
-    svr.Get("/get_faculty_info", [](const httplib::Request &req, httplib::Response &res) {
+    svr.Get("/get_faculty_info", [&](const httplib::Request &req, httplib::Response &res) {
         std::string uni("");
         if (req.has_param("uni")) {
             uni = req.get_param_value("uni");
@@ -145,7 +145,7 @@ int main(int argc, char** argv) {
         }
     });
 
-    svr.Get("/get_administrator_info", [](const httplib::Request &req, httplib::Response &res) {
+    svr.Get("/get_administrator_info", [&](const httplib::Request &req, httplib::Response &res) {
         std::string uni("");
         if (req.has_param("uni")) {
             uni = req.get_param_value("uni");
