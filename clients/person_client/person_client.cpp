@@ -65,7 +65,6 @@ public:
 
     ErrorCode ReadAdministratorInfo(const std::string& uni, Administrator& administrator) {
         AdministratorReadRequest request;
-        request.set_table(table);
         request.set_uni(uni);
 
         AdministratorReadResponse response;
@@ -119,7 +118,7 @@ int main(int argc, char** argv) {
         } else {
             std::ostringstream ss;
             ss << "uni | name | email | affiliation | school | advisor" << std::endl;
-            ss << studen.uni() << " | " << student.name() << " | " << student.email() << " | ";
+            ss << student.uni() << " | " << student.name() << " | " << student.email() << " | ";
             ss << student.affiliation() << " | " << student.school() << " | " << student.advisor << std::endl;
             res.set_content(ss.str().c_str(), "text/plain"); 
         }
