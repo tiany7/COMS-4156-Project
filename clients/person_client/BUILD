@@ -4,6 +4,7 @@ cc_binary(
     srcs = ["person_client.cpp"],
     deps = ["@com_github_grpc_grpc//:grpc++",
             "@com_github_grpc_grpc//:grpc++_reflection",
-            "//proto/person_proto:person_cc_grpc"],
+            "//proto/person_proto:person_cc_grpc",
+            "@comm_github_mysql_cpp_connector//:mysql_lib",],
     linkopts = ["-lpthread"],
 )
