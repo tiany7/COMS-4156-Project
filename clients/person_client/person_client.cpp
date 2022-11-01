@@ -4,6 +4,7 @@
 
 #include "httplib.h"
 #include <grpcpp/grpcpp.h>
+#include "proto/person_proto/person.pb.h"
 #include "proto/person_proto/person.grpc.pb.h"
 
 using ::grpc::Channel;
