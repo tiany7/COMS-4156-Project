@@ -2,6 +2,7 @@
 #include <memory>
 #include <string>
 
+#include "httplib.h"
 #include <grpcpp/grpcpp.h>
 #include "proto/person_proto/person.grpc.pb.h"
 
@@ -32,9 +33,8 @@ public:
     PersonServiceClient(std::shared_ptr<Channel> channel)
             : stub_(PersonService::NewStub(channel)) {}
 
-    ErrorCode ReadStudentInfo(const std::string& table, const std::string &uni, Student& student) {
+    ErrorCode ReadStudentInfo(const std::string &uni, Student& student) {
         StudentReadRequest request;
-        request.set_table(table);
         request.set_uni(uni);
 
         StudentReadResponse response;
@@ -48,9 +48,8 @@ public:
         return ErrorCode::NO_ERROR;
     }
     
-    ErrorCode ReadFacultyInfo(const std::string& table, const std::string& uni, Faculty& faculty) {
+    ErrorCode ReadFacultyInfo(const std::string& uni, Faculty& faculty) {
         FacultyReadRequest request;
-        request.set_table(table);
         request.set_uni(uni);
 
         FacultyReadResponse response;
@@ -64,7 +63,7 @@ public:
         return ErrorCode::NO_ERROR;
     }
 
-    ErrorCode ReadAdministratorInfo(const std::string& table, const std::string& uni, Administrator& administrator) {
+    ErrorCode ReadAdministratorInfo(const std::string& uni, Administrator& administrator) {
         AdministratorReadRequest request;
         request.set_table(table);
         request.set_uni(uni);
@@ -80,9 +79,8 @@ public:
         return ErrorCode::NO_ERROR;
     }
 
-    ErrorCode UpdateEmail(const std::string& table, const std::string& uni, const std::string& email) {
+    ErrorCode UpdateEmail(const std::string& uni, const std::string& email) {
         UpdateEmailRequest request;
-        request.set_table(table);
         request.set_uni(uni);
         request.set_email(email);
 
@@ -102,6 +100,73 @@ private:
 
 int main(int argc, char** argv) {
     std::string target_str("localhost:50053");
-    PersonServiceClient client(grpc::CreateChannel(target_str, grpc::InsecureChannelCredentials()));
+    PersonServiceClient person_service_client(grpc::CreateChannel(target_str, grpc::InsecureChannelCredentials()));
+
+    httplib::Server svr;
+    svr.Get("/get_student_info", [](const httplib::Request &req, httplib::Response &res) {
+        std::string uni("");
+        if (req.has_param("uni")) {
+            uni = req.get_param_value("uni");
+        }
+        Student student;
+        ErrorCode error_code = person_service_client.ReadStudentInfo(uni, student);
+        if (error_code == ErrorCode::ERROR) {
+            if (uni.empty()) {
+                res.set_content("Empty UNI", "text/plain");
+            } else {
+                res.set_content("Internal Error", "text/plain");
+            }
+        } else {
+            std::ostringstream ss;
+            ss << "uni | name | email | affiliation | school | advisor" << std::endl;
+            ss << studen.uni() << " | " << student.name() << " | " << student.email() << " | ";
+            ss << student.affiliation() << " | " << student.school() << " | " << student.advisor << std::endl;
+            res.set_content(ss.str().c_str(), "text/plain"); 
+        }
+    });
+
+    svr.Get("/get_faculty_info", [](const httplib::Request &req, httplib::Response &res) {
+        std::string uni("");
+        if (req.has_param("uni")) {
+            uni = req.get_param_value("uni");
+        }
+        Faculty faculty;
+        ErrorCode error_code = person_service_client.ReadFacultyInfo(uni, faculty);
+        if (error_code == ErrorCode::ERROR) {
+            if (uni.empty()) {
+                res.set_content("Empty UNI", "text/plain");
+            } else {
+                res.set_content("Internal Error", "text/plain");
+            }
+        } else {
+            std::ostringstream ss;
+            ss << "uni | name | email | school" << std::endl;
+            ss << faculty.uni() << " | " << faculty.name() << " | " << faculty.email() << " | "  << faculty.school() << std::endl;
+            res.set_content(ss.str().c_str(), "text/plain"); 
+        }
+    });
+
+    svr.Get("/get_administrator_info", [](const httplib::Request &req, httplib::Response &res) {
+        std::string uni("");
+        if (req.has_param("uni")) {
+            uni = req.get_param_value("uni");
+        }
+        Administrator administrator;
+        ErrorCode error_code = person_service_client.ReadAdministratorInfo(uni, administrator);
+        if (error_code == ErrorCode::ERROR) {
+            if (uni.empty()) {
+                res.set_content("Empty UNI", "text/plain");
+            } else {
+                res.set_content("Internal Error", "text/plain");
+            }
+        } else {
+            std::ostringstream ss;
+            ss << "uni | name | email" << std::endl;
+            ss << administrator.uni() << " | " << administrator.name() << " | " << administrator.email() << std::endl;
+            res.set_content(ss.str().c_str(), "text/plain"); 
+        }
+    });
+
+    svr.listen("0.0.0.0", 8083);
     return 0;
 }
