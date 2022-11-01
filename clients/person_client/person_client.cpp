@@ -120,7 +120,7 @@ int main(int argc, char** argv) {
             std::ostringstream ss;
             ss << "uni | name | email | affiliation | school | advisor" << std::endl;
             ss << student.uni() << " | " << student.name() << " | " << student.email() << " | ";
-            ss << student.affiliation() << " | " << student.school() << " | " << student.advisor << std::endl;
+            ss << student.affiliation() << " | " << student.school() << " | " << student.advisor() << std::endl;
             res.set_content(ss.str().c_str(), "text/plain"); 
         }
     });
