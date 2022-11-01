@@ -167,6 +167,27 @@ int main(int argc, char** argv) {
         }
     });
 
+    svr.Post("/update_student_email", [&](const httplib::Request &req, httplib::Response &res) {
+        std::string uni("");
+        std::string email("");
+        if (req.has_param("uni")) {
+            uni = req.get_param_value("uni");
+        }
+        if (req.has_param("email")) {
+            uni = req.get_param_value("email");
+        }
+        ErrorCode error_code = person_service_client.UpdateEmail(uni, email);
+        if (error_code == ErrorCode::ERROR) {
+            if (uni.empty()) {
+                res.set_content("Empty UNI", "text/plain");
+            } else {
+                res.set_content("Internal Error", "text/plain");
+            }
+        } else {
+            res.set_content("Update succ!", "text/plain");
+        }
+    });
+
     std::cout << "Server listening on 0.0.0.0:8083" << std::endl;
     svr.listen("0.0.0.0", 8083);
     return 0;
