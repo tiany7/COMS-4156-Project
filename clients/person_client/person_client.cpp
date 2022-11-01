@@ -5,9 +5,10 @@
 #include <grpcpp/grpcpp.h>
 #include "proto/person_proto/person.grpc.pb.h"
 
-using grpc::Channel;
-using grpc::ClientContext;
-using grpc::Status;
+using ::grpc::Channel;
+using ::grpc::ClientContext;
+using ::grpc::Status;
+
 using ::person::PersonService;
 using ::person::StudentReadRequest;
 using ::person::StudentReadResponse;
@@ -19,6 +20,7 @@ using ::person::UpdateEmailRequest;
 using ::person::UpdateEmailResponse;
 using ::person::Student;
 using ::person::Faculty;
+using ::person::Administrator;
 
 enum ErrorCode {
     NO_ERROR = 0,
@@ -99,7 +101,7 @@ private:
 };
 
 int main(int argc, char** argv) {
-    std::string target_str("localhost:50052");
+    std::string target_str("localhost:50053");
     PersonServiceClient client(grpc::CreateChannel(target_str, grpc::InsecureChannelCredentials()));
     return 0;
 }
