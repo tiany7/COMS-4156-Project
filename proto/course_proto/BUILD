@@ -18,5 +18,6 @@ cc_grpc_library(
     name = "course_cc_grpc",
     srcs = [":course_proto"],
     grpc_only = True,
+    generate_mocks = True,
     deps = [":course_cc_proto"],
 )
