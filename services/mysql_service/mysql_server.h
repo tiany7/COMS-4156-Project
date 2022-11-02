@@ -31,6 +31,24 @@ class FacultyServiceServiceImpl final: public FacultyService::Service {
         int success = FacultyDBService().GetFacultyDept(dept, reply);
         return Status::OK;
     }
+    Status GetFacultyByUni(ServerContext* context, const GetFacultyReq* request,
+                           FacultyRsp* reply)
+    {
+        auto uni = request->uni();
+        int success = FacultyDBService().GetFacultyUni(uni, reply);
+        return Status::OK;
+    }
+
+    Status InsertFaculty(ServerContext* context, const Faculty* request,
+                         Faculty* reply)
+    {
+        auto name = request->name();
+        auto uni = request->uni();
+        auto dept = request->department();
+        auto country = request->country();
+        int success = FacultyDBService().InsertFaculty(name, uni, dept, country);
+        return Status::OK;
+    }
 };
 
 class MysqlServer{

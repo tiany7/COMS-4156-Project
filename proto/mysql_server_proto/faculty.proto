@@ -21,8 +21,9 @@ message Option{
 }
 
 message GetFacultyReq {
-    string department = 1;
-    Option option = 2;
+    string uni = 1;
+    string department = 2;
+    Option option = 3;
 }
 
 
@@ -32,4 +33,6 @@ message FacultyRsp{
 
 service FacultyService {
     rpc GetFaculty(GetFacultyReq) returns (FacultyRsp);
+    rpc InsertFaculty(Faculty) returns (Faculty);
+    rpc GetFacultyByUni(GetFacultyReq) returns (FacultyRsp);
 }

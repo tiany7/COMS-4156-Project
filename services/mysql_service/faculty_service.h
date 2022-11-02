@@ -8,6 +8,7 @@
 #include <cppconn/exception.h>
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
+#include <cppconn/prepared_statement.h>
 #include "mysql_connection.h"
 
 #include <grpcpp/grpcpp.h>
@@ -29,6 +30,8 @@ class FacultyDBService : public DB{
 public:
     FacultyDBService();
     int GetFacultyDept(const string & dept_name, FacultyRsp* reply);
+    int GetFacultyUni(const string & name, FacultyRsp* reply);
+    int InsertFaculty(const string & name, const string & dept, const string & uni, const string & country);
     virtual ~FacultyDBService();
 };
 
