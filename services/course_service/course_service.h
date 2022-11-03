@@ -50,7 +50,7 @@ public:
     CourseDB() ;
     ~CourseDB() ;
 
-    ErrorCode execute(const std::string& query) ;
+    ErrorCode execute(const std::string& query, const int mode) ;
 
     ErrorCode _GetCourseTitle(const string& course, const string& semester,CourseTitleResponse* response) ;
 

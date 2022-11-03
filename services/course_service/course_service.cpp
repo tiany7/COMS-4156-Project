@@ -9,10 +9,14 @@ CourseDB::CourseDB() {
     std::cout << "I connected to mysql server\n";
 }
 
-ErrorCode CourseDB::execute(const std::string& query) {
+ErrorCode CourseDB::execute(const std::string& query, const int mode) {
     try {
         stmt = con->createStatement();
-        res = stmt->executeQuery(query);
+        if (mode == 0){
+            res = stmt->executeQuery(query);
+        } else if (mode == 1){
+            int rows = stmt->executeUpdate(query);
+        } 
     } catch(sql::SQLException &e) {
         std::cout << "This is where the error is in server line 16\n";
         return ErrorCode::ERROR;
@@ -26,7 +30,7 @@ ErrorCode CourseDB::_GetCourseTitle(const string& course, const string& semester
     char buffer[BUFFER_SIZE] = {0};
     string sql = "SELECT course_title from course WHERE course= '%s' and semester = '%s' limit 1";
     sprintf(buffer, sql.c_str(), course.c_str(), semester.c_str());
-    ErrorCode sql_error_code = execute(string(buffer));
+    ErrorCode sql_error_code = execute(string(buffer),0);
     std::cout << "SQL success !!!!!!!!!!!!!!!!!!!!!!\n";
     if (sql_error_code == ErrorCode::ERROR) {
         std::cout <<" Server Line 31 error \n";
@@ -45,7 +49,7 @@ ErrorCode CourseDB::_GetCourseInfo(const int32_t cid, const string& semester,Cou
     char buffer[BUFFER_SIZE] = {0};
     string sql = "SELECT * from course WHERE course_id= %d and semester = '%s' limit 1";
     sprintf(buffer, sql.c_str(), cid, semester.c_str());
-    ErrorCode sql_error_code = execute(string(buffer));
+    ErrorCode sql_error_code = execute(string(buffer),0);
     if (sql_error_code == ErrorCode::ERROR) {
         return sql_error_code;
     }
@@ -72,7 +76,7 @@ ErrorCode CourseDB::_GetCourseList(const string& department, const string& semes
     char buffer[BUFFER_SIZE] = {0};
     string sql = "SELECT * from course WHERE department='%s' and semester = '%s'";
     sprintf(buffer, sql.c_str(), department.c_str(), semester.c_str());
-    ErrorCode sql_error_code = execute(string(buffer));
+    ErrorCode sql_error_code = execute(string(buffer),0);
     if (sql_error_code == ErrorCode::ERROR) {
         return sql_error_code;
     }
@@ -106,7 +110,7 @@ ErrorCode CourseDB::_GetCoursePrereq(const string& course, CoursePrereqResponse*
 
     // there might be the transpose issue !
     sprintf(buffer, sql.c_str(), course.c_str());
-    ErrorCode sql_error_code = execute(string(buffer));
+    ErrorCode sql_error_code = execute(string(buffer),0);
     if (sql_error_code == ErrorCode::ERROR) {
         return sql_error_code;
     }
@@ -117,18 +121,19 @@ ErrorCode CourseDB::_GetCoursePrereq(const string& course, CoursePrereqResponse*
         response->set_pre2(string(res->getString(2)));
         response->set_pre3(string(res->getString(3)));
     }
+    
     return ErrorCode::NO_ERROR;
 }
 
 ErrorCode CourseDB::_InsertCourse(const string& course, const string& semester, const string& course_title,
     const int32_t cid, CRUDCourseResponse* response) {
     char buffer[BUFFER_SIZE] = {0};
-    string sql = "insert into course (course, semester, course_title, course_id)"
+    string sql = "insert into course (course, semester, course_title, course_id) "
              " values ( '%s' , '%s' , '%s' , %d) ;";
     sprintf(buffer, sql.c_str(),  course.c_str(), semester.c_str(), course_title.c_str(), cid);
-    ErrorCode sql_error_code = execute(string(buffer));
-    std::cout << "Success Insert!\n";
+    ErrorCode sql_error_code = execute(string(buffer),1);
     if (sql_error_code == ErrorCode::ERROR) {
+        std::cout << "Success Insert!\n";
         response->set_message("Insert FAILED!");
         return sql_error_code;
     }
@@ -141,12 +146,12 @@ ErrorCode CourseDB::_UpdateCourse(const string& course, const string& semester, 
     char buffer[BUFFER_SIZE] = {0};
     string sql = "Update course  "
              "Set course_title = '%s', faculty_name = '%s', faculty_uni = '%s' "
-             "WHERE course = '%s' and semester ='%s' ";
+             "WHERE course = '%s' and semester ='%s' ;";
     sprintf(buffer, sql.c_str(), course_title.c_str(), faculty_name.c_str(),
         faculty_uni.c_str(), course.c_str(), semester.c_str());
-    ErrorCode sql_error_code = execute(string(buffer));
-    std::cout << "Success Update!\n";
+    ErrorCode sql_error_code = execute(string(buffer),1);
     if (sql_error_code == ErrorCode::ERROR) {
+        std::cout << "Success Update!\n";
         response->set_message("Update FAILED!");
         return sql_error_code;
     }
@@ -157,12 +162,12 @@ ErrorCode CourseDB::_UpdateCourse(const string& course, const string& semester, 
 
 ErrorCode CourseDB::_DeleteCourse(const int32_t cid, const string& semester, CRUDCourseResponse* response) {
     char buffer[BUFFER_SIZE] = {0};
-    string sql = "Delete from course WHERE course_id = %d and semester ='%s' ";
+    string sql = "Delete from course WHERE course_id = %d and semester ='%s'";
     sprintf(buffer, sql.c_str(), cid, semester.c_str());
-    ErrorCode sql_error_code = execute(string(buffer));
-    std::cout << "Success Delete!\n";
+    ErrorCode sql_error_code = execute(string(buffer),1);
     // this will have segmentation fault, no message back to the course_client
     if (sql_error_code == ErrorCode::ERROR) {
+        std::cout << "Success Delete!\n";
         response->set_message("DELETE FAILED!");
         return sql_error_code;
     }
