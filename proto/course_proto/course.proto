@@ -29,9 +29,9 @@ message CourseInfo {
     // int32 maxsize = 9; // 120
     // int32 enrolled = 10; // 37
     //         // repeated string = 8;  //由于mysql table设置，不适用repeated
-    string prereq1 = 12; // same as course_name
-    string prereq2 = 13;
-    string prereq3 = 14;
+    string prereq1 = 8; // same as course_name
+    string prereq2 = 9;
+    string prereq3 = 10;
     // string further = 15; // the sequential course for this one
     
     // // time info
@@ -41,8 +41,17 @@ message CourseInfo {
 
 }
 
-
 // Reqest & Response
+message GetCourseTitleRequest {
+    string course = 1;
+    string semester = 2;
+}
+
+message CourseTitleResponse {
+    string course_title = 1;
+}
+
+
 message GetCourseListRequest {
     string department = 1;
     string semester = 2;
@@ -78,8 +87,9 @@ message DeleteCourseResponse {
 }
 
 service CourseService {
-    rpc GetCourseList(GetCourseListRequest) returns (CourseListResponse);
+    rpc GetCourseTitle(GetCourseTitleRequest) returns (CourseTitleResponse);
     rpc GetCourseInfo(GetCourseInfoRequest) returns (CourseInfoResponse);
+    rpc GetCourseList(GetCourseListRequest) returns (CourseListResponse);
     rpc GetCoursePrereq(GetCoursePrereqRequest) returns (CoursePrereqResponse);
     rpc DeleteCourse(DeleteCourseRequest) returns (DeleteCourseResponse);
 }
