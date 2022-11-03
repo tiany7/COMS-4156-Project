@@ -22,6 +22,7 @@ cc_binary(
     visibility = ["//visibility:public"],
     deps = ["//proto/am_proto:am_cc_grpc",
                 "@com_github_grpc_grpc//:grpc++",
+                "@comm_github_mysql_cpp_connector//:mysql_lib",
                 "@com_github_grpc_grpc//:grpc++_reflection"],
     linkopts = ["-lpthread",],
 )

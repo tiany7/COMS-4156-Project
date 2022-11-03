@@ -14,7 +14,7 @@
 #include <grpcpp/health_check_service_interface.h>
 #include "proto/person_proto/person.grpc.pb.h"
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 105
 
 using ::std::string;
 using ::person::PersonService;
@@ -57,9 +57,9 @@ public:
     PersonDB() {
         try {
             driver = get_driver_instance();
-            // con = driver->connect("tcp://127.0.0.1:3306", "root", "");
+             con = driver->connect("tcp://127.0.0.1:3306", "root", "");
             // con->setSchema(kSchemaName);
-            con = driver->connect("coms4156-rds.cnxeqkxjuxbw.us-east-1.rds.amazonaws.com", "admin", "12345678");
+//            con = driver->connect("coms4156-rds.cnxeqkxjuxbw.us-east-1.rds.amazonaws.com", "admin", "12345678");
             con->setSchema("coms4156_db");
         } catch (sql::SQLException& e) {
             std::cout << "Could not connect to server. Error message: " << e.what() << std::endl;
@@ -178,14 +178,21 @@ public:
         string sql = "insert into " + kStudentInfoTable + "(uni, name) values('%s', '%s')";
         std::string uni = request->uni(), name = request->name();
         sprintf(buffer, sql.c_str(), uni.c_str(), name.c_str());
+
         try {
             stmt = con->createStatement();
             stmt->execute(string(buffer));
         } catch (sql::SQLException &e) {
-            response->set_message("ERROR");
+            std::cout << "# ERR: SQLException in " << __FILE__;
+            std::cout << "(" << __FUNCTION__ << ") on line "
+                 << __LINE__ << std::endl;
+            std::cout << "# ERR: " << e.what();
+            std::cout << " (MySQL error code: " << e.getErrorCode();
+            std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
             return ErrorCode::ERROR;
+        } catch(...){
+            std::cout << "Unknown exception" << std::endl;
         }
-        response->set_message("OK");
         return ErrorCode::NO_ERROR;
     }
 
@@ -261,7 +268,9 @@ class PersonServiceImpl final : public PersonService::Service {
     }
 
     Status CreateStudent(ServerContext* context, const Student* request, CreatePersonResponse* response) {
+        std::cout << "Create student: " << request->uni() << std::endl;
         ErrorCode error_code = PersonDB().CreateStudent(request, response);
+        std::cout<<"Creating student"<<std::endl;
         if (error_code == ErrorCode::ERROR) {
             return Status(StatusCode::CANCELLED, "Create student failed!");
         }

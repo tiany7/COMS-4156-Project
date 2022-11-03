@@ -67,6 +67,6 @@ int main(int argc, char** argv) {
         res.set_content(os.str().c_str(), "text/plain");
     });
     std::cout << "Server started" << std::endl;
-    svr.listen("0.0.0.0", 10080);
+    svr.listen("0.0.0.0", 8080);
     return 0;
 }

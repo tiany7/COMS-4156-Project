@@ -104,10 +104,12 @@ public:
 
         CreatePersonResponse response;
         ClientContext context;
-        Status status = stub_->CreateStudent(&context, request, &response); 
+        Status status = stub_->CreateStudent(&context, request, &response);
+        std::cout<<status.error_message()<<std::endl;
         if (!status.ok()) {
             return ErrorCode::ERROR;
         }
+
         return ErrorCode::NO_ERROR;
     }
 
@@ -241,10 +243,13 @@ int main(int argc, char** argv) {
         if (req.has_param("name")) {
             name = req.get_param_value("name");
         }
+
         if (uni.empty() || name.empty()) {
             res.set_content("Empty UNI/name", "text/plain");
         } else {
+            std::cout<<"create student"<<std::endl;
             ErrorCode error_code = person_service_client.CreateStudent(uni, name);
+            std::cout<<"complete"<<std::endl;
             if (error_code == ErrorCode::ERROR) {
                 res.set_content("Internal Error", "text/plain");
             } else {

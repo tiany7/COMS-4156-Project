@@ -1,6 +1,6 @@
 #include "faculty_service.h"
 
-FacultyDBService::FacultyDBService() :DB("faculty")
+FacultyDBService::FacultyDBService() :DB("coms4156_db")
 {
 
 }
@@ -73,8 +73,8 @@ int FacultyDBService::InsertFaculty(const string & name, const string & dept, co
     try {
         auto stmt = con->createStatement();
         char buffer[150] = {0};
-        string sql = "INSERT INTO faculty VALUES ('%s', '%s', '%s', '%s')";
-        sprintf(buffer, sql.c_str(), name.c_str(), uni.c_str(), dept.c_str(), country.c_str());
+        string sql = "INSERT INTO faculty(name, uni, department, country) VALUES ('%s', '%s', '%s', '%s')";
+        sprintf(buffer, sql.c_str(), name.c_str(), dept.c_str(),uni.c_str(),  country.c_str());
         stmt->execute(buffer);
         if(stmt)delete stmt, stmt = nullptr;
     }catch (sql::SQLException &e) {
