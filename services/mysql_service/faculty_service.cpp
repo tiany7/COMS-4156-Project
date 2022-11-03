@@ -1,6 +1,6 @@
 #include "faculty_service.h"
 
-FacultyDBService::FacultyDBService() :DB("faculty")
+FacultyDBService::FacultyDBService() :DB("coms4156_db")
 {
 
 }
