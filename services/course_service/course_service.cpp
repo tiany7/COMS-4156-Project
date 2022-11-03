@@ -4,8 +4,9 @@
 
 CourseDB::CourseDB() {
     driver = get_driver_instance();
-    con = driver->connect("host.docker.internal", "root", "Czh19981011");
-    con->setSchema("proj"); // change schema name
+//    con = driver->connect("host.docker.internal", "root", "Czh19981011");
+    con = driver->connect("tcp://localhost:3306", "root", "");
+    con->setSchema("coms4156_db"); // change schema name
     std::cout << "I connected to mysql server\n";
 }
 
