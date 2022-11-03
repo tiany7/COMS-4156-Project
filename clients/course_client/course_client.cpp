@@ -136,20 +136,22 @@ int main(int argc, char** argv) {
     CourseServiceClient mysqlsvc(
             grpc::CreateChannel("localhost:50053", grpc::InsecureChannelCredentials()));
     std::cout << "client enter line 46\n";
-    // auto coursetitle = mysqlsvc.GetTitle("cs4156", "2022Fall");
-    // auto coursetitle = mysqlsvc.GetCourse(1111, "2022Fall");
-    // if (coursetitle == "Adv Software") {
-    //     cout << "Success" << endl;
-    // } else {
-    //     cout << "Fail" << endl;
-    // }
+    auto coursetitle = mysqlsvc.GetTitle("cs4156", "2022Fall");
+    
+    auto coursetitle = mysqlsvc.GetCourse(1111, "2022Fall");
+    if (coursetitle == "Adv Software") {
+        cout << "Success" << endl;
+    } else {
+        cout << "Fail" << endl;
+    }
 
-    // auto num = mysqlsvc.GetCourseList("CS","2022Fall");
-    // std::cout << num << std::endl;
+    auto num = mysqlsvc.GetCourseList("CS","2022Fall");
+    std::cout << num << std::endl;
+
+
+    // these two will be further implemented
     // auto num = mysqlsvc.GetCoursePrereq("cs4156");
-    // std::cout << num << std::endl;
-
-    mysqlsvc.DeleteCourse(111,"2022Spring");
+    // mysqlsvc.DeleteCourse(111,"2022Spring");
 
     return 0;
 }
