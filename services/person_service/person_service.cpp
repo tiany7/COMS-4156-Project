@@ -202,12 +202,8 @@ public:
             stmt->execute(buffer);
         } catch (sql::SQLException &e) {
             std::cout << "# ERR: SQLException in " << __FILE__;
-<<<<<<< HEAD
             std::cout << "(" << __FUNCTION__ << ") on line "
                  << __LINE__ << std::endl;
-=======
-            std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
->>>>>>> 506a7f50a0cfbbe2d6db116fb57e6ac011497d5b
             std::cout << "# ERR: " << e.what();
             std::cout << " (MySQL error code: " << e.getErrorCode();
             std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
@@ -245,7 +241,7 @@ public:
         sprintf(buffer, sql.c_str(), uni.c_str());
         try {
             stmt = con->createStatement();
-            stmt->execute(string(buffer));
+            stmt->execute(buffer);
         } catch (sql::SQLException &e) {
             std::cout << "# ERR: SQLException in " << __FILE__;
             std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
@@ -300,13 +296,9 @@ class PersonServiceImpl final : public PersonService::Service {
     }
 
     Status CreateStudent(ServerContext* context, const Student* request, CreatePersonResponse* response) {
-<<<<<<< HEAD
         std::cout << "Create student: " << request->uni() << std::endl;
-        ErrorCode error_code = PersonDB().CreateStudent(request, response);
-        std::cout<<"Creating student"<<std::endl;
-=======
         ErrorCode error_code = PersonDB().CreateStudent(request);
->>>>>>> 506a7f50a0cfbbe2d6db116fb57e6ac011497d5b
+        std::cout<<"Creating student"<<std::endl;
         if (error_code == ErrorCode::ERROR) {
             response->set_message("ERROR");
             return Status(StatusCode::CANCELLED, "Create student failed!");

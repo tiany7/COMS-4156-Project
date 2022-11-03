@@ -48,7 +48,7 @@ int FacultyDBService::GetFacultyUni(const string & uni, FacultyRsp* reply)
         char buffer[105] = {0};
         string sql = "SELECT * FROM faculty WHERE uni = '%s'";
         sprintf(buffer, sql.c_str(), uni.c_str());
-        auto res = stmt->executeQuery(buffer);
+        auto res = stmt->executeQuery(string(buffer));
         while (res->next()) {
             auto faculty = reply->add_faculty();
             faculty->set_name(string(res->getString(1)));
@@ -75,7 +75,7 @@ int FacultyDBService::InsertFaculty(const string & name, const string & dept, co
         char buffer[150] = {0};
         string sql = "INSERT INTO faculty(name, uni, department, country) VALUES ('%s', '%s', '%s', '%s')";
         sprintf(buffer, sql.c_str(), name.c_str(), dept.c_str(),uni.c_str(),  country.c_str());
-        stmt->execute(buffer);
+        stmt->execute(string(buffer));
         if(stmt)delete stmt, stmt = nullptr;
     }catch (sql::SQLException &e) {
         cout << "# ERR: SQLException in " << __FILE__;
