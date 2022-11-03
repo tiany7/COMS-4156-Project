@@ -96,34 +96,30 @@ ErrorCode CourseDB::_GetCourseList(const string& department, const string& semes
     return ErrorCode::NO_ERROR;
 }
 
-// @attention THIS NEED TRANSPOSE
-// ErrorCode CourseDB::_GetCoursePrereq(const string& course, CoursePrereqResponse* response) {
-//     char buffer[BUFFER_SIZE] = {0};
-//     string sql = "SELECT prereq1, prereq2, prereq3 from course WHERE course='%s' limit 1;";
-//     // this should later be in the collection shit
-//     // check the student course collection to get the valid response
+ErrorCode CourseDB::_GetCoursePrereq(const string& course, CoursePrereqResponse* response) {
+    char buffer[BUFFER_SIZE] = {0};
+    string sql = "SELECT prereq1, prereq2, prereq3 from course WHERE course='%s' limit 1;";
+    // this should later be in the collection shit
+    // check the student course collection to get the valid response
     
-//     // use this to check xdevapi
+    // use this to check xdevapi
 
-//     // there might be the transpose issue !
-//     sprintf(buffer, sql.c_str(), course.c_str());
-//     ErrorCode sql_error_code = execute(string(buffer));
-//     if (sql_error_code == ErrorCode::ERROR) {
-//         return sql_error_code;
-//     }
-//     int i = 0;
-//     while (res->next()) {
-//         // response->set_course(string(res->getString(1)));
-//         response->set_course(i,string(res->getString(1)));
-//         response->set_course(i+1,string(res->getString(1)));
-//         response->set_course(i+2,string(res->getString(1)));
-//         ++i;
-//     }
-//     return ErrorCode::NO_ERROR;
-// }
+    // there might be the transpose issue !
+    sprintf(buffer, sql.c_str(), course.c_str());
+    ErrorCode sql_error_code = execute(string(buffer));
+    if (sql_error_code == ErrorCode::ERROR) {
+        return sql_error_code;
+    }
 
-// insert Course ! imp
-// use the xdevapi
+    while (res->next()) {
+        // response->set_course(string(res->getString(1)));
+        response->set_pre1(string(res->getString(1)));
+        response->set_pre2(string(res->getString(1)));
+        response->set_pre3(string(res->getString(1)));
+    }
+    return ErrorCode::NO_ERROR;
+}
+
 
 
 ErrorCode CourseDB::_DeleteCourse(const int32_t cid, const string& semester, DeleteCourseResponse* response) {

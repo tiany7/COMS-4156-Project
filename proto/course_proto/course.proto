@@ -75,7 +75,9 @@ message GetCoursePrereqRequest {
 }
 
 message CoursePrereqResponse {
-    repeated string course = 1; // just string
+    string pre1 = 1; // just string
+    string pre2 = 2;
+    string pre3 = 3;
 }
 
 message DeleteCourseRequest {
