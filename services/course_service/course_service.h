@@ -50,7 +50,7 @@ public:
     CourseDB() ;
     ~CourseDB() ;
 
-    ErrorCode execute(const std::string& query) ;
+    ErrorCode execute(const std::string& query, const int mode) ;
 
     ErrorCode _GetCourseTitle(const string& course, const string& semester,CourseTitleResponse* response) ;
 
@@ -60,7 +60,13 @@ public:
 
     ErrorCode _GetCoursePrereq(const string& course, CoursePrereqResponse* response) ;
 
-    ErrorCode _DeleteCourse(const int32_t cid, const string& semester, DeleteCourseResponse* response) ;
+    ErrorCode _InsertCourse(const string& course, const string& semester, const string& course_title,
+    const int32_t cid, CRUDCourseResponse* response);
+
+    ErrorCode _UpdateCourse(const string& course, const string& semester, const string& course_title,
+            const string& faculty_name, const string& faculty_uni, CRUDCourseResponse* response);
+    
+    ErrorCode _DeleteCourse(const int32_t cid, const string& semester, CRUDCourseResponse* response) ;
 };
 
 
@@ -74,5 +80,7 @@ public:
 
     Status GetCoursePrereq(ServerContext* context, const GetCoursePrereqRequest* request, CoursePrereqResponse* response) ;
 
-    Status DeleteCourse(ServerContext* context, const DeleteCourseRequest* request, DeleteCourseResponse* response) ;
+    Status InsertCourse(ServerContext* context, const InsertCourseRequest* request, CRUDCourseResponse* response);
+    Status UpdateCourse(ServerContext* context, const UpdateCourseRequest* request, CRUDCourseResponse* response);
+    Status DeleteCourse(ServerContext* context, const DeleteCourseRequest* request, CRUDCourseResponse* response) ;
 };

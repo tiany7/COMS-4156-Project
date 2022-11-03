@@ -54,7 +54,7 @@ const std::string kAdministratorInfoTable = "administrator";
 
 class PersonDB {
 public:
-    PersonDB() {
+    PersonDB(): stmt(nullptr), res(nullptr) {
         try {
             driver = get_driver_instance();
              con = driver->connect("tcp://127.0.0.1:3306", "root", "");
@@ -62,6 +62,11 @@ public:
 //            con = driver->connect("coms4156-rds.cnxeqkxjuxbw.us-east-1.rds.amazonaws.com", "admin", "12345678");
             con->setSchema("coms4156_db");
         } catch (sql::SQLException& e) {
+            std::cout << "# ERR: SQLException in " << __FILE__;
+            std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
+            std::cout << "# ERR: " << e.what();
+            std::cout << " (MySQL error code: " << e.getErrorCode();
+            std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
             std::cout << "Could not connect to server. Error message: " << e.what() << std::endl;
         }
     }
@@ -81,38 +86,32 @@ public:
         }
     }
 
-    ErrorCode execute(const std::string& query) {
-        try {
-            stmt = con->createStatement();
-            res = stmt->executeQuery(query);
-        } catch(sql::SQLException &e) {
-            std::cout << "Could not execute query successfully. Error message: " << e.what() << std::endl;
-            return ErrorCode::ERROR;
-        }
-
-        return ErrorCode::NO_ERROR;
-    }
-
     ErrorCode GetStudentInfo(const std::string& uni, StudentReadResponse* response) {
         char buffer[BUFFER_SIZE] = {0};
         string sql = "SELECT * from " + kStudentInfoTable + " WHERE uni='%s'";
         sprintf(buffer, sql.c_str(), uni.c_str());
-        ErrorCode sql_error_code = execute(string(buffer));
-        if (sql_error_code == ErrorCode::ERROR) {
+        try {
+            stmt = con->createStatement();
+            res = stmt->executeQuery(buffer);
+            if (res->next()) {
+                Student* student = response->mutable_student();
+                student->set_uni(string(res->getString(1)));
+                student->set_name(string(res->getString(2)));
+                student->set_email(string(res->getString(3)));
+                student->set_affiliation(string(res->getString(4)));
+                student->set_school(string(res->getString(5)));
+                student->set_advisor(string(res->getString(6)));
+            }
+        } catch (sql::SQLException &e) {
+            std::cout << "# ERR: SQLException in " << __FILE__;
+            std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
+            std::cout << "# ERR: " << e.what();
+            std::cout << " (MySQL error code: " << e.getErrorCode();
+            std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
             response->set_message("ERROR");
-            return sql_error_code;
+            return ErrorCode::ERROR;
         }
-        
         response->set_message("OK");
-        while (res->next()) {
-            Student* student = response->mutable_student();
-            student->set_uni(string(res->getString(1)));
-            student->set_name(string(res->getString(2)));
-            student->set_email(string(res->getString(3)));
-            student->set_affiliation(string(res->getString(4)));
-            student->set_school(string(res->getString(5)));
-            student->set_advisor(string(res->getString(6)));
-        }
         return ErrorCode::NO_ERROR;
     }
 
@@ -120,20 +119,27 @@ public:
         char buffer[BUFFER_SIZE] = {0};
         string sql = "SELECT * from " + kFacultyInfoTable + " WHERE uni='%s'";
         sprintf(buffer, sql.c_str(), uni.c_str());
-        ErrorCode sql_error_code = execute(string(buffer));
-        if (sql_error_code == ErrorCode::ERROR) {
+        try {
+            stmt = con->createStatement();
+            res = stmt->executeQuery(buffer);
+            if (res->next()) {
+                Faculty* faculty = response->mutable_faculty();
+                faculty->set_uni(string(res->getString(1)));
+                faculty->set_name(string(res->getString(2)));
+                faculty->set_email(string(res->getString(3)));
+                faculty->set_school(string(res->getString(4)));
+            }
+        } catch (sql::SQLException &e) {
+            std::cout << "# ERR: SQLException in " << __FILE__;
+            std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
+            std::cout << "# ERR: " << e.what();
+            std::cout << " (MySQL error code: " << e.getErrorCode();
+            std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
             response->set_message("ERROR");
-            return sql_error_code;
+            return ErrorCode::ERROR;
         }
-
+        
         response->set_message("OK");
-        while (res->next()) {
-            Faculty* faculty = response->mutable_faculty();
-            faculty->set_uni(string(res->getString(1)));
-            faculty->set_name(string(res->getString(2)));
-            faculty->set_email(string(res->getString(3)));
-            faculty->set_school(string(res->getString(4)));
-        }
         return ErrorCode::NO_ERROR;
     }
 
@@ -141,19 +147,26 @@ public:
         char buffer[BUFFER_SIZE] = {0};
         string sql = "SELECT * from " + kAdministratorInfoTable + " WHERE uni='%s'";
         sprintf(buffer, sql.c_str(), uni.c_str());
-        ErrorCode sql_error_code = execute(string(buffer));
-        if (sql_error_code == ErrorCode::ERROR) {
+        try {
+            stmt = con->createStatement();
+            res = stmt->executeQuery(buffer);
+            if (res->next()) {
+                Administrator* administrator = response->mutable_administrator();
+                administrator->set_uni(string(res->getString(1)));
+                administrator->set_name(string(res->getString(2)));
+                administrator->set_email(string(res->getString(3)));
+            }
+        } catch (sql::SQLException &e) {
+            std::cout << "# ERR: SQLException in " << __FILE__;
+            std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
+            std::cout << "# ERR: " << e.what();
+            std::cout << " (MySQL error code: " << e.getErrorCode();
+            std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
             response->set_message("ERROR");
-            return sql_error_code;
+            return ErrorCode::ERROR;
         }
-
+        
         response->set_message("OK");
-        while (res->next()) {
-            Administrator* administrator = response->mutable_administrator();
-            administrator->set_uni(string(res->getString(1)));
-            administrator->set_name(string(res->getString(2)));
-            administrator->set_email(string(res->getString(3)));
-        }
         return ErrorCode::NO_ERROR;
     }
 
@@ -163,8 +176,13 @@ public:
         sprintf(buffer, sql.c_str(), email.c_str(), uni.c_str());
         try {
             stmt = con->createStatement();
-            stmt->execute(string(buffer));
+            stmt->execute(buffer);
         } catch (sql::SQLException &e) {
+            std::cout << "# ERR: SQLException in " << __FILE__;
+            std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
+            std::cout << "# ERR: " << e.what();
+            std::cout << " (MySQL error code: " << e.getErrorCode();
+            std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
             response->set_message("ERROR");
             return ErrorCode::ERROR;
         }
@@ -173,7 +191,7 @@ public:
         return ErrorCode::NO_ERROR;
     }
     
-    ErrorCode CreateStudent(const Student* request, CreatePersonResponse* response) {
+    ErrorCode CreateStudent(const Student* request) {
         char buffer[BUFFER_SIZE] = {0};
         string sql = "insert into " + kStudentInfoTable + "(uni, name) values('%s', '%s')";
         std::string uni = request->uni(), name = request->name();
@@ -181,11 +199,15 @@ public:
 
         try {
             stmt = con->createStatement();
-            stmt->execute(string(buffer));
+            stmt->execute(buffer);
         } catch (sql::SQLException &e) {
             std::cout << "# ERR: SQLException in " << __FILE__;
+<<<<<<< HEAD
             std::cout << "(" << __FUNCTION__ << ") on line "
                  << __LINE__ << std::endl;
+=======
+            std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
+>>>>>>> 506a7f50a0cfbbe2d6db116fb57e6ac011497d5b
             std::cout << "# ERR: " << e.what();
             std::cout << " (MySQL error code: " << e.getErrorCode();
             std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
@@ -203,8 +225,13 @@ public:
         sprintf(buffer, sql.c_str(), uni.c_str(), name.c_str(), email.c_str());
         try {
             stmt = con->createStatement();
-            stmt->execute(string(buffer));
+            stmt->execute(buffer);
         } catch (sql::SQLException &e) {
+            std::cout << "# ERR: SQLException in " << __FILE__;
+            std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
+            std::cout << "# ERR: " << e.what();
+            std::cout << " (MySQL error code: " << e.getErrorCode();
+            std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
             response->set_message("ERROR");
             return ErrorCode::ERROR;
         }
@@ -220,6 +247,11 @@ public:
             stmt = con->createStatement();
             stmt->execute(string(buffer));
         } catch (sql::SQLException &e) {
+            std::cout << "# ERR: SQLException in " << __FILE__;
+            std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
+            std::cout << "# ERR: " << e.what();
+            std::cout << " (MySQL error code: " << e.getErrorCode();
+            std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
             response->set_message("ERROR");
             return ErrorCode::ERROR;
         }
@@ -268,12 +300,18 @@ class PersonServiceImpl final : public PersonService::Service {
     }
 
     Status CreateStudent(ServerContext* context, const Student* request, CreatePersonResponse* response) {
+<<<<<<< HEAD
         std::cout << "Create student: " << request->uni() << std::endl;
         ErrorCode error_code = PersonDB().CreateStudent(request, response);
         std::cout<<"Creating student"<<std::endl;
+=======
+        ErrorCode error_code = PersonDB().CreateStudent(request);
+>>>>>>> 506a7f50a0cfbbe2d6db116fb57e6ac011497d5b
         if (error_code == ErrorCode::ERROR) {
+            response->set_message("ERROR");
             return Status(StatusCode::CANCELLED, "Create student failed!");
         }
+        response->set_message("OK");
         return Status::OK;
     }
 
