@@ -52,23 +52,27 @@ public:
 
     ErrorCode execute(const std::string& query) ;
 
-    ErrorCode GetCourseInfo(const int32_t cid, const string& semester,CourseInfoResponse* response) ;
+    ErrorCode _GetCourseTitle(const string& course, const string& semester,CourseTitleResponse* response) ;
 
-    ErrorCode GetCourseList(const string& department, const string& semester, CourseListResponse* response) ;
+    ErrorCode _GetCourseInfo(const int32_t cid, const string& semester,CourseInfoResponse* response) ;
 
-    ErrorCode GetCoursePrereq(const string& course, CoursePrereqResponse* response) ;
+    ErrorCode _GetCourseList(const string& department, const string& semester, CourseListResponse* response) ;
 
-    ErrorCode DeleteCourse(const int32_t cid, const string& semester, DeleteCourseResponse* response) ;
+    ErrorCode _GetCoursePrereq(const string& course, CoursePrereqResponse* response) ;
+
+    ErrorCode _DeleteCourse(const int32_t cid, const string& semester, DeleteCourseResponse* response) ;
 };
 
 
 class CourseServiceImpl final : public CourseService::Service {
 public:
+    Status GetCourseTitle(ServerContext* context, const GetCourseTitleRequest* request, CourseTitleResponse* response);
+
     Status GetCourseInfo(ServerContext* context, const GetCourseInfoRequest* request, CourseInfoResponse* response) ;
 
-    Status GetCourseList(ServerContext* context, GetCourseListRequest* request, CourseListResponse* response) ;
+    Status GetCourseList(ServerContext* context, const GetCourseListRequest* request, CourseListResponse* response) ;
 
-    Status GetCoursePrereq(ServerContext* context, GetCoursePrereqRequest* request, CoursePrereqResponse* response) ;
+    Status GetCoursePrereq(ServerContext* context, const GetCoursePrereqRequest* request, CoursePrereqResponse* response) ;
 
-    Status DeleteCourse(ServerContext* context, DeleteCourseRequest* request, DeleteCourseResponse* response) ;
+    Status DeleteCourse(ServerContext* context, const DeleteCourseRequest* request, DeleteCourseResponse* response) ;
 };
