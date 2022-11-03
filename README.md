@@ -147,9 +147,24 @@ When booting up the service, you can use the bootstrap.sh to boot up mysql_servi
 
 ## Table Schema
 
-### Database Faculty
+# Initializing the tables
+We are working on the local databases, but we consider to migrate to RDS later on.
 
-### Table: faculty
+To init the tables, you need to have the mysql server running on port 3306 localhost. The server name is 'root' and password is empty. 
+
+You can enter `util/` directory of base dir.
+
+And execute 
+
+`bazel build :all`
+
+Then go to `bazel-bin/util`
+
+Execute the binary
+
+`./db_init_tables`
+
+Then the environment set up is complete!
 
 ### Table definition
 
