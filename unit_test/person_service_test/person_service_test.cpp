@@ -156,7 +156,7 @@ public:
         CreatePersonResponse response;
         request.set_uni("qw1234");
         request.set_name("kate");
-        request.set_email("qw123411@gmail.com")
+        request.set_email("qw123411@gmail.com");
         stub_->CreateAdministrator(&context, request, &response);
         EXPECT_EQ(response.message(), "OK");
     }
