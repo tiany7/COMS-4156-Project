@@ -21,11 +21,11 @@ void InitMySQL() {
                             "`department` VARCHAR(45) NOT NULL,"
                             "`country` VARCHAR(45) NOT NULL,"
                             "PRIMARY KEY (`uni`))");
-        stmt->execute("CREATE TABLE IF NOT EXISTS `timeslots` ("
-                            "`deptid` VARCHAR(10) NOT NULL,"
-                            "`start` DATETIME NOT NULL,"
-                            "`end` DATETIME NOT NULL,"
-                            "PRIMARY KEY (`deptid`))");
+        stmt->execute("CREATE TABLE IF NOT EXISTS timeslots ("
+                            "deptid VARCHAR(10) NOT NULL,"
+                            "start DATETIME NOT NULL,"
+                            "end DATETIME NOT NULL,"
+                            "PRIMARY KEY (deptid))");
         stmt->execute("CREATE TABLE IF NOT EXISTS `student` ("
                             "`name` VARCHAR(45),"
                             "`uni` VARCHAR(45) NOT NULL,"
