@@ -14,7 +14,7 @@
 #include <grpcpp/health_check_service_interface.h>
 #include "proto/person_proto/person.grpc.pb.h"
 
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 1024
 
 using ::std::string;
 using ::person::PersonService;
@@ -29,6 +29,10 @@ using ::person::UpdateEmailResponse;
 using ::person::Student;
 using ::person::Faculty;
 using ::person::Administrator;
+using ::person::CreatePersonResponse;
+using ::person::DeletePersonRequest;
+using ::person::DeletePersonResponse;
+
 
 using ::grpc::ServerBuilder;
 using ::grpc::ServerContext;
@@ -43,7 +47,7 @@ enum ErrorCode {
 
 
 const std::string kReadStudentInfoErrorMessage = "Read student info failed!";
-const std::string kSchemaName = "enrollment";
+const std::string kSchemaName = "coms4156_db";
 const std::string kStudentInfoTable = "student";
 const std::string kFacultyInfoTable = "student";
 const std::string kAdministratorInfoTable = "administrator";
@@ -53,10 +57,27 @@ public:
     PersonDB() {
         try {
             driver = get_driver_instance();
-            con = driver->connect("tcp://127.0.0.1:3306", "root", "");
-            con->setSchema(kSchemaName);
+            // con = driver->connect("tcp://127.0.0.1:3306", "root", "");
+            // con->setSchema(kSchemaName);
+            con = driver->connect("coms4156-rds.cnxeqkxjuxbw.us-east-1.rds.amazonaws.com", "admin", "12345678");
+            con->setSchema("coms4156_db");
         } catch (sql::SQLException& e) {
             std::cout << "Could not connect to server. Error message: " << e.what() << std::endl;
+        }
+    }
+
+    ~PersonDB() {
+        if (con) {
+            delete con;
+            con = nullptr;
+        }
+        if (stmt) {
+            delete stmt;
+            stmt = nullptr;
+        }
+        if (res) {
+            delete res;
+            res = nullptr;
         }
     }
 
@@ -151,20 +172,52 @@ public:
         response->set_message("OK");
         return ErrorCode::NO_ERROR;
     }
+    
+    ErrorCode CreateStudent(const Student* request, CreatePersonResponse* response) {
+        char buffer[BUFFER_SIZE] = {0};
+        string sql = "insert into " + kStudentInfoTable + "(uni, name) values('%s', '%s')";
+        std::string uni = request->uni(), name = request->name();
+        sprintf(buffer, sql.c_str(), uni.c_str(), name.c_str());
+        try {
+            stmt = con->createStatement();
+            stmt->execute(string(buffer));
+        } catch (sql::SQLException &e) {
+            response->set_message("ERROR");
+            return ErrorCode::ERROR;
+        }
+        response->set_message("OK");
+        return ErrorCode::NO_ERROR;
+    }
 
-    ~PersonDB() {
-        if (con) {
-            delete con;
-            con = nullptr;
+    ErrorCode CreateAdministrator(const Administrator* request, CreatePersonResponse* response) {
+        char buffer[BUFFER_SIZE] = {0};
+        string sql = "insert into " + kAdministratorInfoTable + " values('%s', '%s', '%s')";
+        std::string uni = request->uni(), name = request->name(), email = request->email();
+        sprintf(buffer, sql.c_str(), uni.c_str(), name.c_str(), email.c_str());
+        try {
+            stmt = con->createStatement();
+            stmt->execute(string(buffer));
+        } catch (sql::SQLException &e) {
+            response->set_message("ERROR");
+            return ErrorCode::ERROR;
         }
-        if (stmt) {
-            delete stmt;
-            stmt = nullptr;
+        response->set_message("OK");
+        return ErrorCode::NO_ERROR;
+    }
+
+    ErrorCode DeleteStudent(const std::string& uni, DeletePersonResponse* response) {
+        char buffer[BUFFER_SIZE] = {0};
+        string sql = "delete from " + kStudentInfoTable + " where uni='%s'";
+        sprintf(buffer, sql.c_str(), uni.c_str());
+        try {
+            stmt = con->createStatement();
+            stmt->execute(string(buffer));
+        } catch (sql::SQLException &e) {
+            response->set_message("ERROR");
+            return ErrorCode::ERROR;
         }
-        if (res) {
-            delete res;
-            res = nullptr;
-        }
+        response->set_message("OK");
+        return ErrorCode::NO_ERROR;
     }
 
 private:
@@ -206,6 +259,31 @@ class PersonServiceImpl final : public PersonService::Service {
         }
         return Status::OK;
     }
+
+    Status CreateStudent(ServerContext* context, const Student* request, CreatePersonResponse* response) {
+        ErrorCode error_code = PersonDB().CreateStudent(request, response);
+        if (error_code == ErrorCode::ERROR) {
+            return Status(StatusCode::CANCELLED, "Create student failed!");
+        }
+        return Status::OK;
+    }
+
+    Status CreateAdministrator(ServerContext* context, const Administrator* request, CreatePersonResponse* response) {
+        ErrorCode error_code = PersonDB().CreateAdministrator(request, response);
+        if (error_code == ErrorCode::ERROR) {
+            return Status(StatusCode::CANCELLED, "Create student failed!");
+        }
+        return Status::OK;
+    }
+
+    Status DeleteStudent(ServerContext* context, const DeletePersonRequest* request, DeletePersonResponse* response) {
+        ErrorCode error_code = PersonDB().DeleteStudent(request->uni(), response);
+        if (error_code == ErrorCode::ERROR) {
+            return Status(StatusCode::CANCELLED, "Create student failed!");
+        }
+        return Status::OK;
+    }
+
 };
 
 void RunServer() {
