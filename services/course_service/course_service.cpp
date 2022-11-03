@@ -114,19 +114,54 @@ ErrorCode CourseDB::_GetCoursePrereq(const string& course, CoursePrereqResponse*
     while (res->next()) {
         // response->set_course(string(res->getString(1)));
         response->set_pre1(string(res->getString(1)));
-        response->set_pre2(string(res->getString(1)));
-        response->set_pre3(string(res->getString(1)));
+        response->set_pre2(string(res->getString(2)));
+        response->set_pre3(string(res->getString(3)));
     }
     return ErrorCode::NO_ERROR;
 }
 
-
-
-ErrorCode CourseDB::_DeleteCourse(const int32_t cid, const string& semester, DeleteCourseResponse* response) {
+ErrorCode CourseDB::_InsertCourse(const string& course, const string& semester, const string& course_title,
+    const int32_t cid, CRUDCourseResponse* response) {
     char buffer[BUFFER_SIZE] = {0};
-    string sql = "Delete from course WHERE course_id = %d and semester ='%s'";
+    string sql = "insert into course (course, semester, course_title, course_id)"
+             " values ( '%s' , '%s' , '%s' , %d) ;";
+    sprintf(buffer, sql.c_str(),  course.c_str(), semester.c_str(), course_title.c_str(), cid);
+    ErrorCode sql_error_code = execute(string(buffer));
+    std::cout << "Success Insert!\n";
+    if (sql_error_code == ErrorCode::ERROR) {
+        response->set_message("Insert FAILED!");
+        return sql_error_code;
+    }
+    response->set_message("Insert SUCCESS!");
+    return ErrorCode::NO_ERROR;
+}
+
+ErrorCode CourseDB::_UpdateCourse(const string& course, const string& semester, const string& course_title,
+            const string& faculty_name, const string& faculty_uni, CRUDCourseResponse* response) {
+    char buffer[BUFFER_SIZE] = {0};
+    string sql = "Update course  "
+             "Set course_title = '%s', faculty_name = '%s', faculty_uni = '%s' "
+             "WHERE course = '%s' and semester ='%s' ";
+    sprintf(buffer, sql.c_str(), course_title.c_str(), faculty_name.c_str(),
+        faculty_uni.c_str(), course.c_str(), semester.c_str());
+    ErrorCode sql_error_code = execute(string(buffer));
+    std::cout << "Success Update!\n";
+    if (sql_error_code == ErrorCode::ERROR) {
+        response->set_message("Update FAILED!");
+        return sql_error_code;
+    }
+    response->set_message("Update SUCCESS!");
+    return ErrorCode::NO_ERROR;
+}
+
+
+ErrorCode CourseDB::_DeleteCourse(const int32_t cid, const string& semester, CRUDCourseResponse* response) {
+    char buffer[BUFFER_SIZE] = {0};
+    string sql = "Delete from course WHERE course_id = %d and semester ='%s' ";
     sprintf(buffer, sql.c_str(), cid, semester.c_str());
     ErrorCode sql_error_code = execute(string(buffer));
+    std::cout << "Success Delete!\n";
+    // this will have segmentation fault, no message back to the course_client
     if (sql_error_code == ErrorCode::ERROR) {
         response->set_message("DELETE FAILED!");
         return sql_error_code;
@@ -188,7 +223,32 @@ Status CourseServiceImpl::GetCoursePrereq(ServerContext* context, const GetCours
     return Status::OK;
 }
 
-Status CourseServiceImpl::DeleteCourse(ServerContext* context, const DeleteCourseRequest* request, DeleteCourseResponse* response) {
+Status CourseServiceImpl::InsertCourse(ServerContext* context, const InsertCourseRequest* request, CRUDCourseResponse* response) {
+    ErrorCode error_code = CourseDB()._InsertCourse(request->course(),
+        request->semester(), 
+        request->course_title(),
+        request->cid(),
+        response);//
+    if (error_code == ErrorCode::ERROR) {
+        return Status::CANCELLED;
+    }
+    return Status::OK;
+}
+
+Status CourseServiceImpl::UpdateCourse(ServerContext* context, const UpdateCourseRequest* request, CRUDCourseResponse* response) {
+    ErrorCode error_code = CourseDB()._UpdateCourse(request->course(),
+        request->semester(),
+        request->course_title(),
+        request->faculty_name(),
+        request->faculty_uni(),
+        response);//
+    if (error_code == ErrorCode::ERROR) {
+        return Status::CANCELLED;
+    }
+    return Status::OK;
+}
+
+Status CourseServiceImpl::DeleteCourse(ServerContext* context, const DeleteCourseRequest* request, CRUDCourseResponse* response) {
     ErrorCode error_code = CourseDB()._DeleteCourse(request->cid(),request->semester(), response);//
     if (error_code == ErrorCode::ERROR) {
         return Status::CANCELLED;
