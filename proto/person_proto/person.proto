@@ -94,5 +94,5 @@ service PersonService {
     rpc CreateStudent(Student) returns (CreatePersonResponse);
     rpc CreateFaculty(Faculty) returns (CreatePersonResponse);
     rpc CreateAdministrator(Administrator) returns (CreatePersonResponse);
-    rpc DeleteStudent(DeletePersonRequest) returns {DeletePersonResponse};
+    rpc DeleteStudent(DeletePersonRequest) returns (DeletePersonResponse);
 }
