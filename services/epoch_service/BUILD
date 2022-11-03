@@ -12,7 +12,7 @@ cc_library(
     name = "time_service",
     srcs = ["time_service.cc"],
     hdrs = ["time_service.hh"],
-    deps = ["//proto/mysql_server_proto:time_cc_grpc",
+    deps = ["//proto/echo_proto:time_cc_grpc",
             "@com_github_grpc_grpc//:grpc++",
             "@com_github_grpc_grpc//:grpc++_reflection",
             "@comm_github_mysql_cpp_connector//:mysql_lib"],
