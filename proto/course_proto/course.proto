@@ -80,11 +80,31 @@ message CoursePrereqResponse {
     string pre3 = 3;
 }
 
+
+// Insert
+// Complete full info later
+message InsertCourseRequest {
+    string course = 1;
+    string semester =2;
+    int32 cid = 3;
+    string course_title = 4; //
+}
+
+// Update
+message UpdateCourseRequest {
+    string course = 1;
+    string semester =2;
+    string course_title = 3; //
+    string faculty_name = 4;
+    string faculty_uni = 5;
+}
+
+// Delete
 message DeleteCourseRequest {
     int32 cid = 1;
     string semester = 2;
 }
-message DeleteCourseResponse {
+message CRUDCourseResponse {
     string message = 1;
 }
 
@@ -93,5 +113,7 @@ service CourseService {
     rpc GetCourseInfo(GetCourseInfoRequest) returns (CourseInfoResponse);
     rpc GetCourseList(GetCourseListRequest) returns (CourseListResponse);
     rpc GetCoursePrereq(GetCoursePrereqRequest) returns (CoursePrereqResponse);
-    rpc DeleteCourse(DeleteCourseRequest) returns (DeleteCourseResponse);
+    rpc InsertCourse (InsertCourseRequest) returns (CRUDCourseResponse);
+    rpc UpdateCourse (UpdateCourseRequest) returns (CRUDCourseResponse);
+    rpc DeleteCourse(DeleteCourseRequest) returns (CRUDCourseResponse);
 }
