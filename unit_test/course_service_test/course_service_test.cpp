@@ -23,44 +23,37 @@ public:
     void DoGetCourseInfo() {
         ClientContext context;
         GetCourseInfoRequest request;
-        CourseInfoResponse response;
+        CourseInfoResponse reply;
 
-        request.set_cid('11397');
-        request.set_semester('2022Fall');
+        request.set_cid(1111);
+        request.set_semester("2022Fall");
 
-        Status status = stub->GetIdentity(&context, request, &reply);
+        Status status = stub_->GetCourseInfo(&context, request, &reply);
         EXPECT_TRUE(status.ok());
-        EXPECT_EQ(reply.indentity(), cs4156);
+        EXPECT_EQ(reply.course().course_title(), "Adv Software");
     }
 
 private:
-    CourseService:StubInterface* stub_;
-}
-
-// TEST(HelloTest, PP) {
-//     // Expect two strings not to be equal.
-//     EXPECT_STRNE("hello", "world");
-//     // Expect equality.
-//     EXPECT_EQ(7 * 6, 42);
-// }
+    CourseService::StubInterface* stub_;
+};
 
 TEST(MockCourseService, CheckGetCourseInfo) {
-    MockCourseServiceServiceStub stub;
+    MockCourseServiceStub stub;
     // GetCourseInfoRequest request;
     CourseInfoResponse response;
     // ClientContext context;
     CourseInfo* cs4156 = response.mutable_course();
     // reply.set_identity(Course4156);
-    cs4156->set_course("");
-    cs4156->set_course_id();
-    cs4156->set_course_title();
-    cs4156->set_department();
-    cs4156->set_faculty_name();
-    cs4156->set_faculty_uni();
-    cs4156->set_prereq1();
-    cs4156->set_prereq2();
-    cs4156->set_prereq3();
-    cs4156->set_semester();
+    cs4156->set_course("cs4156");
+    cs4156->set_course_id("1111");
+    cs4156->set_course_title("Adv Software");
+    cs4156->set_department("CS");
+    cs4156->set_faculty_name("BOB");
+    cs4156->set_faculty_uni("bb1111");
+    cs4156->set_prereq1("CS2000");
+    // cs4156->set_prereq2("");
+    // cs4156->set_prereq3();
+    cs4156->set_semester("2022Fall");
     
     EXPECT_CALL(stub, GetCourseInfo(_,_,_)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
     FakeClient client(&stub);
