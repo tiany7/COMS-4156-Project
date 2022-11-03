@@ -4,7 +4,7 @@
 
 ### What will the server do?
 
-Our project is an open enrollment service system. The system will provide the service to both the students and the faculties. On the student’s side, the server will support searching courses, browsing course information, adding courses to the shopping cart, checking the fulfillment of prerequisites, enrolling the waitlists and acquiring enrollment-related information. On the faculty’s side, the server will support posting courses, modifying the course information(capacity, date and time, instructor info…), and enrolling students from waitlists. 
+Our project is a student/faculty management system system. The system will provide the service to both the students and the faculties. On the student’s side, the server will support searching courses, browsing course information, adding courses to the shopping cart, checking the fulfillment of prerequisites, enrolling the waitlists and acquiring enrollment-related information. On the faculty’s side, the server will support posting courses, modifying the course information(capacity, date and time, instructor info…), and enrolling students from waitlists. 
 
 
 ### Who or what will be its users?
