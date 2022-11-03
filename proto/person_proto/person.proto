@@ -74,9 +74,24 @@ message UpdateEmailResponse {
     string email = 2;
 }
 
+message CreatePersonResponse {
+    string message = 1;
+}
+
+message DeletePersonRequest {
+    string uni = 1;
+}
+
+message DeletePersonResponse {
+    string message = 1;
+}
+
 service PersonService {
     rpc ReadStudentInfo(StudentReadRequest) returns (StudentReadResponse);
     rpc ReadFacultyInfo(FacultyReadRequest) returns (FacultyReadResponse);
     rpc ReadAdministratorInfo(AdministratorReadRequest) returns (AdministratorReadResponse);
     rpc UpdateEmail(UpdateEmailRequest) returns (UpdateEmailResponse);
+    rpc CreateStudent(Student) returns (CreatePersonResponse);
+    rpc CreateAdministrator(Administrator) returns (CreatePersonResponse);
+    rpc DeleteStudent(DeletePersonRequest) returns (DeletePersonResponse);
 }

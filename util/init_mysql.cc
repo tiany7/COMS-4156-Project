@@ -13,13 +13,31 @@ void InitMySQL() {
         auto driver = get_driver_instance();
         auto con = driver->connect("tcp://localhost:3306", "root", "");
         auto stmt = con->createStatement();
-        stmt->execute("CREATE DATABASE IF NOT EXISTS `faculty`");
-        stmt->execute("USE `faculty`");
+        stmt->execute("CREATE DATABASE IF NOT EXISTS `coms4156_db`"); // could be changed to "ssol" or sth. like that
+        stmt->execute("USE `coms4156_db`"); // same above
         stmt->execute("CREATE TABLE IF NOT EXISTS `faculty` ("
                             "`name` VARCHAR(45),"
                             "`uni` VARCHAR(45) NOT NULL,"
                             "`department` VARCHAR(45) NOT NULL,"
                             "`country` VARCHAR(45) NOT NULL,"
+                            "PRIMARY KEY (`uni`))");
+        stmt->execute("CREATE TABLE IF NOT EXISTS `timeslots` ("
+                            "`deptid` VARCHAR(10) NOT NULL,"
+                            "`start` DATETIME NOT NULL,"
+                            "`end` DATETIME NOT NULL,"
+                            "PRIMARY KEY (`deptid`))");
+        stmt->execute("CREATE TABLE IF NOT EXISTS `student` ("
+                            "`name` VARCHAR(45),"
+                            "`uni` VARCHAR(45) NOT NULL,"
+                            "`email` VARCHAR(45),"
+                            "`affiliation` VARCHAR(45),"
+                            "`school` VARCHAR(45),"
+                            "`advisor` VARCHAR(45),"
+                            "PRIMARY KEY (`uni`))");
+        stmt->execute("CREATE TABLE IF NOT EXISTS `administrator` ("
+                            "`name` VARCHAR(45),"
+                            "`uni` VARCHAR(45) NOT NULL,"
+                            "`email` VARCHAR(45),"
                             "PRIMARY KEY (`uni`))");
     } catch (sql::SQLException &e) {
         std::cout << "# ERR: SQLException in " << __FILE__;

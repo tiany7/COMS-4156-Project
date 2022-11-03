@@ -32,6 +32,9 @@ using ::person::Student;
 using ::person::Faculty;
 using ::person::Administrator;
 using ::person::MockPersonServiceStub;
+using ::person::CreatePersonResponse;
+using ::person::DeletePersonRequest;
+using ::person::DeletePersonResponse;
 
 class FakeClient {
 public:
@@ -126,7 +129,7 @@ public:
         EXPECT_EQ(request.email(), response.email());
     }
 
-    void  DoUpdateEmailFailed() {
+    void DoUpdateEmailFailed() {
         ClientContext context;
         UpdateEmailRequest request;
         UpdateEmailResponse response;
@@ -135,6 +138,36 @@ public:
         stub_->UpdateEmail(&context, request, &response);
         EXPECT_EQ(response.message(), "ERROR");
         EXPECT_EQ(response.email(), "");
+    }
+
+    void DoCreateStudent() {
+        ClientContext context;
+        Student request;
+        CreatePersonResponse response;
+        request.set_uni("qw1234");
+        request.set_name("kate");
+        stub_->CreateStudent(&context, request, &response);
+        EXPECT_EQ(response.message(), "OK");
+    }
+
+    void DoCreateAdministrator() {
+        ClientContext context;
+        Administrator request;
+        CreatePersonResponse response;
+        request.set_uni("qw1234");
+        request.set_name("kate");
+        request.set_email("qw123411@gmail.com");
+        stub_->CreateAdministrator(&context, request, &response);
+        EXPECT_EQ(response.message(), "OK");
+    }
+
+    void DoDeleteStudent() {
+        ClientContext context;
+        DeletePersonRequest request;
+        DeletePersonResponse response;
+        request.set_uni("qw1234");
+        stub_->DeleteStudent(&context, request, &response);
+        EXPECT_EQ(response.message(), "OK");
     }
 
 private:
@@ -224,6 +257,35 @@ TEST(MockPersonService, CheckUpdateEmailFailed) {
     EXPECT_CALL(stub, UpdateEmail(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
     FakeClient client(&stub);
     client.DoUpdateEmailFailed();
+}
+
+TEST(MockPersonService, CheckCreateStudent) {
+    MockPersonServiceStub stub;
+    CreatePersonResponse response;
+    response.set_message("OK");
+    EXPECT_CALL(stub, CreateStudent(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoCreateStudent();
+}
+
+
+TEST(MockPersonService, CheckCreateAdministrator) {
+    MockPersonServiceStub stub;
+    CreatePersonResponse response;
+    response.set_message("OK");
+    EXPECT_CALL(stub, CreateAdministrator(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoCreateAdministrator();
+}
+
+
+TEST(MockPersonService, CheckDeleteStudent) {
+    MockPersonServiceStub stub;
+    DeletePersonResponse response;
+    response.set_message("OK");
+    EXPECT_CALL(stub, DeleteStudent(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoDeleteStudent();
 }
 
 int main(int argc, char** argv) {

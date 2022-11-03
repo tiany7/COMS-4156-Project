@@ -23,6 +23,9 @@ using ::person::UpdateEmailResponse;
 using ::person::Student;
 using ::person::Faculty;
 using ::person::Administrator;
+using ::person::CreatePersonResponse;
+using ::person::DeletePersonRequest;
+using ::person::DeletePersonResponse;
 
 enum ErrorCode {
     NO_ERROR = 0,
@@ -91,6 +94,48 @@ public:
             return ErrorCode::ERROR;
         }
 
+        return ErrorCode::NO_ERROR;
+    }
+
+    ErrorCode CreateStudent(const std::string& uni, const std::string& name) {
+        Student request;
+        request.set_uni(uni);
+        request.set_name(name);
+
+        CreatePersonResponse response;
+        ClientContext context;
+        Status status = stub_->CreateStudent(&context, request, &response); 
+        if (!status.ok()) {
+            return ErrorCode::ERROR;
+        }
+        return ErrorCode::NO_ERROR;
+    }
+
+    ErrorCode CreateAdministrator(const std::string& uni, const std::string& name, const std::string& email) {
+        Administrator request;
+        request.set_uni(uni);
+        request.set_name(name);
+        request.set_email(email);
+
+        CreatePersonResponse response;
+        ClientContext context;
+        Status status = stub_->CreateAdministrator(&context, request, &response); 
+        if (!status.ok()) {
+            return ErrorCode::ERROR;
+        }
+        return ErrorCode::NO_ERROR;
+    }
+
+    ErrorCode DeleteStudent(const std::string& uni) {
+        DeletePersonRequest request;
+        request.set_uni(uni);
+
+        DeletePersonResponse response;
+        ClientContext context;
+        Status status = stub_->DeleteStudent(&context, request, &response); 
+        if (!status.ok()) {
+            return ErrorCode::ERROR;
+        }
         return ErrorCode::NO_ERROR;
     }
 
@@ -184,6 +229,67 @@ int main(int argc, char** argv) {
                 res.set_content("Internal Error", "text/plain");
             } else {
                 res.set_content("Update student email successfully!", "text/plain");
+            }
+        }
+    });
+
+    svr.Post("/create_student", [&](const httplib::Request &req, httplib::Response &res) {
+        std::string uni(""), name("");
+        if (req.has_param("uni")) {
+            uni = req.get_param_value("uni");
+        }
+        if (req.has_param("name")) {
+            name = req.get_param_value("name");
+        }
+        if (uni.empty() || name.empty()) {
+            res.set_content("Empty UNI/name", "text/plain");
+        } else {
+            ErrorCode error_code = person_service_client.CreateStudent(uni, name);
+            if (error_code == ErrorCode::ERROR) {
+                res.set_content("Internal Error", "text/plain");
+            } else {
+                res.set_content("Create student successfully!", "text/plain");
+            }
+        }
+    });
+
+    svr.Post("/create_administrator", [&](const httplib::Request &req, httplib::Response &res) {
+        std::string uni(""), name(""), email("");
+        if (req.has_param("uni")) {
+            uni = req.get_param_value("uni");
+        }
+        if (req.has_param("name")) {
+            name = req.get_param_value("name");
+        }
+        if (req.has_param("email")) {
+            email = req.get_param_value("email");
+        }
+        if (uni.empty() || name.empty() || email.empty()) {
+            res.set_content("Empty UNI/name/email", "text/plain");
+        } else {
+            ErrorCode error_code = person_service_client.CreateAdministrator(uni, name, email);
+            if (error_code == ErrorCode::ERROR) {
+                res.set_content("Internal Error", "text/plain");
+            } else {
+                res.set_content("Create administrator successfully!", "text/plain");
+            }
+        }
+    });
+
+    svr.Delete("/delete_student", [&](const httplib::Request &req, httplib::Response &res) {
+        std::string uni("");
+        if (req.has_param("uni")) {
+            uni = req.get_param_value("uni");
+        }
+    
+        if (uni.empty()) {
+            res.set_content("Empty UNI", "text/plain");
+        } else {
+            ErrorCode error_code = person_service_client.DeleteStudent(uni);
+            if (error_code == ErrorCode::ERROR) {
+                res.set_content("Internal Error", "text/plain");
+            } else {
+                res.set_content("Delete student successfully!", "text/plain");
             }
         }
     });
