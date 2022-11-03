@@ -22,9 +22,9 @@ CREATE TABLE course(
 # INSERT
 INSERT INTO course (department,course,course_title,semester,course_id,faculty_name,faculty_uni,prereq1,prereq2,prereq3)
 VALUES
-    ('CS','cs4156','Software','2022Fall','1111','Abby Smith','as1111','cs3000',NULL,NULL),
-    ('CS','cs4111','Database','2022Fall','1112','Bob Smith','bs1111','cs3000','cs3200',NULL),
-    ('CS','cs4118','Operating System','2022Fall','1113','Cathy Smith','cs1111','cs3000','cs3200','cs3500'),
+    -- ('CS','cs4156','Software','2022Fall','1111','Abby Smith','as1111','cs3000',NULL,NULL),
+    -- ('CS','cs4111','Database','2022Fall','1112','Bob Smith','bs1111','cs3000','cs3200',NULL),
+    -- ('CS','cs4118','Operating System','2022Fall','1113','Cathy Smith','cs1111','cs3000','cs3200','cs3500'),
     ('DS','ds4777','Core Data Science','2022Spring','0111','David Smith','ds1111',NULL,NULL,NULL);
 
 
