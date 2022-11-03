@@ -3,7 +3,9 @@
 #include <string>
 
 #include <grpcpp/grpcpp.h>
+#include "httplib.h"
 
+#include "proto/course_proto/course.pb.h"
 #include "proto/course_proto/course.grpc.pb.h"
 
 using grpc::Channel;
@@ -143,6 +145,7 @@ public:
         CRUDCourseResponse reply;
         ClientContext context;
         Status status = stub_->UpdateCourse(&context, request, &reply);
+
         std::cout << reply.message() << std::endl;
         if (status.ok()) {
             std::cout << "OK in line 82\n";
@@ -161,8 +164,9 @@ public:
         request.set_semester(semester);
         CRUDCourseResponse reply;
         ClientContext context;
-        Status status = stub_->DeleteCourse(&context, request, &reply);
-        std::cout << reply.message() << std::endl;
+        Status status = stub_->DeleteCourse(&context, request, &reply); //这里还是不行
+        //error
+        std::cout << reply.message() << std::endl; //
         if (status.ok()) {
             std::cout << "OK in line 82\n";
             return;
@@ -190,7 +194,7 @@ int main(int argc, char** argv) {
 
 
     auto coursetitle = mysqlsvc.GetCourse(1111, "2022Fall");
-    if (coursetitle == "Adv Software Eng") {
+    if (coursetitle == "Adv Software III") {
         cout << "Success" << endl;
     } else {
         cout << "Fail" << endl;
@@ -204,13 +208,30 @@ int main(int argc, char** argv) {
     // std::cout << num << std::endl;
 
     // insert try
-    mysqlsvc.InsertCourse("cs7000","2022Fall","Ultra Software",777);
+    mysqlsvc.InsertCourse("cs1000","2022Fall","Ultra System",777);
 
     // update try
-    mysqlsvc.UpdateCourse("cs4156","2022Fall","Adv Software III","Jojo Smith","js1234");
+    mysqlsvc.UpdateCourse("cs9000","2022Fall","Ultra DBBB","SHIT Smith","js1234");
 
     // 删掉了但会有 segmentation fault
-    // mysqlsvc.DeleteCourse(111,"2022Spring");
+    mysqlsvc.DeleteCourse(777,"2022Fall");
+
+    // httplib::Server svr;
+    // svr.Get("/get_course_info", [&](const httplib::Request &req, httplib::Response &res) {
+    //     int32_t ccc;
+    //     std::string sss("");
+    //     if (req.has_param("course") && req.has_param("semester")) {
+    //         ccc = req.get_param_value("course");
+    //         sss = req.get_param_value("semester");
+    //     }
+    //     std::string title = mysqlsvc.GetCourse(ccc, sss);
+    //     res.set_content(title.c_str());
+    // });
+
+    // std::cout << "Server listening on 0.0.0.0:8084" << std::endl;
+    // svr.listen("0.0.0.0", 8084);
+
+    // 
 
     return 0;
 }
