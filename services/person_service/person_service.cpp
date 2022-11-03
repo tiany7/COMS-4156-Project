@@ -49,7 +49,7 @@ enum ErrorCode {
 const std::string kReadStudentInfoErrorMessage = "Read student info failed!";
 const std::string kSchemaName = "coms4156_db";
 const std::string kStudentInfoTable = "student";
-const std::string kFacultyInfoTable = "student";
+const std::string kFacultyInfoTable = "faculty";
 const std::string kAdministratorInfoTable = "administrator";
 
 class PersonDB {
