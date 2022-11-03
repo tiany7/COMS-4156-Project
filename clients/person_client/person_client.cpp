@@ -119,7 +119,7 @@ public:
 
         CreatePersonResponse response;
         ClientContext context;
-        Status status = stub_->CreateStudent(&context, request, &response); 
+        Status status = stub_->CreateAdministrator(&context, request, &response); 
         if (!status.ok()) {
             return ErrorCode::ERROR;
         }
@@ -251,7 +251,7 @@ int main(int argc, char** argv) {
                 res.set_content("Create student successfully!", "text/plain");
             }
         }
-    }
+    });
 
     svr.Post("/create_administrator", [&](const httplib::Request &req, httplib::Response &res) {
         std::string uni(""), name(""), email("");
@@ -274,7 +274,7 @@ int main(int argc, char** argv) {
                 res.set_content("Create administrator successfully!", "text/plain");
             }
         }
-    }
+    });
 
     svr.Delete("/delete_student", [&](const httplib::Request &req, httplib::Response &res) {
         std::string uni("");
@@ -292,7 +292,7 @@ int main(int argc, char** argv) {
                 res.set_content("Delete student successfully!", "text/plain");
             }
         }
-    }
+    });
 
     std::cout << "Server listening on 0.0.0.0:8083" << std::endl;
     svr.listen("0.0.0.0", 8083);
