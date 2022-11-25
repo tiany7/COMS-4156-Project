@@ -15,11 +15,7 @@ cc_library(
         deps = ["//proto/course_proto:course_cc_grpc",
                 "@com_github_grpc_grpc//:grpc++",
                 "@com_github_grpc_grpc//:grpc++_reflection"],
-        linkopts = ["-I/usr/include/",
-                "-I/usr/include/cppconn",
-                "-L/usr/lib",
-                "-L/usr/local/lib64",
-                "-lmysqlcppconn",],
+        linkopts = ["-lmysqlcppconn",],
         copts = ["-std=c++17"],
 )
 

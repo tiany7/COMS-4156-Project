@@ -33,7 +33,7 @@ load('@bazel_tools//tools/build_defs/repo:git.bzl', 'git_repository')
 git_repository(
     name = "comm_github_mysql_cpp_connector",
     remote = "https://github.com/tiany7/mysql_dependencies.git",
-    commit = "32094895286f499f997bef4324d68f61ea90a41f",
+    commit = "8ba122f93a2f5f9755d4fcef14fe9bcb6acd4edc",
 )
 
 git_repository(
