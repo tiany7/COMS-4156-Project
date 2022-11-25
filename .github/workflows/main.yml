@@ -17,4 +17,4 @@ jobs:
           path: "/home/runner/.cache/bazel"
           key: bazel
       - uses: bazelbuild/setup-bazelisk@v1
-      - run: bazel test //...
+      - run: bazel test //unit_test/person_service_test:person_service_test
