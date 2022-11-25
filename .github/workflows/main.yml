@@ -8,7 +8,7 @@ on:
 
 jobs:
   ci:
-    runs-on: ubuntu-latest
+    runs-on: tiany7/course_dep:1.0
     steps:
       - uses: actions/checkout@v2
       - name: Mount bazel cache
