@@ -15,6 +15,5 @@ jobs:
         uses: actions/cache@v3
         with:
           path: "$HOME/.cache/bazel"
-          key: bazel
       - uses: bazelbuild/setup-bazelisk@v1
       - run: bazel test //...
