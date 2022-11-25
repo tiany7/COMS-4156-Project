@@ -5,10 +5,10 @@
 #include <utility>
 
 #include "mysql_connection.h"
-#include <cppconn/driver.h>
-#include <cppconn/exception.h>
-#include <cppconn/resultset.h>
-#include <cppconn/statement.h>
+#include "cppconn/driver.h"
+#include "cppconn/exception.h"
+#include "cppconn/resultset.h"
+#include "cppconn/statement.h"
 
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
