@@ -4,7 +4,7 @@
 
 ### What will the server do?
 
-Our project is an open enrollment service system. The system will provide the service to both the students and the faculties. On the student’s side, the server will support searching courses, browsing course information, adding courses to the shopping cart, checking the fulfillment of prerequisites, enrolling the waitlists and acquiring enrollment-related information. On the faculty’s side, the server will support posting courses, modifying the course information(capacity, date and time, instructor info…), and enrolling students from waitlists. 
+Our project is a student/faculty management system system. The system will provide the service to both the students and the faculties. On the student’s side, the server will support searching courses, browsing course information, adding courses to the shopping cart, checking the fulfillment of prerequisites, enrolling the waitlists and acquiring enrollment-related information. On the faculty’s side, the server will support posting courses, modifying the course information(capacity, date and time, instructor info…), and enrolling students from waitlists. 
 
 
 ### Who or what will be its users?
@@ -147,9 +147,24 @@ When booting up the service, you can use the bootstrap.sh to boot up mysql_servi
 
 ## Table Schema
 
-### Database Faculty
+# Initializing the tables
+We are working on the local databases, but we consider to migrate to RDS later on.
 
-### Table: faculty
+To init the tables, you need to have the mysql server running on port 3306 localhost. The server name is 'root' and password is empty. 
+
+You can enter `util/` directory of base dir.
+
+And execute 
+
+`bazel build :all`
+
+Then go to `bazel-bin/util`
+
+Execute the binary
+
+`./db_init_tables`
+
+Then the environment set up is complete!
 
 ### Table definition
 
