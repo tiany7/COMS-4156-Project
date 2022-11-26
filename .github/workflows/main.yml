@@ -20,4 +20,4 @@ jobs:
           key: bazel
       - uses: bazelbuild/setup-bazelisk@v1
       - run: sudo apt-get install libboost-all-dev libmysqlclient-dev -y
-      - run: bazel test //unit_test/person_service_test:person_service_test
+      - run: bazel test //services/mysql_service:faculty_service_test
