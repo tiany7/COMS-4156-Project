@@ -7,8 +7,10 @@ on:
     branches: [ main ]
 
 jobs:
-  ci:
+  container-test-job:
     runs-on: ubuntu-latest
+    container: 
+      image: tiany7/course_dep:1.0
     steps:
       - uses: actions/checkout@v2
       - name: Mount bazel cache
