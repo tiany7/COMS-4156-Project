@@ -34,6 +34,7 @@ class FacultyServiceServiceImpl final: public FacultyService::Service {
     Status GetFacultyByUni(ServerContext* context, const GetFacultyReq* request,
                            FacultyRsp* reply)
     {
+
         auto uni = request->uni();
         int success = FacultyDBService().GetFacultyUni(uni, reply);
         return Status::OK;

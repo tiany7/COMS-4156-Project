@@ -11,7 +11,7 @@ FacultyDBService::~FacultyDBService()
 
 }
 
-int FacultyDBService::GetFacultyDept(const string & dept_name, FacultyRsp* reply)
+int FacultyDBService::GetFacultyDept( string dept_name, FacultyRsp* reply)
 {
     try {
         auto stmt = con->createStatement();
@@ -41,7 +41,7 @@ int FacultyDBService::GetFacultyDept(const string & dept_name, FacultyRsp* reply
     return 0;
 }
 
-int FacultyDBService::GetFacultyUni(const string & uni, FacultyRsp* reply)
+int FacultyDBService::GetFacultyUni( string uni, FacultyRsp* reply)
 {
     try {
         auto stmt = con->createStatement();
@@ -68,7 +68,7 @@ int FacultyDBService::GetFacultyUni(const string & uni, FacultyRsp* reply)
     }
     return 0;
 }
-int FacultyDBService::InsertFaculty(const string & name, const string & dept, const string & uni, const string & country)
+int FacultyDBService::InsertFaculty( string name,  string dept,  string uni,  string  country)
 {
     try {
         auto stmt = con->createStatement();
@@ -88,4 +88,13 @@ int FacultyDBService::InsertFaculty(const string & name, const string & dept, co
         cout << "other exception" << endl;
     }
     return 0;
+}
+
+int FacultyDBService::Print()
+{
+    return 1;
+}
+
+int FacultyDBService::CalculateSomething(int a, int b){
+    return a + b;
 }
