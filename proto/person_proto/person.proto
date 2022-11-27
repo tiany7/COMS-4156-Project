@@ -104,6 +104,7 @@ message GetFacultyRatingRequest {
 message GetFacultyRatingResponse {
     double score = 1;
     repeated string comments = 2;
+    string message = 3;
 }
 
 service PersonService {

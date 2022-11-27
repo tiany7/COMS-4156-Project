@@ -15,9 +15,12 @@ void InitMySQL() {
         auto stmt = con->createStatement();
         stmt->execute("CREATE DATABASE IF NOT EXISTS `coms4156_db`"); // could be changed to "ssol" or sth. like that
         stmt->execute("USE `coms4156_db`"); // same above
+        stmt->execute("DROP TABLE IF EXISTS `faculty`");
         stmt->execute("CREATE TABLE IF NOT EXISTS `faculty` ("
-                            "`name` VARCHAR(45),"
                             "`uni` VARCHAR(45) NOT NULL,"
+                            "`name` VARCHAR(45),"
+                            "`email` VARCHAR(45),"
+                            "`school` VARCHAR(45),"
                             "`department` VARCHAR(45) NOT NULL,"
                             "`country` VARCHAR(45) NOT NULL,"
                             "PRIMARY KEY (`uni`))");
@@ -47,17 +50,19 @@ void InitMySqlV2(){
                       "`start` DATETIME NOT NULL,"
                       "`end` DATETIME NOT NULL,"
                       "PRIMARY KEY (`deptid`))");
+        stmt->execute("DROP TABLE IF EXISTS `student`");            
         stmt->execute("CREATE TABLE IF NOT EXISTS `student` ("
-                      "`name` VARCHAR(45),"
                       "`uni` VARCHAR(45) NOT NULL,"
+                      "`name` VARCHAR(45),"
                       "`email` VARCHAR(45),"
                       "`affiliation` VARCHAR(45),"
                       "`school` VARCHAR(45),"
                       "`advisor` VARCHAR(45),"
                       "PRIMARY KEY (`uni`))");
+        stmt->execute("DROP TABLE IF EXISTS `administrator`");
         stmt->execute("CREATE TABLE IF NOT EXISTS `administrator` ("
-                      "`name` VARCHAR(45),"
                       "`uni` VARCHAR(45) NOT NULL,"
+                      "`name` VARCHAR(45),"
                       "`email` VARCHAR(45),"
                       "PRIMARY KEY (`uni`))");
     } catch (sql::SQLException &e) {
@@ -113,12 +118,12 @@ void InitMySQLV4() {
         auto stmt = con->createStatement();
         stmt->execute("CREATE DATABASE IF NOT EXISTS `coms4156_db`"); // could be changed to "ssol" or sth. like that
         stmt->execute("USE `coms4156_db`"); // same above
+        stmt->execute("DROP TABLE IF EXISTS `rating`");
         stmt->execute("CREATE TABLE IF NOT EXISTS `rating` ("
                       "`uni` VARCHAR(45) NOT NULL,"
                       "`name` VARCHAR(45),"
                       "`score` TINYINT NOT NULL,"
-                      "`comment` VARCHAR(512),"
-                      "PRIMARY KEY (`uni`))");
+                      "`comment` VARCHAR(512))");
     } catch (sql::SQLException &e) {
         std::cout << "# ERR: SQLException in " << __FILE__;
         std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
