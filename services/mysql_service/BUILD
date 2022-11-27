@@ -21,6 +21,7 @@ cc_library(
     deps = ["@comm_github_mysql_cpp_connector//:mysql_lib"],
     linkopts = ["-I/usr/include/",
                 "-I/usr/include/cppconn/",
+                "-L/usr/lib",
                 "-lmysqlcppconn",],
     visibility = ["//visibility:public"],
 )
@@ -36,6 +37,7 @@ cc_library(
                 ":db_service"],
     linkopts = ["-I/usr/include/",
                 "-I/usr/include/cppconn/",
+                "-L/usr/lib",
                 "-lmysqlcppconn",],
     visibility = ["//visibility:public"],
 )
