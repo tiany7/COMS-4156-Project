@@ -11,7 +11,7 @@
 void InitMySQL() {
     try {
         auto driver = get_driver_instance();
-        auto con = driver->connect("tcp://localhost:3306", "root", "");
+        auto con = driver->connect("tcp://localhost:3306", "root", "123456");
         auto stmt = con->createStatement();
         stmt->execute("CREATE DATABASE IF NOT EXISTS `coms4156_db`"); // could be changed to "ssol" or sth. like that
         stmt->execute("USE `coms4156_db`"); // same above
@@ -33,7 +33,7 @@ void InitMySQL() {
 void InitMySqlV2(){
     try {
         auto driver = get_driver_instance();
-        auto con = driver->connect("tcp://localhost:3306", "root", "");
+        auto con = driver->connect("tcp://localhost:3306", "root", "123456");
         auto stmt = con->createStatement();
         stmt->execute("CREATE DATABASE IF NOT EXISTS `coms4156_db`"); // could be changed to "ssol" or sth. like that
         stmt->execute("USE `coms4156_db`"); // same above
@@ -72,7 +72,7 @@ void InitMySqlV2(){
 void InitMySQLV3(){
     try {
         auto driver = get_driver_instance();
-        auto con = driver->connect("tcp://localhost:3306", "root", "");
+        auto con = driver->connect("tcp://localhost:3306", "root", "123456");
         auto stmt = con->createStatement();
         stmt->execute("CREATE DATABASE IF NOT EXISTS `coms4156_db`"); // could be changed to "ssol" or sth. like that
         stmt->execute("USE `coms4156_db`"); // same above
@@ -105,9 +105,33 @@ void InitMySQLV3(){
         std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
     }
 }
+
+void InitMySQLV4() {
+    try {
+        auto driver = get_driver_instance();
+        auto con = driver->connect("tcp://localhost:3306", "root", "123456");
+        auto stmt = con->createStatement();
+        stmt->execute("CREATE DATABASE IF NOT EXISTS `coms4156_db`"); // could be changed to "ssol" or sth. like that
+        stmt->execute("USE `coms4156_db`"); // same above
+        stmt->execute("CREATE TABLE IF NOT EXISTS `rating` ("
+                      "`uni` VARCHAR(45) NOT NULL,"
+                      "`name` VARCHAR(45),"
+                      "`score` TINYINT NOT NULL,"
+                      "`comment` VARCHAR(512),"
+                      "PRIMARY KEY (`uni`))");
+    } catch (sql::SQLException &e) {
+        std::cout << "# ERR: SQLException in " << __FILE__;
+        std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
+        std::cout << "# ERR: " << e.what();
+        std::cout << " (MySQL error code: " << e.getErrorCode();
+        std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+    }
+}
+
 int main() {
     InitMySQL();
     InitMySqlV2();
     InitMySQLV3();
+    InitMySQLV4();
     return 0;
 }
