@@ -6,7 +6,6 @@
 using grpc::Channel;
 using grpc::ClientContext;
 using namespace testing;
-
 TEST(HelloTest, PP) {
 // Expect two strings not to be equal.
 EXPECT_STRNE("hello", "world");

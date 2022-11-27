@@ -7,7 +7,8 @@ cc_binary(
     deps = ["//proto/mysql_server_proto:faculty_cc_grpc",
             "@com_github_grpc_grpc//:grpc++",
             "@com_github_grpc_grpc//:grpc++_reflection",
-            "@comm_github_mysql_cpp_connector//:mysql_lib"],
+            #"@comm_github_mysql_cpp_connector//:mysql_lib"
+            ],
     linkopts = [ "-lmysqlcppconn",
                  "-I/usr/include/",],
     copts = ["-std=c++17"],
@@ -19,6 +20,7 @@ cc_library(
     hdrs = ["DB.h"],
     deps = ["@comm_github_mysql_cpp_connector//:mysql_lib"],
     linkopts = ["-I/usr/include/",
+                "-I/usr/include/cppconn/",
                 "-lmysqlcppconn",],
     visibility = ["//visibility:public"],
 )
@@ -30,9 +32,10 @@ cc_library(
     deps = ["//proto/mysql_server_proto:faculty_cc_grpc",
                 "@com_github_grpc_grpc//:grpc++",
                 "@com_github_grpc_grpc//:grpc++_reflection",
-                "@comm_github_mysql_cpp_connector//:mysql_lib",
+                 "@comm_github_mysql_cpp_connector//:mysql_lib",
                 ":db_service"],
     linkopts = ["-I/usr/include/",
+                "-I/usr/include/cppconn/",
                 "-lmysqlcppconn",],
     visibility = ["//visibility:public"],
 )
