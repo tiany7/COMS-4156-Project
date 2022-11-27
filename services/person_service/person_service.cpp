@@ -9,6 +9,7 @@
 #include "cppconn/exception.h"
 #include "cppconn/resultset.h"
 #include "cppconn/statement.h"
+#include "cppconn/prepared_statement.h"
 
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
@@ -32,34 +33,38 @@ using ::person::Administrator;
 using ::person::CreatePersonResponse;
 using ::person::DeletePersonRequest;
 using ::person::DeletePersonResponse;
-
+using ::person::CreateFacultyRatingRequest;
+using ::person::CreateFacultyRatingResponse;
+using ::person::GetFacultyRatingRequest;
+using ::person::GetFacultyRatingResponse;
 
 using ::grpc::ServerBuilder;
 using ::grpc::ServerContext;
 using ::grpc::Status;
 using ::grpc::StatusCode;
 using ::grpc::Server;
+using ::google::protobuf::uint32;
 
 enum ErrorCode {
     NO_ERROR = 0,
     ERROR = 1,
 };
 
-
 const std::string kReadStudentInfoErrorMessage = "Read student info failed!";
 const std::string kSchemaName = "coms4156_db";
 const std::string kStudentInfoTable = "student";
 const std::string kFacultyInfoTable = "faculty";
 const std::string kAdministratorInfoTable = "administrator";
+const std::string kRatingInfoTable = "rating";
+const uint32 kMinScore = 1;
+const uint32 kMaxScore = 5;
 
 class PersonDB {
 public:
-    PersonDB(): stmt(nullptr), res(nullptr) {
+    PersonDB(): stmt(nullptr), res(nullptr), prep_stmt(nullptr) {
         try {
             driver = get_driver_instance();
-             con = driver->connect("tcp://127.0.0.1:3306", "root", "");
-            // con->setSchema(kSchemaName);
-//            con = driver->connect("coms4156-rds.cnxeqkxjuxbw.us-east-1.rds.amazonaws.com", "admin", "12345678");
+            con = driver->connect("tcp://127.0.0.1:3306", "root", "123456");
             con->setSchema("coms4156_db");
         } catch (sql::SQLException& e) {
             std::cout << "# ERR: SQLException in " << __FILE__;
@@ -83,6 +88,10 @@ public:
         if (res) {
             delete res;
             res = nullptr;
+        }
+        if (prep_stmt) {
+            delete prep_stmt;
+            prep_stmt = nullptr;
         }
     }
 
@@ -196,7 +205,6 @@ public:
         string sql = "insert into " + kStudentInfoTable + "(uni, name) values('%s', '%s')";
         std::string uni = request->uni(), name = request->name();
         sprintf(buffer, sql.c_str(), uni.c_str(), name.c_str());
-
         try {
             stmt = con->createStatement();
             stmt->execute(buffer);
@@ -255,11 +263,69 @@ public:
         return ErrorCode::NO_ERROR;
     }
 
+    ErrorCode CreateFacultyRating(const CreateFacultyRatingRequest* request, CreateFacultyRatingResponse* response) {
+        uint32 score = request->score();
+        if (score < kMinScore || score > kMaxScore) {
+            response->set_message("rating can only be in range of 1-5!");
+            return ErrorCode::ERROR;
+        }
+        try {
+            prep_stmt = con->prepareStatement("INSERT INTO rating VALUES (?, ?, ?, ?)");
+            prep_stmt->setString(1, request->uni());
+            prep_stmt->setString(2, request->name());
+            prep_stmt->setInt(3, score);
+            prep_stmt->setString(4, request->comment());
+            prep_stmt->execute();
+        } catch (sql::SQLException &e) {
+            std::cout << "# ERR: SQLException in " << __FILE__;
+            std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
+            std::cout << "# ERR: " << e.what();
+            std::cout << " (MySQL error code: " << e.getErrorCode();
+            std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+            response->set_message("ERROR");
+            return ErrorCode::ERROR;
+        }
+        response->set_message("OK");
+        return ErrorCode::NO_ERROR;
+    }
+
+    ErrorCode GetFacultyRating(const GetFacultyRatingRequest* request, GetFacultyRatingResponse* response) {
+        std::string uni = request->uni();
+        char buffer[BUFFER_SIZE] = {0};
+        char buffer2[BUFFER_SIZE] = {0};
+        std::string sql = "SELECT comment FROM rating WHERE uni='%s' LIMIT 10";
+        sprintf(buffer, sql.c_str(), uni.c_str());
+        std::string sql2 = "SELECT AVG(score) FROM rating WHERE uni='%s' GROUP BY uni";
+        sprintf(buffer2, sql2.c_str(), uni.c_str());
+        try {
+            stmt = con->createStatement();
+            res = stmt->executeQuery(buffer);
+            while (res->next()) {
+                response->add_comments(std::string(res->getString(1)));
+            }
+            res = stmt->executeQuery(buffer2);
+            if (res->next()) {
+                response->set_score(std::stod(res->getString(1)));
+            }
+        } catch (sql::SQLException &e) {
+            std::cout << "# ERR: SQLException in " << __FILE__;
+            std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
+            std::cout << "# ERR: " << e.what();
+            std::cout << " (MySQL error code: " << e.getErrorCode();
+            std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+            response->set_message("ERROR");
+            return ErrorCode::ERROR;
+        }
+        response->set_message("OK");
+        return ErrorCode::NO_ERROR;
+    }
+
 private:
     sql::Driver* driver;
     sql::Connection* con;
     sql::Statement* stmt;
     sql::ResultSet* res;
+    sql::PreparedStatement* prep_stmt;
 };
 
 class PersonServiceImpl final : public PersonService::Service {
@@ -295,10 +361,8 @@ class PersonServiceImpl final : public PersonService::Service {
         return Status::OK;
     }
 
-    Status CreateStudent(ServerContext* context, const Student* request, CreatePersonResponse* response) {
-        std::cout << "Create student: " << request->uni() << std::endl;
+    Status CreateStudent(ServerContext* context, const Student* request, CreatePersonResponse* response) override {
         ErrorCode error_code = PersonDB().CreateStudent(request);
-        std::cout<<"Creating student"<<std::endl;
         if (error_code == ErrorCode::ERROR) {
             response->set_message("ERROR");
             return Status(StatusCode::CANCELLED, "Create student failed!");
@@ -307,7 +371,7 @@ class PersonServiceImpl final : public PersonService::Service {
         return Status::OK;
     }
 
-    Status CreateAdministrator(ServerContext* context, const Administrator* request, CreatePersonResponse* response) {
+    Status CreateAdministrator(ServerContext* context, const Administrator* request, CreatePersonResponse* response) override {
         ErrorCode error_code = PersonDB().CreateAdministrator(request, response);
         if (error_code == ErrorCode::ERROR) {
             return Status(StatusCode::CANCELLED, "Create student failed!");
@@ -315,7 +379,7 @@ class PersonServiceImpl final : public PersonService::Service {
         return Status::OK;
     }
 
-    Status DeleteStudent(ServerContext* context, const DeletePersonRequest* request, DeletePersonResponse* response) {
+    Status DeleteStudent(ServerContext* context, const DeletePersonRequest* request, DeletePersonResponse* response) override {
         ErrorCode error_code = PersonDB().DeleteStudent(request->uni(), response);
         if (error_code == ErrorCode::ERROR) {
             return Status(StatusCode::CANCELLED, "Create student failed!");
@@ -323,6 +387,21 @@ class PersonServiceImpl final : public PersonService::Service {
         return Status::OK;
     }
 
+    Status CreateFacultyRating(ServerContext* context, const CreateFacultyRatingRequest* request, CreateFacultyRatingResponse* response) override {
+        ErrorCode error_code = PersonDB().CreateFacultyRating(request, response);
+        if (error_code == ErrorCode::ERROR) {
+            return Status(StatusCode::CANCELLED, response->message());
+        }
+        return Status::OK;
+    }
+
+    Status GetFacultyRating(ServerContext* context, const GetFacultyRatingRequest* request, GetFacultyRatingResponse* response) override {
+        ErrorCode error_code = PersonDB().GetFacultyRating(request, response);
+        if (error_code == ErrorCode::ERROR) {
+            return Status(StatusCode::CANCELLED, response->message());
+        }
+        return Status::OK;
+    }
 };
 
 void RunServer() {

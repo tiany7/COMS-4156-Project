@@ -26,6 +26,12 @@ using ::person::Administrator;
 using ::person::CreatePersonResponse;
 using ::person::DeletePersonRequest;
 using ::person::DeletePersonResponse;
+using ::person::CreateFacultyRatingRequest;
+using ::person::CreateFacultyRatingResponse;
+using ::person::GetFacultyRatingRequest;
+using ::person::GetFacultyRatingResponse;
+
+using ::google::protobuf::uint32;
 
 enum ErrorCode {
     NO_ERROR = 0,
@@ -105,11 +111,9 @@ public:
         CreatePersonResponse response;
         ClientContext context;
         Status status = stub_->CreateStudent(&context, request, &response);
-        std::cout<<status.error_message()<<std::endl;
         if (!status.ok()) {
             return ErrorCode::ERROR;
         }
-
         return ErrorCode::NO_ERROR;
     }
 
@@ -135,6 +139,32 @@ public:
         DeletePersonResponse response;
         ClientContext context;
         Status status = stub_->DeleteStudent(&context, request, &response); 
+        if (!status.ok()) {
+            return ErrorCode::ERROR;
+        }
+        return ErrorCode::NO_ERROR;
+    }
+    
+    ErrorCode CreateFacultyRating(const std::string& uni, uint32 score, const std::string& comment) {
+        CreateFacultyRatingRequest request;
+        request.set_uni(uni);
+        request.set_score(score);
+        request.set_comment(comment);
+        CreateFacultyRatingResponse response;
+        ClientContext context;
+        Status status = stub_->CreateFacultyRating(&context, request, &response);
+        if (!status.ok()) {
+            return ErrorCode::ERROR;
+        }
+        return ErrorCode::NO_ERROR;
+    }
+
+    ErrorCode GetFacultyRating(const std::string& uni, GetFacultyRatingResponse& response) {
+        GetFacultyRatingRequest request;
+        request.set_uni(uni);
+
+        ClientContext context;
+        Status status = stub_->GetFacultyRating(&context, request, &response);
         if (!status.ok()) {
             return ErrorCode::ERROR;
         }
@@ -243,13 +273,10 @@ int main(int argc, char** argv) {
         if (req.has_param("name")) {
             name = req.get_param_value("name");
         }
-
         if (uni.empty() || name.empty()) {
             res.set_content("Empty UNI/name", "text/plain");
         } else {
-            std::cout<<"create student"<<std::endl;
             ErrorCode error_code = person_service_client.CreateStudent(uni, name);
-            std::cout<<"complete"<<std::endl;
             if (error_code == ErrorCode::ERROR) {
                 res.set_content("Internal Error", "text/plain");
             } else {
@@ -270,7 +297,7 @@ int main(int argc, char** argv) {
             email = req.get_param_value("email");
         }
         if (uni.empty() || name.empty() || email.empty()) {
-            res.set_content("Empty UNI/name/email", "text/plain");
+            res.set_content("Empty uni/name/email", "text/plain");
         } else {
             ErrorCode error_code = person_service_client.CreateAdministrator(uni, name, email);
             if (error_code == ErrorCode::ERROR) {
@@ -286,7 +313,6 @@ int main(int argc, char** argv) {
         if (req.has_param("uni")) {
             uni = req.get_param_value("uni");
         }
-    
         if (uni.empty()) {
             res.set_content("Empty UNI", "text/plain");
         } else {
@@ -295,6 +321,56 @@ int main(int argc, char** argv) {
                 res.set_content("Internal Error", "text/plain");
             } else {
                 res.set_content("Delete student successfully!", "text/plain");
+            }
+        }
+    });
+
+    svr.Post("/create_faculty_rating", [&](const httplib::Request &req, httplib::Response &res) {
+        std::string uni(""), comment(""), score("");
+        if (req.has_param("uni")) {
+            uni = req.get_param_value("uni");
+        }
+        if (req.has_param("comment")) {
+            comment = req.get_param_value("comment");
+        }
+        if (req.has_param("score")) {
+            score = req.get_param_value("score");
+        }
+    
+        if (uni.empty() || score.empty()) {
+            res.set_content("Empty UNI/Rating", "text/plain");
+        } else {
+            uint32 rating = stoi(score);
+            ErrorCode error_code = person_service_client.CreateFacultyRating(uni, rating, comment);
+            if (error_code == ErrorCode::ERROR) {
+                res.set_content("Internal Error", "text/plain");
+            } else {
+                res.set_content("Create faculty rating successfully!", "text/plain");
+            }
+        }
+    });
+
+    svr.Get("/get_faculty_rating", [&](const httplib::Request &req, httplib::Response &res) {
+        std::string uni("");
+        if (req.has_param("uni")) {
+            uni = req.get_param_value("uni");
+        }
+        if (uni.empty()) {
+            res.set_content("Empty UNI", "text/plain");
+        } else {
+            GetFacultyRatingResponse response;
+            ErrorCode error_code = person_service_client.GetFacultyRating(uni, response);
+            if (error_code == ErrorCode::ERROR) {
+                res.set_content("Internal Error", "text/plain");
+            } else {
+                std::ostringstream ss;
+                ss << "score: " << response.score() << std::endl;
+                ss << "-----top10 comments-----" << std::endl;
+                for (int idx = 0; idx < response.comments_size(); idx++) {
+                    ss << response.comments(idx) << std::endl;
+                }
+                res.set_content(ss.str().c_str(), "text/plain");
+                // res.set_content("Create faculty rating successfully!", "text/plain");
             }
         }
     });
