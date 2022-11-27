@@ -31,7 +31,7 @@ public:
     FacultyDBService();
     int GetFacultyDept( string  dept_name, FacultyRsp* reply);
     int GetFacultyUni( string  uni, FacultyRsp* reply);
-    int GetPostUni(string uni, Profpost* reply);
+    int GetPostUni(string uni, ProfpostRsp* reply);
     int InsertFaculty( string  name,  string  dept,  string  uni,  string  country);
     int InsertPost(string uni, string content, string status);
     int CalculateSomething(int a, int b);

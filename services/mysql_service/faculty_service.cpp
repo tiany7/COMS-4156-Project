@@ -69,7 +69,7 @@ int FacultyDBService::GetFacultyUni( string uni, FacultyRsp* reply)
     return 0;
 }
 
-int FacultyDBService::GetPostUni(string uni, Profpost* reply)
+int FacultyDBService::GetPostUni(string uni, ProfpostRsp* reply)
 {
     try {
         auto stmt = con->createStatement();

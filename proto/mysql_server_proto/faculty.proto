@@ -40,9 +40,13 @@ message FacultyRsp{
     repeated Faculty faculty = 1;
 }
 
+message ProfpostRsp{
+    repeated Profpost profpost = 1;
+}
+
 service FacultyService {
     rpc GetFaculty(GetFacultyReq) returns (FacultyRsp);
-    rpc GetPost(GetPostReq) returns (Profpost);
+    rpc GetPost(GetPostReq) returns (ProfpostRsp);
     rpc InsertFaculty(Faculty) returns (Faculty);
     rpc InsertPost(Profpost) returns (Profpost);
     rpc GetFacultyByUni(GetFacultyReq) returns (FacultyRsp);

@@ -41,7 +41,7 @@ class FacultyServiceServiceImpl final: public FacultyService::Service {
         return Status::OK;
     }
 
-    Status GetPost(ServerContext* context, const GetPostReq* request, Profpost* reply){
+    Status GetPost(ServerContext* context, const GetPostReq* request, ProfpostRsp* reply){
         auto uni = request->uni();
         int success = FacultyDBService().GetPostUni(uni, reply);
         return Status::OK;
