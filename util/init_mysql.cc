@@ -37,6 +37,11 @@ void InitMySqlV2(){
         auto stmt = con->createStatement();
         stmt->execute("CREATE DATABASE IF NOT EXISTS `coms4156_db`"); // could be changed to "ssol" or sth. like that
         stmt->execute("USE `coms4156_db`"); // same above
+        stmt->execute("CREATE TABLE IF NOT EXISTS `profpost` ("
+                      "`uni` VARCHAR(45) NOT NULL,"
+                      "`content` VARCHAR(256),"
+                      "`status` VARCHAR(16) NOT NULL,"
+                      "PRIMARY KEY (`uni`))");
         stmt->execute("CREATE TABLE IF NOT EXISTS `timeslots` ("
                       "`deptid` VARCHAR(10) NOT NULL,"
                       "`start` DATETIME NOT NULL,"
