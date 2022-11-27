@@ -31,12 +31,19 @@ class FacultyServiceServiceImpl final: public FacultyService::Service {
         int success = FacultyDBService().GetFacultyDept(dept, reply);
         return Status::OK;
     }
+
     Status GetFacultyByUni(ServerContext* context, const GetFacultyReq* request,
                            FacultyRsp* reply)
     {
 
         auto uni = request->uni();
         int success = FacultyDBService().GetFacultyUni(uni, reply);
+        return Status::OK;
+    }
+
+    Status GetPost(ServerContext* context, const GetPostReq* request, Profpost* reply){
+        auto uni = request->uni();
+        int success = FacultyDBService().GetPostUni(uni, reply);
         return Status::OK;
     }
 
@@ -48,6 +55,15 @@ class FacultyServiceServiceImpl final: public FacultyService::Service {
         auto dept = request->department();
         auto country = request->country();
         int success = FacultyDBService().InsertFaculty(name, uni, dept, country);
+        return Status::OK;
+    }
+
+    Status InsertPost(ServerContext* context, const Profpost* request, Profpost* reply)
+    {
+        auto uni = request->uni();
+        auto content = request->content();
+        auto status = request->status();
+        int success = FacultyDBService().InsertPost(uni, content, status);
         return Status::OK;
     }
 };

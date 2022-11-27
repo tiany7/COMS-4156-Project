@@ -14,6 +14,12 @@ message Faculty {
     string country = 4;
 }
 
+message Profpost {
+    string uni = 1;
+    string content = 2;
+    string status = 3;
+}
+
 message Option{
     int32 limit = 1;
     int32 offset = 2;
@@ -26,6 +32,9 @@ message GetFacultyReq {
     Option option = 3;
 }
 
+message GetPostReq {
+    string uni = 1;
+}
 
 message FacultyRsp{
     repeated Faculty faculty = 1;
@@ -33,6 +42,8 @@ message FacultyRsp{
 
 service FacultyService {
     rpc GetFaculty(GetFacultyReq) returns (FacultyRsp);
+    rpc GetPost(GetPostReq) returns (Profpost);
     rpc InsertFaculty(Faculty) returns (Faculty);
+    rpc InsertPost(Profpost) returns (Profpost);
     rpc GetFacultyByUni(GetFacultyReq) returns (FacultyRsp);
 }
