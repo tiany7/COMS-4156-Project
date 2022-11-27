@@ -367,7 +367,7 @@ int main(int argc, char** argv) {
                 ss << "score: " << response.score() << std::endl;
                 ss << "-----top10 comments-----" << std::endl;
                 for (int idx = 0; idx < response.comments_size(); idx++) {
-                    ss << response.comments(idx) << std::endl;
+                    ss << idx << ": " << response.comments(idx) << std::endl;
                 }
                 res.set_content(ss.str().c_str(), "text/plain");
                 // res.set_content("Create faculty rating successfully!", "text/plain");
