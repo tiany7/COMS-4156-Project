@@ -19,5 +19,5 @@ jobs:
           path: "/home/runner/.cache/bazel"
           key: bazel
       - uses: bazelbuild/setup-bazelisk@v1
-      - run: sudo apt-get install libboost-all-dev libmysqlclient-dev -y
+      - run: sudo apt-get install libboost-all-dev libmysqlclient-dev libmysqlcppconn-dev -y
       - run: bazel test //services/mysql_service:faculty_service_test
