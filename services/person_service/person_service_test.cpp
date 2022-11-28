@@ -17,7 +17,7 @@ using ::testing::SetArgumentPointee;
 using ::testing::WithArg;
 using ::grpc::Status;
 using ::grpc::ClientContext;
-using grpc::Channel;
+using ::grpc::Channel;
 
 using ::person::PersonService;
 using ::person::StudentReadRequest;
@@ -35,6 +35,10 @@ using ::person::MockPersonServiceStub;
 using ::person::CreatePersonResponse;
 using ::person::DeletePersonRequest;
 using ::person::DeletePersonResponse;
+using ::person::CreateFacultyRatingRequest;
+using ::person::CreateFacultyRatingResponse;
+using ::person::GetFacultyRatingRequest;
+using ::person::GetFacultyRatingResponse;
 
 class FakeClient {
 public:
@@ -175,70 +179,70 @@ private:
 };
 
 TEST(MockPersonService, CheckReadStudentInfo) {
-MockPersonServiceStub stub;
-StudentReadResponse response;
-Student* student = response.mutable_student();
-student->set_uni("qw1234");
-student->set_name("Alex");
-student->set_email("qw1234@columbia.edu");
-student->set_affiliation("Computer Science");
-student->set_school("SEAS");
-student->set_advisor("None on file");
-EXPECT_CALL(stub, ReadStudentInfo(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
-FakeClient client(&stub);
-client.DoReadStudentInfo();
+    MockPersonServiceStub stub;
+    StudentReadResponse response;
+    Student* student = response.mutable_student();
+    student->set_uni("qw1234");
+    student->set_name("Alex");
+    student->set_email("qw1234@columbia.edu");
+    student->set_affiliation("Computer Science");
+    student->set_school("SEAS");
+    student->set_advisor("None on file");
+    EXPECT_CALL(stub, ReadStudentInfo(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoReadStudentInfo();
 }
 
 TEST(MockPersonService, CheckReadStudentInfoFailed) {
-MockPersonServiceStub stub;
-StudentReadResponse response;
-response.set_message("ERROR");
-EXPECT_CALL(stub, ReadStudentInfo(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
-FakeClient client(&stub);
-client.DoReadStudentInfoFailed();
+    MockPersonServiceStub stub;
+    StudentReadResponse response;
+    response.set_message("ERROR");
+    EXPECT_CALL(stub, ReadStudentInfo(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoReadStudentInfoFailed();
 }
 
 TEST(MockPersonService, CheckReadFacultyInfo) {
-MockPersonServiceStub stub;
-FacultyReadResponse response;
-Faculty* faculty = response.mutable_faculty();
-faculty->set_uni("as1234");
-faculty->set_name("Bob");
-faculty->set_email("as1234@columbia.edu");
-faculty->set_school("SEAS");
-EXPECT_CALL(stub, ReadFacultyInfo(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
-FakeClient client(&stub);
-client.DoReadFacultyInfo();
+    MockPersonServiceStub stub;
+    FacultyReadResponse response;
+    Faculty* faculty = response.mutable_faculty();
+    faculty->set_uni("as1234");
+    faculty->set_name("Bob");
+    faculty->set_email("as1234@columbia.edu");
+    faculty->set_school("SEAS");
+    EXPECT_CALL(stub, ReadFacultyInfo(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoReadFacultyInfo();
 }
 
 TEST(MockPersonService, CheckReadFacultyInfoFailed) {
-MockPersonServiceStub stub;
-FacultyReadResponse response;
-response.set_message("ERROR");
-EXPECT_CALL(stub, ReadFacultyInfo(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
-FakeClient client(&stub);
-client.DoReadFacultyInfoFailed();
+    MockPersonServiceStub stub;
+    FacultyReadResponse response;
+    response.set_message("ERROR");
+    EXPECT_CALL(stub, ReadFacultyInfo(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoReadFacultyInfoFailed();
 }
 
 TEST(MockPersonService, CheckReadAdministratorInfo) {
-MockPersonServiceStub stub;
-AdministratorReadResponse response;
-Administrator* administrator = response.mutable_administrator();
-administrator->set_uni("zx1234");
-administrator->set_name("Mat");
-administrator->set_email("zx1234@columbia.edu");
-EXPECT_CALL(stub, ReadAdministratorInfo(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
-FakeClient client(&stub);
-client.DoReadAdministratorInfo();
+    MockPersonServiceStub stub;
+    AdministratorReadResponse response;
+    Administrator* administrator = response.mutable_administrator();
+    administrator->set_uni("zx1234");
+    administrator->set_name("Mat");
+    administrator->set_email("zx1234@columbia.edu");
+    EXPECT_CALL(stub, ReadAdministratorInfo(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoReadAdministratorInfo();
 }
 
 TEST(MockPersonService, CheckReadAdministratorInfoFailed) {
-MockPersonServiceStub stub;
-AdministratorReadResponse response;
-response.set_message("ERROR");
-EXPECT_CALL(stub, ReadAdministratorInfo(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
-FakeClient client(&stub);
-client.DoReadAdministratorInfoFailed();
+    MockPersonServiceStub stub;
+    AdministratorReadResponse response;
+    response.set_message("ERROR");
+    EXPECT_CALL(stub, ReadAdministratorInfo(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoReadAdministratorInfoFailed();
 }
 
 TEST(MockPersonService, CheckUpdateEmail) {
@@ -251,41 +255,41 @@ client.DoUpdateEmail();
 }
 
 TEST(MockPersonService, CheckUpdateEmailFailed) {
-MockPersonServiceStub stub;
-UpdateEmailResponse response;
-response.set_message("ERROR");
-EXPECT_CALL(stub, UpdateEmail(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
-FakeClient client(&stub);
-client.DoUpdateEmailFailed();
+    MockPersonServiceStub stub;
+    UpdateEmailResponse response;
+    response.set_message("ERROR");
+    EXPECT_CALL(stub, UpdateEmail(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoUpdateEmailFailed();
 }
 
 TEST(MockPersonService, CheckCreateStudent) {
-MockPersonServiceStub stub;
-CreatePersonResponse response;
-response.set_message("OK");
-EXPECT_CALL(stub, CreateStudent(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
-FakeClient client(&stub);
-client.DoCreateStudent();
+    MockPersonServiceStub stub;
+    CreatePersonResponse response;
+    response.set_message("OK");
+    EXPECT_CALL(stub, CreateStudent(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoCreateStudent();
 }
 
 
 TEST(MockPersonService, CheckCreateAdministrator) {
-MockPersonServiceStub stub;
-CreatePersonResponse response;
-response.set_message("OK");
-EXPECT_CALL(stub, CreateAdministrator(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
-FakeClient client(&stub);
-client.DoCreateAdministrator();
+    MockPersonServiceStub stub;
+    CreatePersonResponse response;
+    response.set_message("OK");
+    EXPECT_CALL(stub, CreateAdministrator(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoCreateAdministrator();
 }
 
 
 TEST(MockPersonService, CheckDeleteStudent) {
-MockPersonServiceStub stub;
-DeletePersonResponse response;
-response.set_message("OK");
-EXPECT_CALL(stub, DeleteStudent(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
-FakeClient client(&stub);
-client.DoDeleteStudent();
+    MockPersonServiceStub stub;
+    DeletePersonResponse response;
+    response.set_message("OK");
+    EXPECT_CALL(stub, DeleteStudent(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoDeleteStudent();
 }
 
 int main(int argc, char** argv) {
