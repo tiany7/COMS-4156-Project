@@ -174,6 +174,30 @@ public:
         EXPECT_EQ(response.message(), "OK");
     }
 
+    void DoCreateFacultyRating() {
+        ClientContext context;
+        CreateFacultyRatingRequest request;
+        CreateFacultyRatingResponse response;
+        request.set_uni("lm1234");
+        request.set_score(5);
+        request.set_comment("very good");
+        stub_->CreateFacultyRating(&context, request, &response);
+        EXPECT_EQ(response.message(), "OK");
+    }
+
+    void DoGetFacultyRating() {
+        ClientContext context;
+        GetFacultyRatingRequest request;
+        GetFacultyRatingResponse response;
+        request.set_uni("lm1234");
+        stub_->GetFacultyRating(&context, request, &response);
+        EXPECT_EQ(response.message(), "OK");
+        EXPECT_EQ(response.score(), 4.5);
+        EXPECT_EQ(response.comments_size(), 2);
+        EXPECT_EQ(response.comments(0), "very good");
+        EXPECT_EQ(response.comments(1), "good");
+    }
+
 private:
     PersonService::StubInterface* stub_;
 };
@@ -246,12 +270,12 @@ TEST(MockPersonService, CheckReadAdministratorInfoFailed) {
 }
 
 TEST(MockPersonService, CheckUpdateEmail) {
-MockPersonServiceStub stub;
-UpdateEmailResponse response;
-response.set_email("qw5678@columbia.edu");
-EXPECT_CALL(stub, UpdateEmail(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
-FakeClient client(&stub);
-client.DoUpdateEmail();
+    MockPersonServiceStub stub;
+    UpdateEmailResponse response;
+    response.set_email("qw5678@columbia.edu");
+    EXPECT_CALL(stub, UpdateEmail(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoUpdateEmail();
 }
 
 TEST(MockPersonService, CheckUpdateEmailFailed) {
@@ -282,7 +306,6 @@ TEST(MockPersonService, CheckCreateAdministrator) {
     client.DoCreateAdministrator();
 }
 
-
 TEST(MockPersonService, CheckDeleteStudent) {
     MockPersonServiceStub stub;
     DeletePersonResponse response;
@@ -290,6 +313,27 @@ TEST(MockPersonService, CheckDeleteStudent) {
     EXPECT_CALL(stub, DeleteStudent(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
     FakeClient client(&stub);
     client.DoDeleteStudent();
+}
+
+TEST(MockPersonService, CheckCreateFacultyRating) {
+    MockPersonServiceStub stub;
+    CreateFacultyRatingResponse response;
+    response.set_message("OK");
+    EXPECT_CALL(stub, CreateFacultyRating(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoCreateFacultyRating();
+}
+
+TEST(MockPersonService, CheckGetFacultyRating) {
+    MockPersonServiceStub stub;
+    GetFacultyRatingResponse response;
+    response.set_message("OK");
+    response.set_score(4.5);
+    response.add_comments("very good");
+    response.add_comments("good");
+    EXPECT_CALL(stub, GetFacultyRating(_, _, _)).Times(1).WillOnce(DoAll(SetArgumentPointee<2>(response), Return(Status::OK)));
+    FakeClient client(&stub);
+    client.DoGetFacultyRating();
 }
 
 int main(int argc, char** argv) {
