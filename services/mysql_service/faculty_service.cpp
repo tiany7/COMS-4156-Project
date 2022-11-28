@@ -147,7 +147,7 @@ int FacultyDBService::DelPost(string postid)
         auto stmt = con->createStatement();
         char buffer[150] = {0};
         string sql = "DELETE FROM profpost WHERE postid='%s'";
-        sprintf(buffer, postid.c_str());
+        sprintf(buffer, sql.c_str(), postid.c_str());
         stmt->execute(string(buffer));
         if(stmt)delete stmt, stmt = nullptr;
     }catch (sql::SQLException &e) {

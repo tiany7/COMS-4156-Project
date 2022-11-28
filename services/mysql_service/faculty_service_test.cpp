@@ -6,13 +6,6 @@
 using grpc::Channel;
 using grpc::ClientContext;
 using namespace testing;
-TEST(HelloTest, PP) {
-// Expect two strings not to be equal.
-EXPECT_STRNE("hello", "world");
-// Expect equality.
-EXPECT_EQ(7 * 6, 42);
-}
-
 
 
 class MockFacultyDBService : public FacultyDBService{
@@ -26,13 +19,21 @@ public:
 
 };
 
-//TEST(TestMySQLServer, Initialize){
-//    MockFacultyDBService mock;
-//    FacultyRsp rsp;
+
+TEST(HelloTest, PP) {
+    // Expect two strings not to be equal.
+    EXPECT_STRNE("hello", "world");
+    // Expect equality.
+    EXPECT_EQ(7 * 6, 42);
+}
+
+TEST(TestMySQLServer, Initialize){
+    FacultyDBService mock;
+    FacultyRsp rsp;
 //    EXPECT_CALL(mock, GetFacultyDept("test", &rsp)).Times(1).WillOnce(Return(1));
-//    EXPECT_EQ(1, mock.GetFacultyDept("test", &rsp));
-//
-//}
+    auto res = mock.GetFacultyDept("COMS", &rsp)
+    EXPECT_EQ(0, res);
+}
 
 TEST(TestMySQLServer, Initialize2){
     FacultyDBService mock;
@@ -46,6 +47,12 @@ TEST(TestMySQLServer, Initialize3){
     EXPECT_EQ(1, mock.Print());
 
 }
+
+// TEST(ProfpostTest, Insertion){
+//     FacultyDBService mock;
+//     auto res = mock.InsertPost("fg1121", "Hello world!", "Active", "20221122151515fg1121");
+//     EXPECT_EQ(0, res);
+// }
 
 int main(int argc, char** argv) {
     // The following line must be executed to initialize Google Mock
