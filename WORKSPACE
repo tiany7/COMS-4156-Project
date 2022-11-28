@@ -61,3 +61,9 @@ http_archive(
     strip_prefix = "cpplint-1.2.2",
     url = "https://pypi.python.org/packages/source/c/cpplint/cpplint-1.2.2.tar.gz",
 )
+
+git_repository(
+    name = "json_lib",
+    remote = "https://github.com/nlohmann/json.git",
+    commit = "a3e6e26dc83a726b292f5be0492fcc408663ce55",
+)

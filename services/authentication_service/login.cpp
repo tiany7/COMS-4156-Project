@@ -21,7 +21,7 @@ std::string Login::getRedisKey(const std::string &username)
 
 bool Login::Register(const std::string& username, const std::string& password)
 {
-    if (redis_client_->Exists(getRedisKey(username)))
+    if (redis_client_->Exists(username))
     {
         std::cout<<"user already exists"<<std::endl;
         return false;
