@@ -3,8 +3,14 @@
 #include <string>
 
 #include <grpcpp/grpcpp.h>
+#include <nlohmann/json.hpp>
+
 #include "httplib.h"
 #include "proto/mysql_server_proto/faculty.grpc.pb.h"
+#include "services/authentication_service/auth_checker.h"
+
+
+using json = nlohmann::json;
 
 using grpc::Channel;
 using grpc::ClientContext;
@@ -119,12 +125,12 @@ public:
 
         ClientContext context;
 
-        Status status = stub_->InsertPost(&context, f, &reply);
+        auto ret = stub_->InsertPost(&context, f, &reply);
 
-        if (status.ok()) {
+        if (ret.ok()) {
             return 0;
         } else {
-            std::cout << status.error_code() << ": " << status.error_message()
+            std::cout << ret.error_code() << ": " << ret.error_message()
                       << std::endl;
             return -1;
         }
@@ -159,6 +165,8 @@ int main(int argc, char** argv) {
             "localhost:50051", grpc::InsecureChannelCredentials()));
 
     httplib::Server svr;
+    AuthServiceClient auth_checker(
+            grpc::CreateChannel("localhost:95955", grpc::InsecureChannelCredentials()));
 
     svr.Get("/search_dept", [&](const httplib::Request & req, httplib::Response &res) {
         auto param = req.get_param_value("department");
@@ -181,47 +189,64 @@ int main(int argc, char** argv) {
     });
 
     svr.Post("/add_instructor", [&](const httplib::Request & req, httplib::Response &res) {
-        auto name = req.get_param_value("name");
-        auto dept = req.get_param_value("dept");
-        auto uni = req.get_param_value("uni");
-        auto country = req.get_param_value("country");
+        auto js = json::parse(req.body);
+        auto name = js["name"];
+        auto dept = js["department"];
+        auto uni = js["uni"];
+        auto country = js["country"];
+        auto access_token = js["access_token"];
+        auto username = js["username"];
+        json j;
+        if (!auth_checker.IsLoggedIn(username)){
+            j["status"] = "error";
+            j["message"] = "not logged in";
+            res.set_content(j.dump(), "application/json");
+            return;
+        }
+        if (!auth_checker.CheckSecret(username, access_token)){
+            j["status"] = "error";
+            j["message"] = "invalid access token";
+            res.set_content(j.dump(), "application/json");
+            return;
+        }
+
         auto ret = facultyServiceClient.InsertFaculty(name, dept, uni, country);
-        std::ostringstream os;
-        os<<"Status: "<<ret<<std::endl;
-        res.set_content(os.str().c_str(), "text/plain");
+        j["status"] = ret;
+        res.set_content(j.dump(), "application/json");
     });
 
     svr.Post("/add_profpost", [&](const httplib::Request & req, httplib::Response &res) {
-        auto uni = req.get_param_value("uni");
-        auto content = req.get_param_value("content");
-        auto status = req.get_param_value("status");
-        auto profid = req.get_param_value("profid");
+        auto js = json::parse(req.body);
+        auto uni = js["uni"];
+        auto content = js["content"];
+        auto status = js["status"];
+        auto postid = js["postid"];
         auto ret = facultyServiceClient.InsertPost(uni, content, status, postid);
-        std::ostringstream os;
-        os<<"Status: "<<ret<<std::endl;
-        res.set_content(os.str().c_str(), "text/plain");
+        json j;
+        j["status"] = ret;
+    res.set_content(j.dump(), "application/json");
     });
 
-    svr.Post("/mod_profpost", [&](const httplib::Request & req, httplib::Response &res) {
-        auto uni = req.get_param_value("uni");
-        auto content = req.get_param_value("content");
-        auto status = req.get_param_value("status");
-        auto profid = req.get_param_value("profid");
-        auto ret = facultyServiceClient.ModifyPost(postid, uni, content, status);
-        std::ostringstream os;
-        os<<"Status: "<<ret<<std::endl;
-        res.set_content(os.str().c_str(), "text/plain");
-    });
-
-    svr.Get("/find_post", [&](const httplib::Request & req, httplib::Response &res) {
-        auto body = req.get_param_value("uni");
-        auto v = facultyServiceClient.GetPost(body);
-        std::ostringstream os;
-        for(auto it : v){
-            os << it.uni()<<" | "<< it.postid()<< " | "<<it.status()<<" | "<<it.content()<< std::endl;
-        }
-        res.set_content(os.str().c_str(), "text/plain");
-    });
+//    svr.Post("/mod_profpost", [&](const httplib::Request & req, httplib::Response &res) {
+//        auto uni = req.get_param_value("uni");
+//        auto content = req.get_param_value("content");
+//        auto status = req.get_param_value("status");
+//        auto profid = req.get_param_value("profid");
+//        auto ret = facultyServiceClient.ModifyPost(postid, uni, content, status);
+//        std::ostringstream os;
+//        os<<"Status: "<<ret<<std::endl;
+//        res.set_content(os.str().c_str(), "text/plain");
+//    });
+//
+//    svr.Get("/find_post", [&](const httplib::Request & req, httplib::Response &res) {
+//        auto body = req.get_param_value("uni");
+//        auto v = facultyServiceClient.GetPost(body);
+//        std::ostringstream os;
+//        for(auto it : v){
+//            os << it.uni()<<" | "<< it.postid()<< " | "<<it.status()<<" | "<<it.content()<< std::endl;
+//        }
+//        res.set_content(os.str().c_str(), "text/plain");
+//    });
 
     std::cout << "Server started" << std::endl;
     svr.listen("0.0.0.0", 8080);

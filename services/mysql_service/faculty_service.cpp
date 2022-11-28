@@ -102,8 +102,10 @@ int FacultyDBService::InsertFaculty( string name,  string dept,  string uni,  st
     try {
         auto stmt = con->createStatement();
         char buffer[150] = {0};
+        std::cout<<"insert faculty"<<" "<<name<<" "<<dept<<" "<<uni<<" "<<country<<std::endl;
         string sql = "INSERT INTO faculty(name, uni, department, country) VALUES ('%s', '%s', '%s', '%s')";
         sprintf(buffer, sql.c_str(), name.c_str(), dept.c_str(),uni.c_str(),  country.c_str());
+        std::cout<<buffer<<std::endl;
         stmt->execute(string(buffer));
         if(stmt)delete stmt, stmt = nullptr;
     }catch (sql::SQLException &e) {
