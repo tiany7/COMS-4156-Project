@@ -48,11 +48,30 @@ TEST(TestMySQLServer, Initialize3){
 
 }
 
-// TEST(ProfpostTest, Insertion){
-//     FacultyDBService mock;
-//     auto res = mock.InsertPost("fg1121", "Hello world!", "Active", "20221122151515fg1121");
-//     EXPECT_EQ(0, res);
-// }
+TEST(ProfpostTest, Create){
+    FacultyDBService mock;
+    auto res = mock.InsertPost("fg1121", "Hello world!", "Active", "20221122151515fg1121");
+    EXPECT_EQ(0, res);
+}
+
+TEST(ProfpostTest, Read){
+    FacultyDBService mock;
+    ProfpostRsp reply;
+    auto res = mock.GetPost("fg1121", &reply);
+    EXPECT_EQ(0, res);
+}
+
+TEST(ProfpostTest, Update){
+    FacultyDBService mock;
+    auto res = mock.InsertPost("fg1121", "New Content", "Active", "20221122151515fg1121");
+    EXPECT_EQ(0, res);
+}
+
+TEST(ProfpostTest, Delete){
+    FacultyDBService mock;
+    auto res = mock.DelPost("20221122151515fg1121");
+    EXPECT_EQ(0, res);
+}
 
 int main(int argc, char** argv) {
     // The following line must be executed to initialize Google Mock
