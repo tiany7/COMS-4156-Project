@@ -12,6 +12,9 @@ using grpc::Status;
 using std::vector;
 using std::string;
 class FacultyServiceClient {
+private:
+    std::unique_ptr<FacultyService::Stub> stub_;
+
 public:
     FacultyServiceClient(std::shared_ptr<Channel> channel)
             : stub_(FacultyService::NewStub(channel)) {}
@@ -38,6 +41,7 @@ public:
             return {};
         }
     }
+
     vector<Faculty> GetFacultyByUni(const string &uni) {
         GetFacultyReq request;
         request.set_uni(uni);
@@ -59,6 +63,29 @@ public:
             return {};
         }
     }
+
+    vector<Profpost> GetPost(const string &uni) {
+        GetPostReq request;
+        request.set_uni(uni);
+
+        ProfpostRsp reply;
+
+        ClientContext context;
+        Status status = stub_->GetPost(&context, request, &reply);
+
+        if (status.ok()) {
+            vector<Profpost> v;
+            for(auto it : *reply.mutable_profpost()){
+                v.push_back(it);
+            }
+            return v;
+        } else {
+            std::cout << status.error_code() << ": " << status.error_message()
+                      << std::endl;
+            return {};
+        }
+    }
+
     int InsertFaculty(const string &name, const string &dept, const string &uni, const string & country) {
         Faculty f;
         f.set_name(name);
@@ -80,8 +107,51 @@ public:
             return -1;
         }
     }
-private:
-    std::unique_ptr<FacultyService::Stub> stub_;
+
+    int InsertPost(const string &uni, const string &content, const string &status, const string & postid) {
+        Profpost f;
+        f.set_uni(uni);
+        f.set_content(content);
+        f.set_status(status);
+        f.set_postid(postid);
+
+        Profpost reply;
+
+        ClientContext context;
+
+        Status status = stub_->InsertPost(&context, f, &reply);
+
+        if (status.ok()) {
+            return 0;
+        } else {
+            std::cout << status.error_code() << ": " << status.error_message()
+                      << std::endl;
+            return -1;
+        }
+    }
+
+    int ModifyPost(const string & postid, const string &uni, const string &content, const string &status){
+        return InsertPost(uni, content, status, postid);
+    }
+
+    int DeletePost(const string & postid) {
+        DelPostReq f;
+        f.set_postid(postid);
+
+        Profpost reply;
+
+        ClientContext context;
+
+        Status status = stub_->DelPost(&context, f, &reply);
+
+        if (status.ok()) {
+            return 0;
+        } else {
+            std::cout << status.error_code() << ": " << status.error_message()
+                      << std::endl;
+            return -1;
+        }
+    }
 };
 
 int main(int argc, char** argv) {
@@ -89,6 +159,7 @@ int main(int argc, char** argv) {
             "localhost:50051", grpc::InsecureChannelCredentials()));
 
     httplib::Server svr;
+
     svr.Get("/search_dept", [&](const httplib::Request & req, httplib::Response &res) {
         auto param = req.get_param_value("department");
         vector<Faculty> v = facultyServiceClient.GetFaculty(param);
@@ -98,6 +169,7 @@ int main(int argc, char** argv) {
         }
         res.set_content(os.str().c_str(), "text/plain");
     });
+
     svr.Get("/search_uni", [&](const httplib::Request & req, httplib::Response &res) {
         auto body = req.get_param_value("uni");
         vector<Faculty> v = facultyServiceClient.GetFacultyByUni(body);
@@ -116,6 +188,38 @@ int main(int argc, char** argv) {
         auto ret = facultyServiceClient.InsertFaculty(name, dept, uni, country);
         std::ostringstream os;
         os<<"Status: "<<ret<<std::endl;
+        res.set_content(os.str().c_str(), "text/plain");
+    });
+
+    svr.Post("/add_profpost", [&](const httplib::Request & req, httplib::Response &res) {
+        auto uni = req.get_param_value("uni");
+        auto content = req.get_param_value("content");
+        auto status = req.get_param_value("status");
+        auto profid = req.get_param_value("profid");
+        auto ret = facultyServiceClient.InsertPost(uni, content, status, postid);
+        std::ostringstream os;
+        os<<"Status: "<<ret<<std::endl;
+        res.set_content(os.str().c_str(), "text/plain");
+    });
+
+    svr.Post("/mod_profpost", [&](const httplib::Request & req, httplib::Response &res) {
+        auto uni = req.get_param_value("uni");
+        auto content = req.get_param_value("content");
+        auto status = req.get_param_value("status");
+        auto profid = req.get_param_value("profid");
+        auto ret = facultyServiceClient.ModifyPost(postid, uni, content, status);
+        std::ostringstream os;
+        os<<"Status: "<<ret<<std::endl;
+        res.set_content(os.str().c_str(), "text/plain");
+    });
+
+    svr.Get("/find_post", [&](const httplib::Request & req, httplib::Response &res) {
+        auto body = req.get_param_value("uni");
+        auto v = facultyServiceClient.GetPost(body);
+        std::ostringstream os;
+        for(auto it : v){
+            os << it.uni()<<" | "<< it.postid()<< " | "<<it.status()<<" | "<<it.content()<< std::endl;
+        }
         res.set_content(os.str().c_str(), "text/plain");
     });
 
