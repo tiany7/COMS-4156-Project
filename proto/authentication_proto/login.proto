@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+message UserInfo {
+    string username = 1;
+    string token = 2;
+}
+
+message CheckValidRequest {
+    UserInfo user = 1;
+}
+
+message CheckValidResponse {
+    bool valid = 1;
+}
+
+service AuthService {
+    rpc CheckValid(CheckValidRequest) returns (CheckValidResponse) {}
+    rpc IsLoggedIn(CheckValidRequest) returns (CheckValidResponse) {}
+}

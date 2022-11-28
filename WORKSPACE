@@ -41,3 +41,23 @@ git_repository(
     remote = "https://github.com/yhirose/cpp-httplib.git",
     commit = "27cd4e6ffeca2c9978ec1df7de3d22b9303a71b4",
 )
+
+git_repository(
+    name = "redis_lib",
+    remote = "https://github.com/Cylix/cpp_redis.git",
+    commit = "de0e2665ab2fb058f8dd378aac2462ddc053e119",
+)
+http_archive(
+    name = "tacopie",
+    sha256 = "bbdebecdb68d5f9eb64170217000daf844e0aee18b8c4d3dd373d07efd9f7316",
+    strip_prefix = "tacopie-master",
+    url = "https://github.com/cylix/tacopie/archive/master.zip",
+)
+
+http_archive(
+    name = "cpplint_archive",
+    build_file = "@//:cpplint.BUILD",
+    sha256 = "b2979ff630299293f23c52096e408f2b359e2e26cb5cdf24aed4ce53e4293468",
+    strip_prefix = "cpplint-1.2.2",
+    url = "https://pypi.python.org/packages/source/c/cpplint/cpplint-1.2.2.tar.gz",
+)
