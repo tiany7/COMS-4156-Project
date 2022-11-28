@@ -18,6 +18,7 @@ message Profpost {
     string uni = 1;
     string content = 2;
     string status = 3;
+    string postid = 4;
 }
 
 message Option{
@@ -36,6 +37,10 @@ message GetPostReq {
     string uni = 1;
 }
 
+message DelPostReq {
+    string postid = 1;
+}
+
 message FacultyRsp{
     repeated Faculty faculty = 1;
 }
@@ -46,8 +51,9 @@ message ProfpostRsp{
 
 service FacultyService {
     rpc GetFaculty(GetFacultyReq) returns (FacultyRsp);
+    rpc GetFacultyByUni(GetFacultyReq) returns (FacultyRsp);
     rpc GetPost(GetPostReq) returns (ProfpostRsp);
     rpc InsertFaculty(Faculty) returns (Faculty);
     rpc InsertPost(Profpost) returns (Profpost);
-    rpc GetFacultyByUni(GetFacultyReq) returns (FacultyRsp);
+    rpc DelPost(DelPostReq) returns (Profpost);
 }

@@ -69,7 +69,7 @@ int FacultyDBService::GetFacultyUni( string uni, FacultyRsp* reply)
     return 0;
 }
 
-int FacultyDBService::GetPostUni(string uni, ProfpostRsp* reply)
+int FacultyDBService::GetPost(string uni, ProfpostRsp* reply)
 {
     try {
         auto stmt = con->createStatement();
@@ -82,6 +82,7 @@ int FacultyDBService::GetPostUni(string uni, ProfpostRsp* reply)
             profpost->set_uni(string(res->getString(1)));
             profpost->set_content(string(res->getString(2)));
             profpost->set_status(string(res->getString(3)));
+            profpost->set_postid(string(res->getString(4)));
         }
         if(res)delete res, res = nullptr;
         if(stmt)delete stmt, stmt = nullptr;
@@ -118,13 +119,35 @@ int FacultyDBService::InsertFaculty( string name,  string dept,  string uni,  st
     return 0;
 }
 
-int FacultyDBService::InsertPost(string uni, string content, string status)
+int FacultyDBService::InsertPost(string uni, string content, string status, string postid)
 {
     try {
         auto stmt = con->createStatement();
         char buffer[150] = {0};
-        string sql = "INSERT INTO profpost(uni, content, status) VALUES ('%s', '%s', '%s')";
-        sprintf(buffer, sql.c_str(), uni.c_str(), content.c_str(), status.c_str());
+        string sql = "INSERT INTO profpost(uni, content, status, postid) VALUES ('%s', '%s', '%s', '%s') ON DUPLICATE KEY UPDATE uni='%s', content='%s', status='%s'";
+        sprintf(buffer, sql.c_str(), uni.c_str(), content.c_str(), status.c_str(), postid.c_str(), uni.c_str(), content.c_str(), status.c_str());
+        stmt->execute(string(buffer));
+        if(stmt)delete stmt, stmt = nullptr;
+    }catch (sql::SQLException &e) {
+        cout << "# ERR: SQLException in " << __FILE__;
+        cout << "(" << __FUNCTION__ << ") on line "
+             << __LINE__ << endl;
+        cout << "# ERR: " << e.what();
+        cout << " (MySQL error code: " << e.getErrorCode();
+        cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+    }catch (...) {
+        cout << "other exception" << endl;
+    }
+    return 0;
+}
+
+int FacultyDBService::DelPost(string postid)
+{
+    try {
+        auto stmt = con->createStatement();
+        char buffer[150] = {0};
+        string sql = "DELETE FROM profpost WHERE postid='%s'";
+        sprintf(buffer, postid.c_str());
         stmt->execute(string(buffer));
         if(stmt)delete stmt, stmt = nullptr;
     }catch (sql::SQLException &e) {

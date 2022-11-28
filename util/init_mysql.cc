@@ -42,9 +42,10 @@ void InitMySqlV2(){
         stmt->execute("USE `coms4156_db`"); // same above
         stmt->execute("CREATE TABLE IF NOT EXISTS `profpost` ("
                       "`uni` VARCHAR(45) NOT NULL,"
-                      "`content` VARCHAR(256),"
+                      "`content` VARCHAR(256) NOT NULL,"
                       "`status` VARCHAR(16) NOT NULL,"
-                      "PRIMARY KEY (`uni`))");
+                      "`postid` VARCHAR(45) NOT NULL,"
+                      "PRIMARY KEY (`postid`))");
         stmt->execute("CREATE TABLE IF NOT EXISTS `timeslots` ("
                       "`deptid` VARCHAR(10) NOT NULL,"
                       "`start` DATETIME NOT NULL,"

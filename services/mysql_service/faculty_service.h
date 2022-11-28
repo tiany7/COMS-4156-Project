@@ -31,9 +31,10 @@ public:
     FacultyDBService();
     int GetFacultyDept( string  dept_name, FacultyRsp* reply);
     int GetFacultyUni( string  uni, FacultyRsp* reply);
-    int GetPostUni(string uni, ProfpostRsp* reply);
+    int GetPost(string uni, ProfpostRsp* reply);
     int InsertFaculty( string  name,  string  dept,  string  uni,  string  country);
-    int InsertPost(string uni, string content, string status);
+    int InsertPost(string uni, string content, string status, string postid);
+    int DelPost(string postid);
     int CalculateSomething(int a, int b);
     virtual ~FacultyDBService();
     int Print();

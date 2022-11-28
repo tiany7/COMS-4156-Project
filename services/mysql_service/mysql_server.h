@@ -43,7 +43,7 @@ class FacultyServiceServiceImpl final: public FacultyService::Service {
 
     Status GetPost(ServerContext* context, const GetPostReq* request, ProfpostRsp* reply){
         auto uni = request->uni();
-        int success = FacultyDBService().GetPostUni(uni, reply);
+        int success = FacultyDBService().GetPost(uni, reply);
         return Status::OK;
     }
 
@@ -63,7 +63,15 @@ class FacultyServiceServiceImpl final: public FacultyService::Service {
         auto uni = request->uni();
         auto content = request->content();
         auto status = request->status();
-        int success = FacultyDBService().InsertPost(uni, content, status);
+        auto postid = request->postid();
+        int success = FacultyDBService().InsertPost(uni, content, status, postid);
+        return Status::OK;
+    }
+
+    Status DelPost(ServerContext* context, const DelPostReq* request, Profpost* reply)
+    {
+        auto postid = request->postid();
+        int success = FacultyDBService().DelPost(postid);
         return Status::OK;
     }
 };
