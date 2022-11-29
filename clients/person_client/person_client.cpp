@@ -4,9 +4,12 @@
 
 #include "httplib.h"
 #include <grpcpp/grpcpp.h>
+#include <nlohmann/json.hpp>
 #include "proto/person_proto/person.pb.h"
 #include "proto/person_proto/person.grpc.pb.h"
+#include "services/authentication_service/auth_checker.h"
 
+using json = nlohmann::json;
 using ::grpc::Channel;
 using ::grpc::ClientContext;
 using ::grpc::Status;
@@ -178,6 +181,8 @@ private:
 int main(int argc, char** argv) {
     std::string target_str("localhost:50053");
     PersonServiceClient person_service_client(grpc::CreateChannel(target_str, grpc::InsecureChannelCredentials()));
+    AuthServiceClient auth_checker(
+        grpc::CreateChannel("localhost:95955", grpc::InsecureChannelCredentials()));
 
     httplib::Server svr;
     svr.Get("/get_student_info", [&](const httplib::Request &req, httplib::Response &res) {
@@ -245,65 +250,68 @@ int main(int argc, char** argv) {
     });
 
     svr.Post("/update_student_email", [&](const httplib::Request &req, httplib::Response &res) {
-        std::string uni("");
-        std::string email("");
-        if (req.has_param("uni")) {
-            uni = req.get_param_value("uni");
-        }
-        if (req.has_param("email")) {
-            email = req.get_param_value("email");
-        }
+        auto js = json::parse(req.body);
+        auto uni = js["uni"];
+        auto email = js["email"];
+        json j;
         if (uni.empty() || email.empty()) {
-            res.set_content("Empty UNI/Email", "text/plain");
+            j["status"] = "error";
+            j["message"] = "Empty UNI/Email";
+            res.set_content(j.dump(), "application/json");
         } else {
             ErrorCode error_code = person_service_client.UpdateEmail(uni, email);
             if (error_code == ErrorCode::ERROR) {
-                res.set_content("Internal Error", "text/plain");
+                j["status"] = "error";
+                j["message"] = "Internal Error";
+                res.set_content(j.dump(), "application/json");
             } else {
-                res.set_content("Update student email successfully!", "text/plain");
+                j["status"] = "OK";
+                j["message"] = "Update student email successfully!";
+                res.set_content(j.dump(), "application/json");
             }
         }
     });
 
     svr.Post("/create_student", [&](const httplib::Request &req, httplib::Response &res) {
-        std::string uni(""), name("");
-        if (req.has_param("uni")) {
-            uni = req.get_param_value("uni");
-        }
-        if (req.has_param("name")) {
-            name = req.get_param_value("name");
-        }
+        auto js = json::parse(req.body);
+        auto uni = js["uni"];
+        auto name = js["name"];
+        json j;
         if (uni.empty() || name.empty()) {
-            res.set_content("Empty UNI/name", "text/plain");
+            j["status"] = "error";
+            j["message"] = "Empty UNI/name";
+            res.set_content(j.dump(), "application/json");
         } else {
             ErrorCode error_code = person_service_client.CreateStudent(uni, name);
             if (error_code == ErrorCode::ERROR) {
-                res.set_content("Internal Error", "text/plain");
+                j["status"] = "error";
+                j["message"] = "Internal Error";
+                res.set_content(j.dump(), "application/json");
             } else {
-                res.set_content("Create student successfully!", "text/plain");
+                j["status"] = "OK";
+                j["message"] = "Create student successfully!";
+                res.set_content(j.dump(), "application/json");
             }
         }
     });
 
     svr.Post("/create_administrator", [&](const httplib::Request &req, httplib::Response &res) {
-        std::string uni(""), name(""), email("");
-        if (req.has_param("uni")) {
-            uni = req.get_param_value("uni");
-        }
-        if (req.has_param("name")) {
-            name = req.get_param_value("name");
-        }
-        if (req.has_param("email")) {
-            email = req.get_param_value("email");
-        }
+        auto js = json::parse(req.body);
+        auto uni = js["uni"];
+        auto name = js["name"];
+        auto email = js["email"];
+        json j;
         if (uni.empty() || name.empty() || email.empty()) {
-            res.set_content("Empty uni/name/email", "text/plain");
+            j["message"] = "Empty uni/name/email";
+            res.set_content(j.dump(), "application/json");
         } else {
             ErrorCode error_code = person_service_client.CreateAdministrator(uni, name, email);
             if (error_code == ErrorCode::ERROR) {
-                res.set_content("Internal Error", "text/plain");
+                j["message"] = "Internal Error";
+                res.set_content(j.dump(), "application/json");
             } else {
-                res.set_content("Create administrator successfully!", "text/plain");
+                j["message"] = "ok";
+                res.set_content(j.dump(), "application/json");
             }
         }
     });
@@ -326,26 +334,23 @@ int main(int argc, char** argv) {
     });
 
     svr.Post("/create_faculty_rating", [&](const httplib::Request &req, httplib::Response &res) {
-        std::string uni(""), comment(""), score("");
-        if (req.has_param("uni")) {
-            uni = req.get_param_value("uni");
-        }
-        if (req.has_param("comment")) {
-            comment = req.get_param_value("comment");
-        }
-        if (req.has_param("score")) {
-            score = req.get_param_value("score");
-        }
-    
+        auto js = json::parse(req.body);
+        std::string uni = js["uni"];
+        std::string comment = js["comment"];
+        std::string score = js["score"];
+        json j;
         if (uni.empty() || score.empty()) {
-            res.set_content("Empty UNI/Rating", "text/plain");
+            j["message"] = "Empty UNI/Rating";
+            res.set_content("Empty UNI/Rating", "application/json");
         } else {
             uint32 rating = stoi(score);
             ErrorCode error_code = person_service_client.CreateFacultyRating(uni, rating, comment);
             if (error_code == ErrorCode::ERROR) {
-                res.set_content("Internal Error", "text/plain");
+                j["message"] = "Internal Error";
+                res.set_content(j.dump(), "application/json");
             } else {
-                res.set_content("Create faculty rating successfully!", "text/plain");
+                j["message"] = "Create faculty rating successfully!";
+                res.set_content(j.dump(), "application/json");
             }
         }
     });
