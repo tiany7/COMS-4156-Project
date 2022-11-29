@@ -201,6 +201,49 @@ You should use a branch coverage tool together with your unit, integration and s
 
 You should also use a static analysis bug finder tool on your entire server codebase.  The static analyzer should run automatically during CI.  Include the static analysis reports in your server repository.  Try to fix most of the bugs found by the analyzer.
 
+```bash
+Checking auth_main.cpp ...
+1/10 files checked 1% done
+Checking auth_service.cpp ...
+2/10 files checked 15% done
+Checking client_main.cpp ...
+auth_checker.h:11:3: style: Class 'AuthServiceClient' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+  AuthServiceClient(std::shared_ptr<Channel> channel)
+  ^
+3/10 files checked 17% done
+Checking http_layer.cpp ...
+4/10 files checked 46% done
+Checking login.cpp ...
+login.cpp:4:3: warning: Class 'Login' does not have a copy constructor which is recommended since it has dynamic memory/resource allocation(s). [noCopyConstructor]
+  redis_client_ = new RedisClient();
+  ^
+login.cpp:4:3: warning: Class 'Login' does not have a operator= which is recommended since it has dynamic memory/resource allocation(s). [noOperatorEq]
+  redis_client_ = new RedisClient();
+  ^
+5/10 files checked 61% done
+Checking login_test.cpp ...
+6/10 files checked 67% done
+Checking random_generator.cpp ...
+7/10 files checked 73% done
+Checking random_generator_test.cpp ...
+8/10 files checked 80% done
+Checking redis_client.cpp ...
+redis_client.cpp:36:48: style: Parameter 'reply' can be declared with const [constParameter]
+  client_.set(key, value, [](cpp_redis::reply& reply) {
+                                               ^
+redis_client.cpp:49:15: style: Unused variable: value [unusedVariable]
+  std::string value;
+              ^
+9/10 files checked 96% done
+Checking redis_client_test.cpp ...
+10/10 files checked 100% done
+redis_client.cpp:25:0: style: The function 'Disconnect' is never used. [unusedFunction]
+
+^
+nofile:0:0: information: Cppcheck cannot find all the include files (use --check-config for details) [missingInclude]
+
+```
+
 ## End-to-end tests checklist
 
 Implement end-to-end tests where your client exercises as much functionality of your server as possible.  Although ideally automated, it's ok to run end-to-end tests manually.  Document any manual tests with a checklist or some other mechanism to make sure you can re-run the exact same set of tests as needed, e.g., after fixing a bug.
