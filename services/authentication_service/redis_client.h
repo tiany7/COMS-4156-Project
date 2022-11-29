@@ -1,11 +1,11 @@
 #pragma once
 
+#include <cpp_redis/cpp_redis>
 #include <iostream>
 #include <string>
-#include <cpp_redis/cpp_redis>
 
 class RedisClient {
-public:
+ public:
   RedisClient();
   ~RedisClient();
 
@@ -17,6 +17,6 @@ public:
   void Commit();
   bool Exists(const std::string& key);
 
-private:
+ private:
   cpp_redis::client client_;
 };
