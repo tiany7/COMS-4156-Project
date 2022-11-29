@@ -186,7 +186,20 @@ int main(int argc, char** argv) {
         grpc::CreateChannel("localhost:95955", grpc::InsecureChannelCredentials()));
 
     httplib::Server svr;
+    svr.Options("/(.*)",
+            [&](const httplib::Request & /*req*/, httplib::Response &res) {
+                res.set_header("Access-Control-Allow-Methods", " POST, GET, OPTIONS");
+                res.set_header("Content-Type", "text/html; charset=utf-8");
+                res.set_header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Accept");
+                res.set_header("Access-Control-Allow-Origin", "*");
+                res.set_header("Connection", "close");
+            });
     svr.Get("/get_student_info", [&](const httplib::Request &req, httplib::Response &res) {
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
         std::string uni("");
         if (req.has_param("uni")) {
             uni = req.get_param_value("uni");
@@ -209,6 +222,11 @@ int main(int argc, char** argv) {
     });
 
     svr.Get("/get_faculty_info", [&](const httplib::Request &req, httplib::Response &res) {
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
         std::string uni("");
         if (req.has_param("uni")) {
             uni = req.get_param_value("uni");
@@ -230,6 +248,11 @@ int main(int argc, char** argv) {
     });
 
     svr.Get("/get_administrator_info", [&](const httplib::Request &req, httplib::Response &res) {
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
         std::string uni("");
         if (req.has_param("uni")) {
             uni = req.get_param_value("uni");
@@ -251,6 +274,11 @@ int main(int argc, char** argv) {
     });
 
     svr.Post("/update_student_email", [&](const httplib::Request &req, httplib::Response &res) {
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
         auto js = json::parse(req.body);
         auto uni = js["uni"];
         auto email = js["email"];
@@ -274,6 +302,11 @@ int main(int argc, char** argv) {
     });
 
     svr.Post("/create_student", [&](const httplib::Request &req, httplib::Response &res) {
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
         auto js = json::parse(req.body);
         auto uni = js["uni"];
         auto name = js["name"];
@@ -297,6 +330,11 @@ int main(int argc, char** argv) {
     });
 
     svr.Post("/create_administrator", [&](const httplib::Request &req, httplib::Response &res) {
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
         auto js = json::parse(req.body);
         auto uni = js["uni"];
         auto name = js["name"];
@@ -339,6 +377,11 @@ int main(int argc, char** argv) {
         std::string uni = js["uni"];
         std::string comment = js["comment"];
         std::string score = js["score"];
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
         json j;
         if (uni.empty() || score.empty()) {
             j["message"] = "Empty UNI/Rating";
@@ -357,6 +400,11 @@ int main(int argc, char** argv) {
     });
 
     svr.Get("/get_faculty_rating", [&](const httplib::Request &req, httplib::Response &res) {
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
         std::string uni("");
         if (req.has_param("uni")) {
             uni = req.get_param_value("uni");
