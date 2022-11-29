@@ -6,7 +6,6 @@
 #include <nlohmann/json.hpp>
 
 #include "httplib.h"
-#include "login.h"
 #include "proto/mysql_server_proto/faculty.grpc.pb.h"
 #include "services/authentication_service/auth_checker.h"
 
