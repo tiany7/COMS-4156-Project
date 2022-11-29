@@ -410,6 +410,39 @@ Logout is a POST request that takes in a username and token. It will return a me
 
 You can use the postman to test the authentication service. The postman collection is in the postman folder.
 
+### Person Service
+Entry point: PORT is 8083 (e.g. localhost:8083)
+POST requests:
+
+/update_student_email: take uni and email as input, and return messages for updating status.
+
+/create_student: take uni and name as input, and return messages to show the status of creatign a new student.
+
+/create_administrator: take uni, name and email as input, and return messages to show the status of creatign a new administrator.
+
+/create_faculty_rating: take uni, comment and score as input, and return messages to indidate corresponding status.
+
+GET requests:
+
+/get_student_info?uni=xxxx
+/get_faculty_info?uni=xxxx
+/get_administrator_info?uni=xxxx
+
+Take uni as input and retrieve related information of the student/faculty/administrator.
+
+/get_faculty_rating?uni=xxxx
+
+Take uni as input and retrieve average score and top10 comments of the corresponing faculty.
+
+DELETE requests:
+
+/delete_student?uni=xxxx
+
+Take uni as input and delete the corresponding student record.
+
+
+
+
 #### Init the service
 
 Boot the service in the following order.
