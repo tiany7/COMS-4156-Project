@@ -6,6 +6,7 @@
 #include <nlohmann/json.hpp>
 
 #include "httplib.h"
+#include "login.h"
 #include "proto/mysql_server_proto/faculty.grpc.pb.h"
 #include "services/authentication_service/auth_checker.h"
 
@@ -169,7 +170,7 @@ int main(int argc, char** argv) {
             grpc::CreateChannel("localhost:95955", grpc::InsecureChannelCredentials()));
 
     svr.Options("/(.*)",
-              [&](const Request & /*req*/, Response &res) {
+              [&](const httplib::Request & /*req*/, httplib::Response &res) {
                   res.set_header("Access-Control-Allow-Methods", " POST, GET, OPTIONS");
                   res.set_header("Content-Type", "text/html; charset=utf-8");
                   res.set_header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Accept");
