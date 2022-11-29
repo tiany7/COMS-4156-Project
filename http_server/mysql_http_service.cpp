@@ -221,32 +221,63 @@ int main(int argc, char** argv) {
         auto content = js["content"];
         auto status = js["status"];
         auto postid = js["postid"];
-        auto ret = facultyServiceClient.InsertPost(uni, content, status, postid);
+        auto access_token = js["access_token"];
+        auto username = js["username"];
         json j;
+        if (!auth_checker.IsLoggedIn(username)){
+            j["status"] = "error";
+            j["message"] = "not logged in";
+            res.set_content(j.dump(), "application/json");
+            return;
+        }
+        if (!auth_checker.CheckSecret(username, access_token)){
+            j["status"] = "error";
+            j["message"] = "invalid access token";
+            res.set_content(j.dump(), "application/json");
+            return;
+        }
+
+        auto ret = facultyServiceClient.InsertPost(uni, content, status, postid);
         j["status"] = ret;
-    res.set_content(j.dump(), "application/json");
+        res.set_content(j.dump(), "application/json");
     });
 
-//    svr.Post("/mod_profpost", [&](const httplib::Request & req, httplib::Response &res) {
-//        auto uni = req.get_param_value("uni");
-//        auto content = req.get_param_value("content");
-//        auto status = req.get_param_value("status");
-//        auto profid = req.get_param_value("profid");
-//        auto ret = facultyServiceClient.ModifyPost(postid, uni, content, status);
-//        std::ostringstream os;
-//        os<<"Status: "<<ret<<std::endl;
-//        res.set_content(os.str().c_str(), "text/plain");
-//    });
-//
-//    svr.Get("/find_post", [&](const httplib::Request & req, httplib::Response &res) {
-//        auto body = req.get_param_value("uni");
-//        auto v = facultyServiceClient.GetPost(body);
-//        std::ostringstream os;
-//        for(auto it : v){
-//            os << it.uni()<<" | "<< it.postid()<< " | "<<it.status()<<" | "<<it.content()<< std::endl;
-//        }
-//        res.set_content(os.str().c_str(), "text/plain");
-//    });
+    svr.Post("/mod_profpost", [&](const httplib::Request & req, httplib::Response &res) {
+        auto js = json::parse(req.body);
+        auto uni = js["uni"];
+        auto content = js["content"];
+        auto status = js["status"];
+        auto postid = js["postid"];
+        auto access_token = js["access_token"];
+        auto username = js["username"];
+        json j;
+        if (!auth_checker.IsLoggedIn(username)){
+            j["status"] = "error";
+            j["message"] = "not logged in";
+            res.set_content(j.dump(), "application/json");
+            return;
+        }
+        if (!auth_checker.CheckSecret(username, access_token)){
+            j["status"] = "error";
+            j["message"] = "invalid access token";
+            res.set_content(j.dump(), "application/json");
+            return;
+        }
+
+        auto ret = facultyServiceClient.ModifyPost(postid, uni, content, status);
+        j["status"] = ret;
+        res.set_content(j.dump(), "application/json");
+    });
+
+    svr.Get("/search_post", [&](const httplib::Request & req, httplib::Response &res) {
+        auto body = req.get_param_value("uni");
+        auto v = facultyServiceClient.GetPost(body);
+        std::ostringstream os;
+        for(auto it : v){
+            os << it.postid()<<" | "<< it.uni()<< " | "<<it.content()<<" | "<<it.status()<< std::endl;
+        }
+        res.set_content(os.str().c_str(), "text/plain");
+    });
 
     std::cout << "Server started" << std::endl;
     svr.listen("0.0.0.0", 8080);
