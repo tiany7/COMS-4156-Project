@@ -197,6 +197,21 @@ Add continuous integration (CI) to your main github repository, where your serve
 
 You should use a branch coverage tool together with your unit, integration and system testing during CI.  Try to achieve at least 85% branch coverage. Include your testing and coverage reports in your server repository. Try to fix most of the bugs found by the tests.
 
+```bash
+Reading data file bazel-testlogs/services/authentication_service/random_generator_test/coverage.dat
+Resolved relative source file path "services/authentication_service/random_generator.cpp" with CWD to "/home/azureuser/COMS-4156-Project/services/authentication_service/random_generator.cpp".
+Found 1 entries.
+Found common filename prefix "/home/azureuser/COMS-4156-Project/services"
+Writing .css and .png files.
+Generating output.
+Processing file authentication_service/random_generator.cpp
+Writing directory view page.
+Overall coverage rate:
+  lines......: 100.0% (19 of 19 lines)
+  functions..: 100.0% (3 of 3 functions)
+
+```
+
 ## Static analysis reports
 
 You should also use a static analysis bug finder tool on your entire server codebase.  The static analyzer should run automatically during CI.  Include the static analysis reports in your server repository.  Try to fix most of the bugs found by the analyzer.
