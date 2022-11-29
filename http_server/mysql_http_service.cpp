@@ -168,6 +168,15 @@ int main(int argc, char** argv) {
     AuthServiceClient auth_checker(
             grpc::CreateChannel("localhost:95955", grpc::InsecureChannelCredentials()));
 
+    svr.Options("/(.*)",
+              [&](const Request & /*req*/, Response &res) {
+                  res.set_header("Access-Control-Allow-Methods", " POST, GET, OPTIONS");
+                  res.set_header("Content-Type", "text/html; charset=utf-8");
+                  res.set_header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Accept");
+                  res.set_header("Access-Control-Allow-Origin", "*");
+                  res.set_header("Connection", "close");
+              });
+    
     svr.Get("/search_dept", [&](const httplib::Request & req, httplib::Response &res) {
         auto param = req.get_param_value("department");
         vector<Faculty> v = facultyServiceClient.GetFaculty(param);
@@ -175,6 +184,11 @@ int main(int argc, char** argv) {
         for(auto it : v){
             os << it.name()<<" | "<< it.department()<< " | "<<it.uni()<<" | "<<it.country()<< std::endl;
         }
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
         res.set_content(os.str().c_str(), "text/plain");
     });
 
@@ -185,6 +199,11 @@ int main(int argc, char** argv) {
         for(auto it : v){
             os << it.name()<<" | "<< it.department()<< " | "<<it.uni()<<" | "<<it.country()<< std::endl;
         }
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
         res.set_content(os.str().c_str(), "text/plain");
     });
 
@@ -212,6 +231,12 @@ int main(int argc, char** argv) {
 
         auto ret = facultyServiceClient.InsertFaculty(name, dept, uni, country);
         j["status"] = ret;
+
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
         res.set_content(j.dump(), "application/json");
     });
 
@@ -239,6 +264,12 @@ int main(int argc, char** argv) {
 
         auto ret = facultyServiceClient.InsertPost(uni, content, status, postid);
         j["status"] = ret;
+
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
         res.set_content(j.dump(), "application/json");
     });
 
@@ -266,6 +297,12 @@ int main(int argc, char** argv) {
 
         auto ret = facultyServiceClient.ModifyPost(postid, uni, content, status);
         j["status"] = ret;
+
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
         res.set_content(j.dump(), "application/json");
     });
 
@@ -276,6 +313,11 @@ int main(int argc, char** argv) {
         for(auto it : v){
             os << it.postid()<<" | "<< it.uni()<< " | "<<it.content()<<" | "<<it.status()<< std::endl;
         }
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
         res.set_content(os.str().c_str(), "text/plain");
     });
 

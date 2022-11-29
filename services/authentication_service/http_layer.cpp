@@ -9,14 +9,25 @@ using namespace httplib;
 int main() {
   Server svr;
   Login login;
+  svr.Options("/(.*)",
+              [&](const Request & /*req*/, Response &res) {
+                  res.set_header("Access-Control-Allow-Methods", " POST, GET, OPTIONS");
+                  res.set_header("Content-Type", "text/html; charset=utf-8");
+                  res.set_header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Accept");
+                  res.set_header("Access-Control-Allow-Origin", "*");
+                  res.set_header("Connection", "close");
+              });
   svr.Get("/Hello", [&](const Request &req, Response &res) {
     res.set_content("Hello World!", "text/plain");
+      res.set_header("Access-Control-Allow-Origin", "*");
+      res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+      res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
   });
   svr.Post("/Register", [&](const Request &req, Response &res) {
     auto valueMap = json::parse(req.body);
     std::string username = valueMap["username"];
     std::string password = valueMap["password"];
-
+    std::cout<<"register"<<std::endl;
     json j;
     auto result = login.Register(username, password);
     std::cout << username << std::endl;
@@ -26,7 +37,13 @@ int main() {
     } else {
       j["status"] = "duplicated user";
     }
+    res.set_header("Access-Control-Allow-Credentials", "true");
+      res.set_header("Access-Control-Allow-Origin", "*");
+      res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+      res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+      res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
     res.set_content(j.dump(), "application/json");
+
   });
 
   svr.Post("/login", [&](const Request &req, Response &res) {
@@ -47,8 +64,13 @@ int main() {
     if (result.empty()) {
       j["error"] = "wrong password";
     }
-
+      res.set_header("Access-Control-Allow-Credentials", "true");
+      res.set_header("Access-Control-Allow-Origin", "*");
+      res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+      res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+      res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
     res.set_content(j.dump(), "application/json");
+
   });
   svr.Post("/logout", [&](const Request &req, Response &res) {
     // json
@@ -58,7 +80,12 @@ int main() {
     login.LogOut(username);
     json j;
     j["logout"] = "success";
+      res.set_header("Access-Control-Allow-Credentials", "true");
+      res.set_header("Access-Control-Allow-Origin", "*");
+      res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+      res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+      res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
     res.set_content(j.dump(), "application/json");
   });
-  svr.listen("localhost", 30005);
+  svr.listen("0.0.0.0", 30005);
 }
