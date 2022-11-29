@@ -288,54 +288,6 @@ Your entire server codebase, including test cases and even trivial code, should 
 Errors are trivial. We already formatted our codebase with clang-format.
 
 ```bash
-auth_main.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-auth_main.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
-auth_main.cpp:7:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
-Done processing auth_main.cpp
-auth_service.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-auth_service.cpp:8:  Include the directory when naming header files  [build/include_subdir] [4]
-auth_service.cpp:58:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
-Done processing auth_service.cpp
-client_main.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-client_main.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
-client_main.cpp:3:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
-client_main.cpp:8:  Line contains only semicolon. If this should be an empty statement, use {} instead.  [whitespace/semicolon] [5]
-client_main.cpp:13:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
-Done processing client_main.cpp
-http_layer.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-http_layer.cpp:2:  Found C++ system header after other header. Should be: http_layer.h, c system, c++ system, other.  [build/include_order] [4]
-http_layer.cpp:4:  Include the directory when naming header files  [build/include_subdir] [4]
-http_layer.cpp:5:  Include the directory when naming header files  [build/include_subdir] [4]
-http_layer.cpp:7:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
-http_layer.cpp:96:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
-Done processing http_layer.cpp
-login.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-login.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
-login.cpp:67:  Add #include <string> for string  [build/include_what_you_use] [4]
-Done processing login.cpp
-login_test.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-login_test.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
-login_test.cpp:5:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
-login_test.cpp:29:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
-Done processing login_test.cpp
-random_generator.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-random_generator.cpp:2:  Include the directory when naming header files  [build/include_subdir] [4]
-random_generator.cpp:12:  Use int16/int64/etc, rather than the C type long  [runtime/int] [4]
-random_generator.cpp:26:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
-Done processing random_generator.cpp
-random_generator_test.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-random_generator_test.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
-random_generator_test.cpp:8:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
-random_generator_test.cpp:35:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
-Done processing random_generator_test.cpp
-redis_client.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-redis_client.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
-Done processing redis_client.cpp
-redis_client_test.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-redis_client_test.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
-redis_client_test.cpp:8:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
-Done processing redis_client_test.cpp
-Total errors found: 37
 root@GRPC:/home/azureuser/COMS-4156-Project/services/authentication_service# cpplint *.cpp
 auth_main.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
 auth_main.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
@@ -384,6 +336,7 @@ redis_client_test.cpp:0:  No copyright message found.  You should have a line: "
 redis_client_test.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
 redis_client_test.cpp:8:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
 Done processing redis_client_test.cpp
+Total errors found: 37
 
 ```
 ## Operational entry points
@@ -461,5 +414,45 @@ It is important to set up the authentication service as a part of the whole serv
 
 If any third-party code is included in either your server or client codebase, also document exactly which code this is, where it resides in your repository, and where you got it from (e.g., download url).
 
+All included libraries can be found in the WORKSPACE file, along with their download urls and commit SHAs ending with .git
 
+```python
+git_repository(
+    name = "comm_github_mysql_cpp_connector",
+    remote = "https://github.com/tiany7/mysql_dependencies.git",
+    commit = "8ba122f93a2f5f9755d4fcef14fe9bcb6acd4edc",
+)
+
+git_repository(
+    name = "http_lib",
+    remote = "https://github.com/yhirose/cpp-httplib.git",
+    commit = "27cd4e6ffeca2c9978ec1df7de3d22b9303a71b4",
+)
+
+git_repository(
+    name = "redis_lib",
+    remote = "https://github.com/Cylix/cpp_redis.git",
+    commit = "de0e2665ab2fb058f8dd378aac2462ddc053e119",
+)
+http_archive(
+    name = "tacopie",
+    sha256 = "bbdebecdb68d5f9eb64170217000daf844e0aee18b8c4d3dd373d07efd9f7316",
+    strip_prefix = "tacopie-master",
+    url = "https://github.com/cylix/tacopie/archive/master.zip",
+)
+
+http_archive(
+    name = "cpplint_archive",
+    build_file = "@//:cpplint.BUILD",
+    sha256 = "b2979ff630299293f23c52096e408f2b359e2e26cb5cdf24aed4ce53e4293468",
+    strip_prefix = "cpplint-1.2.2",
+    url = "https://pypi.python.org/packages/source/c/cpplint/cpplint-1.2.2.tar.gz",
+)
+
+git_repository(
+    name = "json_lib",
+    remote = "https://github.com/nlohmann/json.git",
+    commit = "a3e6e26dc83a726b292f5be0492fcc408663ce55",
+)
+```
 
