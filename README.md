@@ -209,6 +209,19 @@ Writing directory view page.
 Overall coverage rate:
   lines......: 100.0% (19 of 19 lines)
   functions..: 100.0% (3 of 3 functions)
+  
+  
+Reading data file bazel-testlogs/services/authentication_service/redis_client_test/coverage.dat
+Resolved relative source file path "services/authentication_service/redis_client.cpp" with CWD to "/home/azureuser/COMS-4156-Project/services/authentication_service/redis_client.cpp".
+Found 1 entries.
+Found common filename prefix "/home/azureuser/COMS-4156-Project/services"
+Writing .css and .png files.
+Generating output.
+Processing file authentication_service/redis_client.cpp
+Writing directory view page.
+Overall coverage rate:
+  lines......: 84.0% (42 of 50 lines)
+  functions..: 90.0% (9 of 10 functions)
 
 ```
 
