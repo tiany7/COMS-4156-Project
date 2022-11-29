@@ -414,6 +414,19 @@ Logout is a POST request that takes in a username and token. It will return a me
 
 You can use the postman to test the authentication service. The postman collection is in the postman folder.
 
+### Faculty Post
+This service enables professors to post their small ads/posts. Each entry consists of: `postid` (the unique id number of the post), `uni` (of the professor), `content` (a string, the contents of their ads/posts), `status` (indicating whether the ad is `Active` or `Expired`).
+
+POST requests:
+* /add_profpost: take `postid`, `uni`, `content`, `status` as inputs, `username` and `accesstoken` also required. If the `postid` already exists in the database, it would replace the existing entry.
+* /mod_profpost: same as /add_profpost.
+
+GET requests:
+* /search_post: take `uni` as input, returns all the posts posted by the professor with the `uni`.
+
+DELETE requests:
+* /delete_post: available soon. take `postid` as input, delete the post with the `postid` if exists.
+
 ### Person Service
 Entry point: PORT is 8083 (e.g. localhost:8083)
 
