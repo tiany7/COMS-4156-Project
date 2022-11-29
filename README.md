@@ -187,7 +187,7 @@ Github repository: https://github.com/zchen565/4156_FE/tree/main/demo01
 
 Readme: https://github.com/zchen565/4156_FE/blob/main/demo01/README.md
 
-Describe how some third-party could develop and run their own client that uses your server.
+Third-party could develop and run their own client that uses our server by building a redis-server and mysql-server on their own and changing the configuration.
 
 ## CI reports
 
@@ -201,7 +201,7 @@ You should use a branch coverage tool together with your unit, integration and s
 
 You should also use a static analysis bug finder tool on your entire server codebase.  The static analyzer should run automatically during CI.  Include the static analysis reports in your server repository.  Try to fix most of the bugs found by the analyzer.
 
-## end-to-end tests checklist
+## End-to-end tests checklist
 
 Implement end-to-end tests where your client exercises as much functionality of your server as possible.  Although ideally automated, it's ok to run end-to-end tests manually.  Document any manual tests with a checklist or some other mechanism to make sure you can re-run the exact same set of tests as needed, e.g., after fixing a bug.
 
