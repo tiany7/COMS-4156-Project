@@ -220,7 +220,7 @@ Generating output.
 Processing file authentication_service/redis_client.cpp
 Writing directory view page.
 Overall coverage rate:
-  lines......: 84.0% (42 of 50 lines)
+  lines......: 85.0% (42 of 50 lines)
   functions..: 90.0% (9 of 10 functions)
 
 ```
