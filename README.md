@@ -419,7 +419,7 @@ POST requests:
 
 /create_student: take uni and name as input, and return messages to show the status of creatign a new student.
 
-/create_administrator: take uni, name and email as input, and return messages to show the status of creatign a new administrator.
+/create_administrator: take uni, name and email as input, and return messages to show the status of creating a new administrator.
 
 /create_faculty_rating: take uni, comment and score as input, and return messages to indidate corresponding status.
 
