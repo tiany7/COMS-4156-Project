@@ -284,6 +284,9 @@ Your entire server codebase, including test cases and even trivial code, should 
 
 If certain entry points must be called in certain orders or never called in certain orders, make sure to say so.
 
+### Authentication Service
+
+
 ## Third-party code
 
 If any third-party code is included in either your server or client codebase, also document exactly which code this is, where it resides in your repository, and where you got it from (e.g., download url).
