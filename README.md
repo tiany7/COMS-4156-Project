@@ -288,54 +288,6 @@ Your entire server codebase, including test cases and even trivial code, should 
 Errors are trivial. We already formatted our codebase with clang-format.
 
 ```bash
-auth_main.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-auth_main.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
-auth_main.cpp:7:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
-Done processing auth_main.cpp
-auth_service.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-auth_service.cpp:8:  Include the directory when naming header files  [build/include_subdir] [4]
-auth_service.cpp:58:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
-Done processing auth_service.cpp
-client_main.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-client_main.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
-client_main.cpp:3:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
-client_main.cpp:8:  Line contains only semicolon. If this should be an empty statement, use {} instead.  [whitespace/semicolon] [5]
-client_main.cpp:13:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
-Done processing client_main.cpp
-http_layer.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-http_layer.cpp:2:  Found C++ system header after other header. Should be: http_layer.h, c system, c++ system, other.  [build/include_order] [4]
-http_layer.cpp:4:  Include the directory when naming header files  [build/include_subdir] [4]
-http_layer.cpp:5:  Include the directory when naming header files  [build/include_subdir] [4]
-http_layer.cpp:7:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
-http_layer.cpp:96:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
-Done processing http_layer.cpp
-login.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-login.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
-login.cpp:67:  Add #include <string> for string  [build/include_what_you_use] [4]
-Done processing login.cpp
-login_test.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-login_test.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
-login_test.cpp:5:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
-login_test.cpp:29:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
-Done processing login_test.cpp
-random_generator.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-random_generator.cpp:2:  Include the directory when naming header files  [build/include_subdir] [4]
-random_generator.cpp:12:  Use int16/int64/etc, rather than the C type long  [runtime/int] [4]
-random_generator.cpp:26:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
-Done processing random_generator.cpp
-random_generator_test.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-random_generator_test.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
-random_generator_test.cpp:8:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
-random_generator_test.cpp:35:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
-Done processing random_generator_test.cpp
-redis_client.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-redis_client.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
-Done processing redis_client.cpp
-redis_client_test.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
-redis_client_test.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
-redis_client_test.cpp:8:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
-Done processing redis_client_test.cpp
-Total errors found: 37
 root@GRPC:/home/azureuser/COMS-4156-Project/services/authentication_service# cpplint *.cpp
 auth_main.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
 auth_main.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
@@ -384,6 +336,7 @@ redis_client_test.cpp:0:  No copyright message found.  You should have a line: "
 redis_client_test.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
 redis_client_test.cpp:8:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
 Done processing redis_client_test.cpp
+Total errors found: 37
 
 ```
 ## Operational entry points
