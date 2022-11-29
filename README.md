@@ -193,6 +193,9 @@ Third-party could develop and run their own client that uses our server by build
 
 Add continuous integration (CI) to your main github repository, where your server's codebase resides, so that all your build, analysis and testing tools are automatically run for every commit.  Integrate CI with your repository, e.g., using github actions Links to an external site.or github apps Links to an external site.. Include the CI reports in your repository and explain where to find them in your README (or include a clearly marked link in the README to where your CI reports reside).  If the CI reports include any or all of the other reports mentioned below, you do not need to also include them separately, but please explain what is and is not included with the CI reports in your README. 
 
+[CI Report](https://github.com/tiany7/COMS-4156-Project/actions/runs/3570762583/jobs/6002027527)
+
+
 ## Testing and coverage reports
 
 You should use a branch coverage tool together with your unit, integration and system testing during CI.  Try to achieve at least 85% branch coverage. Include your testing and coverage reports in your server repository. Try to fix most of the bugs found by the tests.
@@ -276,17 +279,154 @@ nofile:0:0: information: Cppcheck cannot find all the include files (use --check
 
 Implement end-to-end tests where your client exercises as much functionality of your server as possible.  Although ideally automated, it's ok to run end-to-end tests manually.  Document any manual tests with a checklist or some other mechanism to make sure you can re-run the exact same set of tests as needed, e.g., after fixing a bug.
 
+
+
 ## Style checker reports
 
 Your entire server codebase, including test cases and even trivial code, should be compliant with a style checker appropriate for your language/platform.  Include some reports from your style checker in your repository.  If it does not generate files, use redirection of output to a file, screenshots, or some other means to produce files.
 
+Errors are trivial. We already formatted our codebase with clang-format.
+
+```bash
+auth_main.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+auth_main.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
+auth_main.cpp:7:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
+Done processing auth_main.cpp
+auth_service.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+auth_service.cpp:8:  Include the directory when naming header files  [build/include_subdir] [4]
+auth_service.cpp:58:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
+Done processing auth_service.cpp
+client_main.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+client_main.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
+client_main.cpp:3:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
+client_main.cpp:8:  Line contains only semicolon. If this should be an empty statement, use {} instead.  [whitespace/semicolon] [5]
+client_main.cpp:13:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
+Done processing client_main.cpp
+http_layer.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+http_layer.cpp:2:  Found C++ system header after other header. Should be: http_layer.h, c system, c++ system, other.  [build/include_order] [4]
+http_layer.cpp:4:  Include the directory when naming header files  [build/include_subdir] [4]
+http_layer.cpp:5:  Include the directory when naming header files  [build/include_subdir] [4]
+http_layer.cpp:7:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
+http_layer.cpp:96:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
+Done processing http_layer.cpp
+login.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+login.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
+login.cpp:67:  Add #include <string> for string  [build/include_what_you_use] [4]
+Done processing login.cpp
+login_test.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+login_test.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
+login_test.cpp:5:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
+login_test.cpp:29:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
+Done processing login_test.cpp
+random_generator.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+random_generator.cpp:2:  Include the directory when naming header files  [build/include_subdir] [4]
+random_generator.cpp:12:  Use int16/int64/etc, rather than the C type long  [runtime/int] [4]
+random_generator.cpp:26:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
+Done processing random_generator.cpp
+random_generator_test.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+random_generator_test.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
+random_generator_test.cpp:8:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
+random_generator_test.cpp:35:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
+Done processing random_generator_test.cpp
+redis_client.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+redis_client.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
+Done processing redis_client.cpp
+redis_client_test.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+redis_client_test.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
+redis_client_test.cpp:8:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
+Done processing redis_client_test.cpp
+Total errors found: 37
+root@GRPC:/home/azureuser/COMS-4156-Project/services/authentication_service# cpplint *.cpp
+auth_main.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+auth_main.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
+auth_main.cpp:7:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
+Done processing auth_main.cpp
+auth_service.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+auth_service.cpp:8:  Include the directory when naming header files  [build/include_subdir] [4]
+auth_service.cpp:58:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
+Done processing auth_service.cpp
+client_main.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+client_main.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
+client_main.cpp:3:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
+client_main.cpp:8:  Line contains only semicolon. If this should be an empty statement, use {} instead.  [whitespace/semicolon] [5]
+client_main.cpp:13:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
+Done processing client_main.cpp
+http_layer.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+http_layer.cpp:2:  Found C++ system header after other header. Should be: http_layer.h, c system, c++ system, other.  [build/include_order] [4]
+http_layer.cpp:4:  Include the directory when naming header files  [build/include_subdir] [4]
+http_layer.cpp:5:  Include the directory when naming header files  [build/include_subdir] [4]
+http_layer.cpp:7:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
+http_layer.cpp:96:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
+Done processing http_layer.cpp
+login.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+login.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
+login.cpp:67:  Add #include <string> for string  [build/include_what_you_use] [4]
+Done processing login.cpp
+login_test.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+login_test.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
+login_test.cpp:5:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
+login_test.cpp:29:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
+Done processing login_test.cpp
+random_generator.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+random_generator.cpp:2:  Include the directory when naming header files  [build/include_subdir] [4]
+random_generator.cpp:12:  Use int16/int64/etc, rather than the C type long  [runtime/int] [4]
+random_generator.cpp:26:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
+Done processing random_generator.cpp
+random_generator_test.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+random_generator_test.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
+random_generator_test.cpp:8:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
+random_generator_test.cpp:35:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
+Done processing random_generator_test.cpp
+redis_client.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+redis_client.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
+Done processing redis_client.cpp
+redis_client_test.cpp:0:  No copyright message found.  You should have a line: "Copyright [year] <Copyright Owner>"  [legal/copyright] [5]
+redis_client_test.cpp:1:  Include the directory when naming header files  [build/include_subdir] [4]
+redis_client_test.cpp:8:  Do not use namespace using-directives.  Use using-declarations instead.  [build/namespaces] [5]
+Done processing redis_client_test.cpp
+
+```
 ## Operational entry points
 
 If certain entry points must be called in certain orders or never called in certain orders, make sure to say so.
 
 ### Authentication Service
+The authentication service is at the /service/authentication_serivce endpoint. It has the following entry points:
+port 30005 for paths /Register /login /logout
 
+/Register
+
+Register is a POST request that takes in a username and password. It will return a message if the username and password are valid. If the username is already taken, it will return an error message.
+
+/login
+
+Login is a POST request that takes in a username and password. It will return a token if the username and password are valid. If the username or password is incorrect, it will return an error message.
+
+
+/logout
+
+Logout is a POST request that takes in a username and token. It will return a message if the username is valid. If the username or token is incorrect, it will return an error message.
+
+
+You can use the postman to test the authentication service. The postman collection is in the postman folder.
+
+#### Init the service
+
+Boot the service in the following order.
+
+```bash
+
+cd bazel-bin/services/authentication_service
+./http_service #as a independent service
+or
+./auth_service #as a part of the whole service via RPC
+```
+
+It is important to set up the authentication service as a part of the whole service before booting up other services.
 
 ## Third-party code
 
 If any third-party code is included in either your server or client codebase, also document exactly which code this is, where it resides in your repository, and where you got it from (e.g., download url).
+
+
+

@@ -11,7 +11,7 @@
 void InitMySQL() {
     try {
         auto driver = get_driver_instance();
-        auto con = driver->connect("tcp://localhost:3306", "root", "123456");
+        auto con = driver->connect("tcp://localhost:3306", "root", "");
         auto stmt = con->createStatement();
         stmt->execute("CREATE DATABASE IF NOT EXISTS `coms4156_db`"); // could be changed to "ssol" or sth. like that
         stmt->execute("USE `coms4156_db`"); // same above
@@ -36,7 +36,7 @@ void InitMySQL() {
 void InitMySqlV2(){
     try {
         auto driver = get_driver_instance();
-        auto con = driver->connect("tcp://localhost:3306", "root", "123456");
+        auto con = driver->connect("tcp://localhost:3306", "root", "");
         auto stmt = con->createStatement();
         stmt->execute("CREATE DATABASE IF NOT EXISTS `coms4156_db`"); // could be changed to "ssol" or sth. like that
         stmt->execute("USE `coms4156_db`"); // same above
@@ -78,7 +78,7 @@ void InitMySqlV2(){
 void InitMySQLV3(){
     try {
         auto driver = get_driver_instance();
-        auto con = driver->connect("tcp://localhost:3306", "root", "123456");
+        auto con = driver->connect("tcp://localhost:3306", "root", "");
         auto stmt = con->createStatement();
         stmt->execute("CREATE DATABASE IF NOT EXISTS `coms4156_db`"); // could be changed to "ssol" or sth. like that
         stmt->execute("USE `coms4156_db`"); // same above
@@ -115,7 +115,7 @@ void InitMySQLV3(){
 void InitMySQLV4() {
     try {
         auto driver = get_driver_instance();
-        auto con = driver->connect("tcp://localhost:3306", "root", "123456");
+        auto con = driver->connect("tcp://localhost:3306", "root", "");
         auto stmt = con->createStatement();
         stmt->execute("CREATE DATABASE IF NOT EXISTS `coms4156_db`"); // could be changed to "ssol" or sth. like that
         stmt->execute("USE `coms4156_db`"); // same above

@@ -64,7 +64,7 @@ class PersonDB {
   PersonDB() : stmt(nullptr), res(nullptr), prep_stmt(nullptr) {
     try {
       driver = get_driver_instance();
-      con = driver->connect("tcp://127.0.0.1:3306", "root", "123456");
+      con = driver->connect("tcp://127.0.0.1:3306", "root", "");
       con->setSchema("coms4156_db");
     } catch (sql::SQLException& e) {
       std::cout << "# ERR: SQLException in " << __FILE__;

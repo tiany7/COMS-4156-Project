@@ -16,6 +16,8 @@ TEST(RedisClientTest, TestRedisClient) {
   EXPECT_EQ(ret, 0);
 
   auto ret1 = client.CompareIfEqual("test", "test");
+
+  auto ret2 = client.Exists("test");
   EXPECT_EQ(ret1, true);
 }
 
