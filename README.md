@@ -176,3 +176,43 @@ CREATE TABLE faculty (
         country VARCHAR(50)
 ));
 ```
+
+# Second Iteration
+
+## Client app
+
+Github repository: https://github.com/zchen565/4156_FE/tree/main/demo01
+
+### Build and run
+
+Readme: https://github.com/zchen565/4156_FE/blob/main/demo01/README.md
+
+Describe how some third-party could develop and run their own client that uses your server.
+
+## CI reports
+
+Add continuous integration (CI) to your main github repository, where your server's codebase resides, so that all your build, analysis and testing tools are automatically run for every commit.  Integrate CI with your repository, e.g., using github actions Links to an external site.or github apps Links to an external site.. Include the CI reports in your repository and explain where to find them in your README (or include a clearly marked link in the README to where your CI reports reside).  If the CI reports include any or all of the other reports mentioned below, you do not need to also include them separately, but please explain what is and is not included with the CI reports in your README. 
+
+## Testing and coverage reports
+
+You should use a branch coverage tool together with your unit, integration and system testing during CI.  Try to achieve at least 85% branch coverage. Include your testing and coverage reports in your server repository. Try to fix most of the bugs found by the tests.
+
+## Static analysis reports
+
+You should also use a static analysis bug finder tool on your entire server codebase.  The static analyzer should run automatically during CI.  Include the static analysis reports in your server repository.  Try to fix most of the bugs found by the analyzer.
+
+## end-to-end tests checklist
+
+Implement end-to-end tests where your client exercises as much functionality of your server as possible.  Although ideally automated, it's ok to run end-to-end tests manually.  Document any manual tests with a checklist or some other mechanism to make sure you can re-run the exact same set of tests as needed, e.g., after fixing a bug.
+
+## Style checker reports
+
+Your entire server codebase, including test cases and even trivial code, should be compliant with a style checker appropriate for your language/platform.  Include some reports from your style checker in your repository.  If it does not generate files, use redirection of output to a file, screenshots, or some other means to produce files.
+
+## Operational entry points
+
+If certain entry points must be called in certain orders or never called in certain orders, make sure to say so.
+
+## Third-party code
+
+If any third-party code is included in either your server or client codebase, also document exactly which code this is, where it resides in your repository, and where you got it from (e.g., download url).

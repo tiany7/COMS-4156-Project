@@ -19,3 +19,4 @@ jobs:
       - uses: bazelbuild/setup-bazelisk@v1
       - run: sudo apt-get install libboost-all-dev libmysqlclient-dev libmysqlcppconn-dev redis -y
       - run: bazel test //services/authentication_service:all
+      - run: bazel test //services/person_service:all
