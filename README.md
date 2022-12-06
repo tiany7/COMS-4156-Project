@@ -1,50 +1,49 @@
-#COMS - 4156 - Project
+# COMS - 4156 - Project
 
-##Introduction
+## Introduction
 
-    ## #What will the server do
-    ?
+### What will the server do
+?
 
-    Our project is a student /
-        faculty management system system
-            .The system will provide the service to both the students and the
-                faculties.On the student’s side,
-    the server will support searching courses, browsing course information,
-    adding courses to the shopping cart,
-    checking the fulfillment of prerequisites,
-    enrolling the waitlists and acquiring enrollment -
-        related information.On the faculty’s side,
-    the server will support posting courses,
-    modifying the course information(capacity, date and time, instructor info…),
-    and enrolling students from waitlists.
+Our project is a student /
+    faculty management system system
+        .The system will provide the service to both the students and the
+            faculties.On the student’s side,
+the server will support searching courses, browsing course information,
+adding courses to the shopping cart,
+checking the fulfillment of prerequisites,
+enrolling the waitlists and acquiring enrollment -
+    related information.On the faculty’s side,
+the server will support posting courses,
+modifying the course information(capacity, date and time, instructor info…),
+and enrolling students from waitlists.
 
-        ## #Who
-        or what will be its users
-    ?
+### Who or what will be its users
+?
 
-    Its users have two types.One type is student,
-    and the other is administrator(e.g.instructor)
-            .
+Its users have two types.One type is student,
+and the other is administrator(e.g.instructor)
+        .
 
-        ## #What kind of data will your service create
-        or accumulate
-    ? What will the data be used for
-    ? Course information(e.g.call number, points, day&time, location,
-                         enrollment, instructor) :
-    students and instructors can check course information and related enrollment
-        status(e.g.the number of enrolled students, max capacity of the course)
-            .Instructors can also insert and modify their own course
-                information.
+    ## #What kind of data will your service create
+    or accumulate
+? What will the data be used for
+? Course information(e.g.call number, points, day&time, location,
+                        enrollment, instructor) :
+students and instructors can check course information and related enrollment
+    status(e.g.the number of enrolled students, max capacity of the course)
+        .Instructors can also insert and modify their own course
+            information.
 
-    Student information(e.g.UNI, name, grade, enrollment status) :
-    students can check and update their own enrollment status.And administrators
-        can look for all students' information and update enrollment status of students.
+Student information(e.g.UNI, name, grade, enrollment status) :
+students can check and update their own enrollment status.And administrators
+    can look for all students' information and update enrollment status of students.
 
-    Administrator information(e.g.UNI, name)
-    : support read, modification,
-      insertion and update of their personal information.
+Administrator information(e.g.UNI, name)
+: support read, modification,
+    insertion and update of their personal information.
 
-      ##Installation&Running the Server
+## Installation & Running the Server
 
           Install Bazel and its
               dependencies(Please refer to the link below,
@@ -59,9 +58,9 @@
 `https
     :  // grpc.io/blog/installation/ `
 
-    ## #Alternative
+### Alternative
 
-        Taking advantage of bazel's online compilation functionality(i.e. http_archive and git_repositories ), we can include grpc as a library link instead of downloading the whole stuff. MySQL C++ drivers are also included in the git set up of WORKSPACE page.
+Taking advantage of bazel's online compilation functionality(i.e. http_archive and git_repositories ), we can include grpc as a library link instead of downloading the whole stuff. MySQL C++ drivers are also included in the git set up of WORKSPACE page.
 
 `See / WORKSPACE`
 
@@ -70,12 +69,12 @@
 `https
     :  // github.com/tiany7/mysql_dependencies`
 
-#Install the MySQL libraries. 
+## Install the MySQL libraries. 
 
 `sudo apt - get update && sudo apt - get install libmysqlclient -
                                dev`
 
-#install the MySQL and boot up the MySQL server on the same machine which you \
+install the MySQL and boot up the MySQL server on the same machine which you \
     are using.
 
                                Follow this link.
@@ -87,7 +86,9 @@
   to compile a simple MySQL rpc -
       http client
 
-          ##Compilation
+Run `mysqld_safe --user=root &` to start the MySQL database. Also run `mysqladmin version` to check that it is actually running. 
+
+## Compilation
 
 `cd services /
           mysql_service /`
@@ -170,7 +171,7 @@
 
 `sudo ufw allow<PORT>`
 
-#Example 
+### Example 
 
 ```Perl GET http :  // 34.162.75.2:8080/query_sql
 
@@ -194,7 +195,7 @@ Content length : 140 bytes
 
     All referencees are mentioned in the previous paragraphs
 
-#Make Life Easier
+### Make Life Easier
 
         When booting up the service,
     you can use the bootstrap.sh to boot up mysql_service and its http
@@ -203,9 +204,9 @@ Content length : 140 bytes
 
 `sh bootstrap.sh`
 
-    ##Table Schema
+## Table Schema
 
-#Initializing the tables
+### Initializing the tables
         We are working on the local databases,
     but we consider to migrate to RDS later on.
 
@@ -237,7 +238,7 @@ Content length : 140 bytes
                 faculty(name VARCHAR(50), department VARCHAR(50),
                         uni(VARCHAR(50), country VARCHAR(50)));
 ```
-#Second Iteration
+# Second Iteration
 
 ## Client app
 
@@ -476,14 +477,27 @@ You can use the postman to test the authentication service. The postman collecti
 ### Faculty Post
 This service enables professors to post their small ads/posts. Each entry consists of: `postid` (the unique id number of the post), `uni` (of the professor), `content` (a string, the contents of their ads/posts), `status` (indicating whether the ad is `Active` or `Expired`).
 
-POST requests:
+#### POST requests
 * /add_profpost: take `postid`, `uni`, `content`, `status` as inputs, `username` and `accesstoken` also required. If the `postid` already exists in the database, it would replace the existing entry.
 * /mod_profpost: same as /add_profpost.
 
-GET requests:
+Example:
+```
+curl -X POST http://0.0.0.0:8080/search_p
+   -H 'Content-Type: application/json'
+   -d '{"postid":"myid","uni":"my123","content":"Hello world","status":"Active","username":"Backdoor","accesstoken":"any"}'
+```
+Note: When `username` is `Backdoor`, any accesstoken will be accepted.
+
+#### GET requests
 * /search_post: take `uni` as input, returns all the posts posted by the professor with the `uni`.
 
-DELETE requests:
+Example:
+```
+curl http://0.0.0.0:8080/search_post?uni=my123
+```
+
+#### DELETE requests:
 * /delete_post: available soon. take `postid` as input, delete the post with the `postid` if exists.
 
 ### Person Service
@@ -520,7 +534,7 @@ Take uni as input and delete the corresponding student record.
 
 
 
-#### Init the service
+## Init the service
 
 Boot the service in the following order.
 
