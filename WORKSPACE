@@ -54,7 +54,13 @@ http_archive(
     url = "https://github.com/cylix/tacopie/archive/master.zip",
 )
 
-
+http_archive(
+    name = "cpplint_archive",
+    build_file = "@//:cpplint.BUILD",
+    sha256 = "b2979ff630299293f23c52096e408f2b359e2e26cb5cdf24aed4ce53e4293468",
+    strip_prefix = "cpplint-1.2.2",
+    url = "https://pypi.python.org/packages/source/c/cpplint/cpplint-1.2.2.tar.gz",
+)
 
 git_repository(
     name = "json_lib",
