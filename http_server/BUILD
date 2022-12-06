@@ -1,5 +1,6 @@
-cc_binary(
+cc_library(
     name = "mysql_http_server",
+    hdrs = ["mysql_http_service.h"],
     srcs = ["mysql_http_service.cpp"],
     defines= ["CPPHTTPLIB_OPENSSL_SUPPORT"],
     visibility = ["//visibility:public"],
