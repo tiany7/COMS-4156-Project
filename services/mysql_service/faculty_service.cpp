@@ -73,7 +73,7 @@ int FacultyDBService::GetPost(string uni, ProfpostRsp* reply)
 {
     try {
         auto stmt = con->createStatement();
-        char buffer[105] = {0};
+        char buffer[128] = {0};
         string sql = "SELECT * FROM profpost WHERE uni = '%s'";
         sprintf(buffer, sql.c_str(), uni.c_str());
         auto res = stmt->executeQuery(string(buffer));
@@ -101,7 +101,7 @@ int FacultyDBService::InsertFaculty( string name,  string dept,  string uni,  st
 {
     try {
         auto stmt = con->createStatement();
-        char buffer[150] = {0};
+        char buffer[256] = {0};
         std::cout<<"insert faculty"<<" "<<name<<" "<<dept<<" "<<uni<<" "<<country<<std::endl;
         string sql = "INSERT INTO faculty(name, uni, department, country) VALUES ('%s', '%s', '%s', '%s')";
         sprintf(buffer, sql.c_str(), name.c_str(), dept.c_str(),uni.c_str(),  country.c_str());
@@ -124,11 +124,15 @@ int FacultyDBService::InsertFaculty( string name,  string dept,  string uni,  st
 int FacultyDBService::InsertPost(string uni, string content, string status, string postid)
 {
     try {
-        auto stmt = con->createStatement();
-        char buffer[150] = {0};
-        string sql = "INSERT INTO profpost(uni, content, status, postid) VALUES ('%s', '%s', '%s', '%s') ON DUPLICATE KEY UPDATE uni='%s', content='%s', status='%s'";
-        sprintf(buffer, sql.c_str(), uni.c_str(), content.c_str(), status.c_str(), postid.c_str(), uni.c_str(), content.c_str(), status.c_str());
-        stmt->execute(string(buffer));
+        auto stmt = con->prepareStatement("INSERT INTO profpost(uni, content, status, postid) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE uni=? content=?, status=?");
+        stmt->setString(1, uni);
+        stmt->setString(2, content);
+        stmt->setString(3, status);
+        stmt->setString(4, postid);
+        stmt->setString(5, uni);
+        stmt->setString(6, content);
+        stmt->setString(7, status);
+        stmt->execute();
         if(stmt)delete stmt, stmt = nullptr;
     }catch (sql::SQLException &e) {
         cout << "# ERR: SQLException in " << __FILE__;
