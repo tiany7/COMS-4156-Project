@@ -1,164 +1,141 @@
-#include <iostream>
-#include <memory>
-#include <string>
-
-#include <grpcpp/grpcpp.h>
-#include <nlohmann/json.hpp>
-
-#include "httplib.h"
-#include "proto/mysql_server_proto/faculty.grpc.pb.h"
-#include "services/authentication_service/auth_checker.h"
+#include "mysql_http_service.h"
 
 
-using json = nlohmann::json;
 
-using grpc::Channel;
-using grpc::ClientContext;
-using grpc::Status;
-using std::vector;
-using std::string;
-class FacultyServiceClient {
-private:
-    std::unique_ptr<FacultyService::Stub> stub_;
+vector<Faculty> FacultyServiceClient::GetFaculty(string dept) {
+    GetFacultyReq request;
+    request.set_department(dept);
 
-public:
-    FacultyServiceClient(std::shared_ptr<Channel> channel)
-            : stub_(FacultyService::NewStub(channel)) {}
+    FacultyRsp reply;
 
-    vector<Faculty> GetFaculty(string dept) {
-        GetFacultyReq request;
-        request.set_department(dept);
+    ClientContext context;
 
-        FacultyRsp reply;
+    Status status = stub_->GetFaculty(&context, request, &reply);
 
-        ClientContext context;
-
-        Status status = stub_->GetFaculty(&context, request, &reply);
-
-        if (status.ok()) {
-            vector<Faculty>v;
-            for(auto it : *reply.mutable_faculty()){
-                v.push_back(it);
-            }
-            return v;
-        } else {
-            std::cout << status.error_code() << ": " << status.error_message()
-                      << std::endl;
-            return {};
+    if (status.ok()) {
+        vector<Faculty>v;
+        for(auto it : *reply.mutable_faculty()){
+            v.push_back(it);
         }
+        return v;
+    } else {
+        std::cout << status.error_code() << ": " << status.error_message()
+                    << std::endl;
+        return {};
     }
+}
 
-    vector<Faculty> GetFacultyByUni(const string &uni) {
-        GetFacultyReq request;
-        request.set_uni(uni);
+vector<Faculty> FacultyServiceClient::GetFacultyByUni(const string &uni) {
+    GetFacultyReq request;
+    request.set_uni(uni);
 
-        FacultyRsp reply;
+    FacultyRsp reply;
 
-        ClientContext context;
-        Status status = stub_->GetFacultyByUni(&context, request, &reply);
+    ClientContext context;
+    Status status = stub_->GetFacultyByUni(&context, request, &reply);
 
-        if (status.ok()) {
-            vector<Faculty>v;
-            for(auto it : *reply.mutable_faculty()){
-                v.push_back(it);
-            }
-            return v;
-        } else {
-            std::cout << status.error_code() << ": " << status.error_message()
-                      << std::endl;
-            return {};
+    if (status.ok()) {
+        vector<Faculty>v;
+        for(auto it : *reply.mutable_faculty()){
+            v.push_back(it);
         }
+        return v;
+    } else {
+        std::cout << status.error_code() << ": " << status.error_message()
+                    << std::endl;
+        return {};
     }
+}
 
-    vector<Profpost> GetPost(const string &uni) {
-        GetPostReq request;
-        request.set_uni(uni);
+vector<Profpost> FacultyServiceClient::GetPost(const string &uni) {
+    GetPostReq request;
+    request.set_uni(uni);
 
-        ProfpostRsp reply;
+    ProfpostRsp reply;
 
-        ClientContext context;
-        Status status = stub_->GetPost(&context, request, &reply);
+    ClientContext context;
+    Status status = stub_->GetPost(&context, request, &reply);
 
-        if (status.ok()) {
-            vector<Profpost> v;
-            for(auto it : *reply.mutable_profpost()){
-                v.push_back(it);
-            }
-            return v;
-        } else {
-            std::cout << status.error_code() << ": " << status.error_message()
-                      << std::endl;
-            return {};
+    if (status.ok()) {
+        vector<Profpost> v;
+        for(auto it : *reply.mutable_profpost()){
+            v.push_back(it);
         }
+        return v;
+    } else {
+        std::cout << status.error_code() << ": " << status.error_message()
+                    << std::endl;
+        return {};
     }
+}
 
-    int InsertFaculty(const string &name, const string &dept, const string &uni, const string & country) {
-        Faculty f;
-        f.set_name(name);
-        f.set_department(dept);
-        f.set_uni(uni);
-        f.set_country(country);
+int FacultyServiceClient::InsertFaculty(const string &name, const string &dept, const string &uni, const string & country) {
+    Faculty f;
+    f.set_name(name);
+    f.set_department(dept);
+    f.set_uni(uni);
+    f.set_country(country);
 
-        Faculty reply;
+    Faculty reply;
 
-        ClientContext context;
+    ClientContext context;
 
-        Status status = stub_->InsertFaculty(&context, f, &reply);
+    Status status = stub_->InsertFaculty(&context, f, &reply);
 
-        if (status.ok()) {
-            return 0;
-        } else {
-            std::cout << status.error_code() << ": " << status.error_message()
-                      << std::endl;
-            return -1;
-        }
+    if (status.ok()) {
+        return 0;
+    } else {
+        std::cout << status.error_code() << ": " << status.error_message()
+                    << std::endl;
+        return -1;
     }
+}
 
-    int InsertPost(const string &uni, const string &content, const string &status, const string & postid) {
-        Profpost f;
-        f.set_uni(uni);
-        f.set_content(content);
-        f.set_status(status);
-        f.set_postid(postid);
+int FacultyServiceClient::InsertPost(const string &uni, const string &content, const string &status, const string & postid) {
+    Profpost f;
+    f.set_uni(uni);
+    f.set_content(content);
+    f.set_status(status);
+    f.set_postid(postid);
 
-        Profpost reply;
+    Profpost reply;
 
-        ClientContext context;
+    ClientContext context;
 
-        auto ret = stub_->InsertPost(&context, f, &reply);
+    auto ret = stub_->InsertPost(&context, f, &reply);
 
-        if (ret.ok()) {
-            return 0;
-        } else {
-            std::cout << ret.error_code() << ": " << ret.error_message()
-                      << std::endl;
-            return -1;
-        }
+    if (ret.ok()) {
+        return 0;
+    } else {
+        std::cout << ret.error_code() << ": " << ret.error_message()
+                    << std::endl;
+        return -1;
     }
+}
 
-    int ModifyPost(const string & postid, const string &uni, const string &content, const string &status){
-        return InsertPost(uni, content, status, postid);
+int FacultyServiceClient::ModifyPost(const string & postid, const string &uni, const string &content, const string &status){
+    return InsertPost(uni, content, status, postid);
+}
+
+int FacultyServiceClient::DeletePost(const string & postid) {
+    DelPostReq f;
+    f.set_postid(postid);
+
+    Profpost reply;
+
+    ClientContext context;
+
+    Status status = stub_->DelPost(&context, f, &reply);
+
+    if (status.ok()) {
+        return 0;
+    } else {
+        std::cout << status.error_code() << ": " << status.error_message()
+                    << std::endl;
+        return -1;
     }
+}
 
-    int DeletePost(const string & postid) {
-        DelPostReq f;
-        f.set_postid(postid);
-
-        Profpost reply;
-
-        ClientContext context;
-
-        Status status = stub_->DelPost(&context, f, &reply);
-
-        if (status.ok()) {
-            return 0;
-        } else {
-            std::cout << status.error_code() << ": " << status.error_message()
-                      << std::endl;
-            return -1;
-        }
-    }
-};
 
 int main(int argc, char** argv) {
     FacultyServiceClient facultyServiceClient(grpc::CreateChannel(
