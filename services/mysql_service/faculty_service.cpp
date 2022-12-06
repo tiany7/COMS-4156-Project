@@ -124,7 +124,7 @@ int FacultyDBService::InsertFaculty( string name,  string dept,  string uni,  st
 int FacultyDBService::InsertPost(string uni, string content, string status, string postid)
 {
     try {
-        auto stmt = con->prepareStatement("INSERT INTO profpost(uni, content, status, postid) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE uni=? content=?, status=?");
+        auto stmt = con->prepareStatement("INSERT INTO profpost(uni, content, status, postid) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE uni=?, content=?, status=?");
         stmt->setString(1, uni);
         stmt->setString(2, content);
         stmt->setString(3, status);
