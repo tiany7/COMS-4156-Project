@@ -46,6 +46,9 @@ void InitMySqlV2(){
                       "`status` VARCHAR(16) NOT NULL,"
                       "`postid` VARCHAR(45) NOT NULL,"
                       "PRIMARY KEY (`postid`))");
+        stmt->execute("INSERT INTO profpost VALUES"
+                      "('fg1121', 'Hello world', 'Active', 'fg221122')"
+                      );
         stmt->execute("CREATE TABLE IF NOT EXISTS `timeslots` ("
                       "`deptid` VARCHAR(10) NOT NULL,"
                       "`start` DATETIME NOT NULL,"
