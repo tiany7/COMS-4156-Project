@@ -483,11 +483,11 @@ This service enables professors to post their small ads/posts. Each entry consis
 
 Example:
 ```
-curl -X POST http://0.0.0.0:8080/search_p
+curl -X POST http://0.0.0.0:8080/mod_profpost
    -H 'Content-Type: application/json'
    -d '{"postid":"myid","uni":"my123","content":"Hello world","status":"Active","username":"Backdoor","accesstoken":"any"}'
 ```
-Note: When `username` is `Backdoor`, any accesstoken will be accepted.
+Note: For mod_profpost, when `username` is `Backdoor`, any accesstoken will be accepted.
 
 #### GET requests
 * /search_post: take `uni` as input, returns all the posts posted by the professor with the `uni`.
