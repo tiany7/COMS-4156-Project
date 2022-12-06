@@ -1,7 +1,6 @@
 #include "mysql_http_service.h"
 
 
-
 vector<Faculty> FacultyServiceClient::GetFaculty(string dept) {
     GetFacultyReq request;
     request.set_department(dept);
