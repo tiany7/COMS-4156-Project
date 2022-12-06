@@ -481,3 +481,112 @@ If any third-party code is included in either your server or client codebase, al
 
 
 
+# Detailed Instruction
+
+## Running the clang-tidy
+
+We mandate our group member to run clang tidy to ensure the style is correct.
+```bash
+clang-format -style=Google -i *
+```
+
+## Turn on the back end
+
+### Turn on the authentication module
+
+The authentication related modules are located in the /services/authentication_service subdirectory
+
+You can go into the directory, and build the targets.
+
+```bash
+cd /services/authentication_service
+bazel build :all
+cd bazel-bin/services/authentication_service
+./http_server &
+./auth_server &
+
+```
+
+### Turn on the person module
+You could log into the person service using the following steps.
+
+```bash
+cd /services/person_service
+
+bazel build :all # will generate the target person_service
+
+cd /bazel-bin/services/person_service
+
+./person_service &
+
+cd /clients/person_client
+
+bazel build :all #will generate the target person_client
+
+cd /bazel-bin/clients/person_client
+
+./person_client & # http running on port 8083
+```
+
+## Turn on the front end
+
+### Prerequisite
+Download the npm on the domestic machine
+
+[Download NPM package](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
+### Turn on the app
+
+```bash
+
+npm install
+
+npm run dev # browser will prop out
+```
+
+### How to test the functionality of front end
+
+1. Go to the register option, register your account.
+2. Go to login page, use the account that you just created to log in.
+3. Go to rate/comment and score and you could rate and comment professor.
+4. You can see the result in the ScoreSample page.
+
+
+## Coverage Analysis
+
+We use the bazel's native coverage tool to test our coverage.
+
+Take authentication service for example.
+
+```bash
+cd /services/authentication_service
+
+bazel coverage :login_test
+
+bazel coverage :redis_client_test
+
+bazel coverage :random_generator_test
+
+# go to COMS-4156-Project's root directory
+
+z COMS
+
+# run coverage
+sudo genhtml --output genhtml ./bazel-testlogs/services/authentication_service/login_test/coverage.dat
+sudo genhtml --output genhtml ./bazel-testlogs/services/authentication_service/random_generator_test/coverage.dat
+sudo genhtml --output genhtml ./bazel-testlogs/services/authentication_service/redis_client_test/coverage.dat
+
+```
+
+Then you can see the report.
+
+## Static analysis
+
+Go to the project root directory
+
+Run
+```bash
+cppcheck --enable=all *.cpp
+```
+
+

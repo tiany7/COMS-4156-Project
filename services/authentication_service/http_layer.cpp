@@ -92,5 +92,29 @@ int main() {
                    "x-requested-with,Content-Type,X-CSRF-Token");
     res.set_content(j.dump(), "application/json");
   });
+
+  svr.Post("/is_logged_in", [&](const Request &req, Response &res) {
+      // json
+
+      auto valueMap = json::parse(req.body);
+      std::string username = valueMap["username"];
+      std::string token = valueMap["access_token"];
+      auto isLegal = login.IsLegalOperator(username, token);
+      json j;
+      if(isLegal){
+        j["status"] = "success";
+      }else{
+        j["status"] = "reject";
+      }
+
+      res.set_header("Access-Control-Allow-Credentials", "true");
+      res.set_header("Access-Control-Allow-Origin", "*");
+      res.set_header("Access-Control-Allow-Headers",
+                     "Origin, X-Requested-With, Content-Type, Accept");
+      res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+      res.set_header("Access-Control-Allow-Headers",
+                     "x-requested-with,Content-Type,X-CSRF-Token");
+      res.set_content(j.dump(), "application/json");
+  });
   svr.listen("0.0.0.0", 30005);
 }
