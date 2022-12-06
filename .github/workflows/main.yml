@@ -18,5 +18,7 @@ jobs:
           key: bazel
       - uses: bazelbuild/setup-bazelisk@v1
       - run: sudo apt-get install libboost-all-dev libmysqlclient-dev libmysqlcppconn-dev redis -y
-      - run: bazel test //services/authentication_service:all
+      - run: bazel test //services/authentication_service:random_generator_test
+      - run: bazel test //services/authentication_service:redis_client_test
+      - run: bazel test //services/authentication_service:login_test
       - run: bazel test //services/person_service:all
