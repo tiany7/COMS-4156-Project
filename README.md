@@ -181,7 +181,7 @@ CREATE TABLE faculty (
 
 ## Client app
 
-Github repository: https://github.com/zchen565/4156_FE/tree/main/demo01
+Github repository: https://github.com/zchen565/4156_FE/tree/main/demo02
 
 ### Build and run
 
