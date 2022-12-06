@@ -46,7 +46,7 @@ void InitMySqlV2(){
                       "`status` VARCHAR(16) NOT NULL,"
                       "`postid` VARCHAR(45) NOT NULL,"
                       "PRIMARY KEY (`postid`))");
-        stmt->execute("INSERT INTO profpost VALUES"
+        stmt->execute("INSERT IGNORE INTO profpost VALUES"
                       "('fg1121', 'Hello world', 'Active', 'fg221122')"
                       );
         stmt->execute("CREATE TABLE IF NOT EXISTS `timeslots` ("
@@ -100,7 +100,7 @@ void InitMySQLV3(){
                       "    prereq3 VARCHAR(20),\n"
                       "    UNIQUE KEY (semester, course)\n"
                       ") COMMENT 'raw course table'");
-        stmt->execute("INSERT INTO course (department,course,course_title,semester,course_id,faculty_name,faculty_uni,prereq1,prereq2,prereq3)\n"
+        stmt->execute("INSERT IGNORE INTO course (department,course,course_title,semester,course_id,faculty_name,faculty_uni,prereq1,prereq2,prereq3)\n"
                       "VALUES\n"
                       "    ('CS','cs4156','Software','2022Fall','1111','Abby Smith','as1111','cs3000',NULL,NULL),\n"
                       "    ('CS','cs4111','Database','2022Fall','1112','Bob Smith','bs1111','cs3000','cs3200',NULL),\n"
