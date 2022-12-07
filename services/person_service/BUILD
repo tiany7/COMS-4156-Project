@@ -2,6 +2,7 @@ cc_binary(
     name = "person_service",
     srcs = [
         "person_service.cpp",
+        "person_service.h",
     ],
     visibility = ["//visibility:public"],
     deps = ["//proto/person_proto:person_cc_grpc",
