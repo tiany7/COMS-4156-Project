@@ -38,7 +38,7 @@ TEST(TestLogin, LogMain) {
 TEST(TestLogin, Register) {
   Login login;
   login.Register("admin3", "admin");
-  EXPECT_EQ(login.Register("admin3", "admin"), true);
+  EXPECT_EQ(login.Register("admin3", "admin"), false);
 }
 int main(int argc, char** argv) {
   testing::InitGoogleTest(&argc, argv);
