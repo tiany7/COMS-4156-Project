@@ -16,8 +16,10 @@ TEST(TestLogin, LogMain) {
   EXPECT_EQ(login.LogIn("admin1", "admin1"), "user not exists");
   login.LogOut("admin");
   login.LogOut("admin2");
+  login.Register("admin3", "admin");
   login.Register("admin", "admin");
   login.Register("admin2", "admin2");
+  auto res = login.Register("admin", "admin");
   auto secret = login.LogIn("admin", "admin");
   bool result = allDigits(secret.c_str());
   login.LogOut("admin");
@@ -30,8 +32,14 @@ TEST(TestLogin, LogMain) {
   EXPECT_EQ(login.IsLegalOperator("admin2", secret2), true);
   EXPECT_EQ(login.IsLegalOperator("admin2", "123"), false);
   EXPECT_EQ(login.IsLegalOperator("admin", secret2), false);
+  EXPECT_EQ(login.IsLegalOperator("admin2", secret), false);
 }
 
+TEST(TestLogin, Register) {
+  Login login;
+  login.Register("admin3", "admin");
+  EXPECT_EQ(login.Register("admin3", "admin"), true);
+}
 int main(int argc, char** argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

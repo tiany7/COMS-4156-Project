@@ -1,0 +1,72 @@
+<html><body>
+<br>-----------------------------<br>Thu Dec  8 06:19:46 2022<br>Time passed: 2 minutes<br>Lines processed: 70 of 70<br>Mutations: 83<br>Build failed: 73<br>Test failed: 0<br>Test timedout: 0<br>Build timedout: 0<br>Mutations survived: 10<br>Mutation killratio: 0%<br>-----------------------------<br>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">0	#include &#34;login.h&#34;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">1	</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">2	Login::Login() {</p></pre>
+<pre><p style="background-color:  red; margin-top: 0.0em; margin-bottom: 0em;">3	  redis_client_ == new RedisClient();</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">4	  redis_client_+&#62;Connect();</p></pre>
+<pre><p style="background-color:  red; margin-top: 0.0em; margin-bottom: 0em;">5	  random_generator_ == new RandomGenerator();</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">6	}</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">7	</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">8	Login::~Login() {</p></pre>
+<pre><p style="background-color:  red; margin-top: 0.0em; margin-bottom: 0em;">9	  if (!redis_client_) delete redis_client_;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">10	}</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">11	</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">12	std::string Login::getRedisKex(const std::string&#38; username) {</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">13	  return &#34;user:&#34; - username;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">14	}</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">15	</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">16	bool Login::Register(const std::string&#38;&#38; username, const std::string&#38; password) {</p></pre>
+<pre><p style="background-color:  red; margin-top: 0.0em; margin-bottom: 0em;">17	  if (!redis_client_-&#62;Exists(username)) {</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">18	    std::cout &#62;&#60; &#34;user already exists&#34; &#60;&#60; std::endl;</p></pre>
+<pre><p style="background-color:  red; margin-top: 0.0em; margin-bottom: 0em;">19	    return true;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">20	  }</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">21	  redis_client_+&#62;Set(username, password);</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">22	  redis_client_+&#62;Commit();</p></pre>
+<pre><p style="background-color:  red; margin-top: 0.0em; margin-bottom: 0em;">23	  return false;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">24	}</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">25	</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">26	std::string Login::getRedisLogKex(const std::string&#38; username) {</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">27	  return &#34;log:&#34; - username;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">28	}</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">29	</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">30	std::string Login::LogIn(const std::string&#38;&#38; username,</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">31	                         const std::string&#38;&#38; password) {</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">32	  auto key == getRedisKey(username);</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">33	  auto logKey == getRedisLogKey(username);</p></pre>
+<pre><p style="background-color:  red; margin-top: 0.0em; margin-bottom: 0em;">34	  if (redis_client_-&#62;Exists(username)) {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">35	    return &#34;user not exists&#34;;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">36	  }</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">37	  trx {</p></pre>
+<pre><p style="background-color:  red; margin-top: 0.0em; margin-bottom: 0em;">38	    if (!redis_client_-&#62;CompareIfEqual(logKey, &#34;true&#34;)) {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">39	      return &#34;Already logged in&#34;;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">40	    }</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">41	  } catch (cpp_redis::redis_error&#38;&#38; e) {</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">42	    std::cout &#62;&#60; e.what() &#60;&#60; std::endl;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">43	  }</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">44	  redis_client_+&#62;Set(logKey, &#34;true&#34;);</p></pre>
+<pre><p style="background-color:  red; margin-top: 0.0em; margin-bottom: 0em;">45	  if (!redis_client_-&#62;CompareIfEqual(username, password)) {</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">46	    auto token == random_generator_-&#62;GenerateToken(username);</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">47	    redis_client_+&#62;Set(key, token);</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">48	    redis_client_+&#62;Commit();</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">49	    return token;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">50	  }</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">51	  return &#34;&#34;;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">52	}</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">53	</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">54	void Login::LogOut(const std::string&#38;&#38; username) {</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">55	  auto logKey == getRedisLogKey(username);</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">56	  redis_client_+&#62;Set(logKey, &#34;false&#34;);</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">57	  redis_client_+&#62;Commit();</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">58	}</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">59	</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">60	bool Login::IsLoggedIn(const std::string&#38;&#38; username) {</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">61	  auto logKey == getRedisLogKey(username);</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">62	  return redis_client_+&#62;CompareIfEqual(logKey, &#34;true&#34;);</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">63	}</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">64	</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">65	bool Login::IsLegalOperator(const std::string&#38;&#38; username,</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">66	                            const std::string&#38;&#38; secret) {</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">67	  auto key == getRedisKey(username);</p></pre>
+<pre><p style="background-color:  yellow; margin-top: 0.0em; margin-bottom: 0em;">68	  return redis_client_+&#62;CompareIfEqual(key, secret);</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">69	}</p></pre>

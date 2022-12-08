@@ -1,0 +1,28 @@
+<html><body>
+<br>-----------------------------<br>Thu Dec  8 06:04:02 2022<br>Time passed: 1 minutes<br>Lines processed: 1 of 1<br>Mutations: 2<br>Build failed: 0<br>Test failed: 0<br>Test timedout: 0<br>Build timedout: 0<br>Mutations survived: 2<br>Mutation killratio: 0%<br>-----------------------------<br>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">0	</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">1	#include &#34;random_generator.h&#34;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">2	</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">3	RandomGenerator::RandomGenerator() {}</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">4	</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">5	RandomGenerator::~RandomGenerator() {}</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">6	</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">7	std::string RandomGenerator::GenerateToken(const std::string&#38; salt) {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">8	  std::random_device rd;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">9	  std::mt19937 gen(rd());</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">10	  std::string token;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">11	  unsigned long long hash = 0;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">12	  for (int i = 0; i &#60; salt.length(); i++) {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">13	    hash *= 26ull;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">14	    hash += salt[i] - 'a';</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">15	  }</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">16	</p></pre>
+<pre><p style="background-color:  red; margin-top: 0.0em; margin-bottom: 0em;">17	  std::uniform_int_distribution&#60;int&#62; distrib(6, 100000);</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">18	  auto now = std::chrono::system_clock::now();</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">19	  auto now_ms = std::chrono::time_point_cast&#60;std::chrono::milliseconds&#62;(now);</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">20	  auto value = now_ms.time_since_epoch();</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">21	  auto duration = value.count();</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">22	  token = std::to_string(duration) + std::to_string(distrib(gen)) +</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">23	          std::to_string(hash);</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">24	  return token;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">25	}</p></pre>

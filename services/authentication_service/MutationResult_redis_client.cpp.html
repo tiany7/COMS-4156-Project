@@ -1,0 +1,81 @@
+<html><body>
+<br>-----------------------------<br>Thu Dec  8 06:03:42 2022<br>Time passed: 1 minutes<br>Lines processed: 1 of 1<br>Mutations: 3<br>Build failed: 0<br>Test failed: 0<br>Test timedout: 0<br>Build timedout: 0<br>Mutations survived: 3<br>Mutation killratio: 0%<br>-----------------------------<br>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">0	#include &#34;redis_client.h&#34;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">1	</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">2	#include &#60;sstream&#62;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">3	RedisClient::RedisClient() {}</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">4	</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">5	RedisClient::~RedisClient() {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">6	  //    if (client_.is_connected()) {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">7	  //        client_.disconnect();</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">8	  //    }</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">9	}</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">10	</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">11	void RedisClient::Connect() {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">12	  if (!client_.is_connected()) {</p></pre>
+<pre><p style="background-color:  red; margin-top: 0.0em; margin-bottom: 0em;">13	    client_.connect(&#34;127.0.0.1&#34;, 6374,</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">14	                    [](const std::string&#38; host, std::size_t port,</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">15	                       cpp_redis::client::connect_state status) {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">16	                      if (status == cpp_redis::client::connect_state::dropped) {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">17	                        std::cout &#60;&#60; &#34;client disconnected from &#34; &#60;&#60; host &#60;&#60; &#34;:&#34;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">18	                                  &#60;&#60; port &#60;&#60; std::endl;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">19	                      }</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">20	                    });</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">21	  }</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">22	}</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">23	</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">24	void RedisClient::Disconnect() {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">25	  //    if (client_.is_connected())</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">26	  //    {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">27	  //        client_.disconnect();</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">28	  //    }</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">29	}</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">30	</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">31	int RedisClient::Set(const std::string&#38; key, const std::string&#38; value) {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">32	  if (!client_.is_connected()) {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">33	    return -1;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">34	  }</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">35	  client_.set(key, value, [](cpp_redis::reply&#38; reply) {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">36	    std::cout &#60;&#60; &#34;set &#34; &#60;&#60; reply &#60;&#60; std::endl;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">37	  });</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">38	  //    Commit();</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">39	  return 0;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">40	}</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">41	</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">42	bool RedisClient::CompareIfEqual(const std::string&#38; key,</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">43	                                 const std::string&#38; secret) {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">44	  if (!client_.is_connected()) {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">45	    std::cout &#60;&#60; &#34;client is not connected&#34; &#60;&#60; std::endl;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">46	    return false;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">47	  }</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">48	  std::string value;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">49	  std::string temp;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">50	  bool cmpResult = false;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">51	  auto res = client_.get(key);</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">52	  client_.sync_commit();</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">53	  std::ostringstream oss;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">54	  oss &#60;&#60; res.get();</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">55	  temp = oss.str();</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">56	  cmpResult = (temp == secret);</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">57	  return cmpResult;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">58	}</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">59	</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">60	void RedisClient::Commit() {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">61	  if (client_.is_connected()) {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">62	    client_.sync_commit();</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">63	  }</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">64	}</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">65	</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">66	bool RedisClient::Exists(const std::string&#38; key) {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">67	  if (!client_.is_connected()) {</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">68	    return false;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">69	  }</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">70	  bool result = false;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">71	  auto res = client_.exists({key});</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">72	  client_.sync_commit();</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">73	  std::ostringstream oss;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">74	  oss &#60;&#60; res.get();</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">75	  std::cout &#60;&#60; &#34;here   &#34; &#60;&#60; oss.str() &#60;&#60; std::endl;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">76	  result = (oss.str() == &#34;1&#34;);</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">77	  return result;</p></pre>
+<pre><p style="background-color:  white; margin-top: 0.0em; margin-bottom: 0em;">78	}</p></pre>
