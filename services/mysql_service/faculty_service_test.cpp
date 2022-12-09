@@ -27,26 +27,26 @@ TEST(HelloTest, PP) {
     EXPECT_EQ(7 * 6, 42);
 }
 
-TEST(TestMySQLServer, Initialize){
-    FacultyDBService mock;
-    FacultyRsp rsp;
-//    EXPECT_CALL(mock, GetFacultyDept("test", &rsp)).Times(1).WillOnce(Return(1));
-    auto res = mock.GetFacultyDept("COMS", &rsp);
-    EXPECT_EQ(0, res);
-}
+// TEST(TestMySQLServer, Initialize){
+//     FacultyDBService mock;
+//     FacultyRsp rsp;
+// //    EXPECT_CALL(mock, GetFacultyDept("test", &rsp)).Times(1).WillOnce(Return(1));
+//     auto res = mock.GetFacultyDept("COMS", &rsp);
+//     EXPECT_EQ(0, res);
+// }
 
-TEST(TestMySQLServer, Initialize2){
-    FacultyDBService mock;
-    int res = mock.CalculateSomething(1,2);
-    EXPECT_EQ(3, res);
-}
+// TEST(TestMySQLServer, Initialize2){
+//     FacultyDBService mock;
+//     int res = mock.CalculateSomething(1,2);
+//     EXPECT_EQ(3, res);
+// }
 
-TEST(TestMySQLServer, Initialize3){
-    FacultyDBService mock;
-    FacultyRsp rsp;
-    EXPECT_EQ(1, mock.Print());
+// TEST(TestMySQLServer, Initialize3){
+//     FacultyDBService mock;
+//     FacultyRsp rsp;
+//     EXPECT_EQ(1, mock.Print());
 
-}
+// }
 
 TEST(ProfpostTest, Create){
     FacultyDBService mock;
