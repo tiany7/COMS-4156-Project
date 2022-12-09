@@ -31,7 +31,7 @@ TEST(TestMySQLServer, Initialize){
     FacultyDBService mock;
     FacultyRsp rsp;
 //    EXPECT_CALL(mock, GetFacultyDept("test", &rsp)).Times(1).WillOnce(Return(1));
-    auto res = mock.GetFacultyDept("COMS", &rsp)
+    auto res = mock.GetFacultyDept("COMS", &rsp);
     EXPECT_EQ(0, res);
 }
 
