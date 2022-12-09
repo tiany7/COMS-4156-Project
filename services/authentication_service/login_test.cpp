@@ -16,7 +16,8 @@ TEST(TestLogin, LogMain) {
   EXPECT_EQ(login.LogIn("admin1", "admin1"), "user not exists");
   login.LogOut("admin");
   login.LogOut("admin2");
-  login.Register("admin3", "admin");
+  auto result3 = login.Register("admin3", "admin");
+  EXPECT_EQ(result3, true)
   login.Register("admin", "admin");
   login.Register("admin2", "admin2");
   auto res = login.Register("admin", "admin");
