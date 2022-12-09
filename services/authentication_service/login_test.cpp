@@ -17,7 +17,7 @@ TEST(TestLogin, LogMain) {
   login.LogOut("admin");
   login.LogOut("admin2");
   auto result3 = login.Register("admin3", "admin");
-  EXPECT_EQ(result3, true)
+  EXPECT_EQ(result3, true);
   login.Register("admin", "admin");
   login.Register("admin2", "admin2");
   auto res = login.Register("admin", "admin");
