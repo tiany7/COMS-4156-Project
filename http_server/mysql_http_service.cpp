@@ -444,7 +444,7 @@ int main(int argc, char** argv) {
 
     svr.Get("/get_bid", [&](const httplib::Request & req, httplib::Response &res) {
         auto course = req.get_param_value("course");
-        auto capacity = req.get_param_value("capacity");
+        auto capacity = std::stoi(req.get_param_value("capacity"));
         auto v = facultyServiceClient.GetBid(course, capacity);
         std::ostringstream os;
         for(auto it : v){
