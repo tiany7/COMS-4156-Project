@@ -92,9 +92,9 @@ public:
         }
     }
 
-    vector<Bidding> GetBid(const string &uni, uint32_t capacity) {
+    vector<Bidding> GetBid(const string &course, uint32_t capacity) {
         GetBidReq request;
-        request.set_uni(uni);
+        request.set_course(course);
         request.set_capacity(capacity);
 
         BiddingRsp reply;
