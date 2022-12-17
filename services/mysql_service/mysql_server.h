@@ -28,7 +28,7 @@ class FacultyServiceServiceImpl final: public FacultyService::Service {
     Status GetFaculty(ServerContext* context, const GetFacultyReq* request,
                       FacultyRsp* reply) {
         auto dept = request->department();
-        int success = FacultyDBService().GetFacultyDept(dept, reply);
+        FacultyDBService().GetFacultyDept(dept, reply);
         return Status::OK;
     }
 
@@ -37,20 +37,20 @@ class FacultyServiceServiceImpl final: public FacultyService::Service {
     {
 
         auto uni = request->uni();
-        int success = FacultyDBService().GetFacultyUni(uni, reply);
+        FacultyDBService().GetFacultyUni(uni, reply);
         return Status::OK;
     }
 
     Status GetPost(ServerContext* context, const GetPostReq* request, ProfpostRsp* reply){
         auto uni = request->uni();
-        int success = FacultyDBService().GetPost(uni, reply);
+        FacultyDBService().GetPost(uni, reply);
         return Status::OK;
     }
 
     Status GetBid(ServerContext* context, const GetBidReq* request, BiddingRsp* reply){
         auto course = request->course();
         auto capacity = request->capacity();
-        int success = FacultyDBService().GetBid(course, reply);
+        FacultyDBService().GetBid(course,capacity, reply);
         return Status::OK;
     }
 
@@ -61,7 +61,7 @@ class FacultyServiceServiceImpl final: public FacultyService::Service {
         auto uni = request->uni();
         auto dept = request->department();
         auto country = request->country();
-        int success = FacultyDBService().InsertFaculty(name, uni, dept, country);
+        FacultyDBService().InsertFaculty(name, uni, dept, country);
         return Status::OK;
     }
 
@@ -71,7 +71,7 @@ class FacultyServiceServiceImpl final: public FacultyService::Service {
         auto content = request->content();
         auto status = request->status();
         auto postid = request->postid();
-        int success = FacultyDBService().InsertPost(uni, content, status, postid);
+        FacultyDBService().InsertPost(uni, content, status, postid);
         return Status::OK;
     }
 
@@ -80,14 +80,14 @@ class FacultyServiceServiceImpl final: public FacultyService::Service {
         auto uni = request->uni();
         auto course = request->course();
         auto quote = request->quote();
-        int success = FacultyDBService().InsertBid(uni, course, quote);
+        FacultyDBService().InsertBid(uni, course, quote);
         return Status::OK;
     }
 
     Status DelPost(ServerContext* context, const DelPostReq* request, Profpost* reply)
     {
         auto postid = request->postid();
-        int success = FacultyDBService().DelPost(postid);
+        FacultyDBService().DelPost(postid);
         return Status::OK;
     }
 };
