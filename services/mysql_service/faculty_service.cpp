@@ -183,7 +183,7 @@ int FacultyDBService::InsertBid(string uni, string course, uint32_t quote)
 {
     try {
         if(quote){
-            auto stmt = con->prepareStatement("SELECT SUM(quote) FROM bidding WHERE uni=? AND course <> '?'");
+            auto stmt = con->prepareStatement("SELECT SUM(quote) FROM bidding WHERE uni=? AND course<>?");
             stmt->setString(1, uni);
             stmt->setString(2, course);
             auto res = stmt->executeQuery();
@@ -199,15 +199,15 @@ int FacultyDBService::InsertBid(string uni, string course, uint32_t quote)
             if(res)delete res, res = nullptr;
             if(stmt)delete stmt, stmt = nullptr;
 
-            stmt = con->prepareStatement("INSERT INTO bidding(uni, course, quote) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE quote=?");
-            stmt->setString(1, uni);
-            stmt->setString(2, course);
-            stmt->setInt(3, quote);
-            stmt->setInt(4, quote);
-            stmt->execute();
-            if(stmt)delete stmt, stmt = nullptr;
+            auto stmt2 = con->prepareStatement("INSERT INTO bidding(uni, course, quote) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE quote=?");
+            stmt2->setString(1, uni);
+            stmt2->setString(2, course);
+            stmt2->setInt(3, quote);
+            stmt2->setInt(4, quote);
+            stmt2->execute();
+            if(stmt2)delete stmt2, stmt2 = nullptr;
         }else{
-            auto stmt = con->prepareStatement("DELETE FROM bidding WHERE uni=?, course=?");
+            auto stmt = con->prepareStatement("DELETE FROM bidding WHERE uni=? AND course=?");
             stmt->setString(1, uni);
             stmt->setString(2, course);
             stmt->execute();
