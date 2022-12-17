@@ -375,6 +375,73 @@ int main(int argc, char** argv) {
         res.set_content(os.str().c_str(), "text/plain");
     });
 
+    svr.Post("/bid", [&](const httplib::Request & req, httplib::Response &res) {
+        auto js = json::parse(req.body);
+        auto uni = js["uni"];
+        auto course = js["course"];
+        auto quote = js["quote"];
+        auto access_token = js["access_token"];
+        auto username = string(js["username"]);
+        json j;
+        if (username!="Backdoor"){
+            if (!auth_checker.IsLoggedIn(username)){
+                j["status"] = "error";
+                j["message"] = "not logged in";
+                res.set_content(j.dump(), "application/json");
+                return;
+            }
+            if (!auth_checker.CheckSecret(username, access_token)){
+                j["status"] = "error";
+                j["message"] = "invalid access token";
+                res.set_content(j.dump(), "application/json");
+                return;
+            }    
+        }
+
+        auto ret = facultyServiceClient.InsertBid(uni, course, quote);
+        j["status"] = ret;
+
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
+        res.set_content(j.dump(), "application/json");
+    });
+
+    svr.Post("/remove_bid", [&](const httplib::Request & req, httplib::Response &res) {
+        auto js = json::parse(req.body);
+        auto uni = js["uni"];
+        auto course = js["course"];
+        auto access_token = js["access_token"];
+        auto username = string(js["username"]);
+        json j;
+        if (username!="Backdoor"){
+            if (!auth_checker.IsLoggedIn(username)){
+                j["status"] = "error";
+                j["message"] = "not logged in";
+                res.set_content(j.dump(), "application/json");
+                return;
+            }
+            if (!auth_checker.CheckSecret(username, access_token)){
+                j["status"] = "error";
+                j["message"] = "invalid access token";
+                res.set_content(j.dump(), "application/json");
+                return;
+            }    
+        }
+
+        auto ret = facultyServiceClient.DeleteBid(uni, course);
+        j["status"] = ret;
+
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
+        res.set_content(j.dump(), "application/json");
+    });
+
     std::cout << "Server started" << std::endl;
     svr.listen("0.0.0.0", 8080);
     return 0;
