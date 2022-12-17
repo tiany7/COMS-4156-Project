@@ -442,6 +442,22 @@ int main(int argc, char** argv) {
         res.set_content(j.dump(), "application/json");
     });
 
+    svr.Get("/get_bid", [&](const httplib::Request & req, httplib::Response &res) {
+        auto course = req.get_param_value("course");
+        auto capacity = req.get_param_value("capacity");
+        auto v = facultyServiceClient.GetBid(course, capacity);
+        std::ostringstream os;
+        for(auto it : v){
+            os << it.uni()<<" | "<< it.course()<< " | "<<it.quote()<< std::endl;
+        }
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
+        res.set_content(os.str().c_str(), "text/plain");
+    });
+
     std::cout << "Server started" << std::endl;
     svr.listen("0.0.0.0", 8080);
     return 0;
