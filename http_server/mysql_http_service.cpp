@@ -92,6 +92,29 @@ public:
         }
     }
 
+    vector<Bidding> GetBid(const string &uni, uint32_t capacity) {
+        GetBidReq request;
+        request.set_uni(uni);
+        request.set_capacity(capacity);
+
+        BiddingRsp reply;
+
+        ClientContext context;
+        Status status = stub_->GetBid(&context, request, &reply);
+
+        if (status.ok()) {
+            vector<Bidding> v;
+            for(auto it : *reply.mutable_bidding()){
+                v.push_back(it);
+            }
+            return v;
+        } else {
+            std::cout << status.error_code() << ": " << status.error_message()
+                      << std::endl;
+            return {};
+        }
+    }
+
     int InsertFaculty(const string &name, const string &dept, const string &uni, const string & country) {
         Faculty f;
         f.set_name(name);
@@ -136,8 +159,37 @@ public:
         }
     }
 
+    int InsertBid(const string &uni, const string &course, uint32_t quote) {
+        Bidding b;
+        b.set_uni(uni);
+        b.set_course(course);
+        b.set_quote(quote);
+
+        Bidding reply;
+
+        ClientContext context;
+
+        auto ret = stub_->InsertBid(&context, b, &reply);
+
+        if (ret.ok()) {
+            return 0;
+        } else {
+            std::cout << ret.error_code() << ": " << ret.error_message()
+                      << std::endl;
+            return -1;
+        }
+    }
+
     int ModifyPost(const string & postid, const string &uni, const string &content, const string &status){
         return InsertPost(uni, content, status, postid);
+    }
+
+    int ModifyBid(const string &uni, const string &course, uint32_t quote){
+        return InsertBid(uni, course, quote);
+    }
+
+    int DeleteBid(const string &uni, const string &course){
+        return InsertBid(uni, course, 0u);
     }
 
     int DeletePost(const string & postid) {

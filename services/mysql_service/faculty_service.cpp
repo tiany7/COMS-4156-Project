@@ -97,6 +97,38 @@ int FacultyDBService::GetPost(string uni, ProfpostRsp* reply)
     return 0;
 }
 
+int FacultyDBService::GetBid(string course, uint32_t capacity, BiddingRsp* reply)
+{
+    try {
+        auto stmt = con->createStatement();
+        char buffer[128] = {0};
+        string sql = "SELECT * FROM bidding WHERE course = '%s' ORDER BY quote DESC";
+        if(capacity){
+            sql += " LIMIT '%u'";
+            sprintf(buffer, sql.c_str(), course.c_str(), capacity);}
+        else{
+            sprintf(buffer, sql.c_str(), course.c_str());
+        }
+        auto res = stmt->executeQuery(string(buffer));
+        while (res->next()) {
+            auto bidding = reply->add_bidding();
+            bidding->set_uni(string(res->getString(1)));
+            bidding->set_course(string(res->getString(2)));
+            bidding->set_quote(res->getInt(3));
+        }
+        if(res)delete res, res = nullptr;
+        if(stmt)delete stmt, stmt = nullptr;
+    }catch (sql::SQLException &e) {
+        cout << "# ERR: SQLException in " << __FILE__;
+        cout << "(" << __FUNCTION__ << ") on line "
+             << __LINE__ << endl;
+        cout << "# ERR: " << e.what();
+        cout << " (MySQL error code: " << e.getErrorCode();
+        cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+    }
+    return 0;
+}
+
 int FacultyDBService::InsertFaculty( string name,  string dept,  string uni,  string  country)
 {
     try {
@@ -134,6 +166,53 @@ int FacultyDBService::InsertPost(string uni, string content, string status, stri
         stmt->setString(7, status);
         stmt->execute();
         if(stmt)delete stmt, stmt = nullptr;
+    }catch (sql::SQLException &e) {
+        cout << "# ERR: SQLException in " << __FILE__;
+        cout << "(" << __FUNCTION__ << ") on line "
+             << __LINE__ << endl;
+        cout << "# ERR: " << e.what();
+        cout << " (MySQL error code: " << e.getErrorCode();
+        cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+    }catch (...) {
+        cout << "other exception" << endl;
+    }
+    return 0;
+}
+
+int FacultyDBService::InsertBid(string uni, string course, uint32_t quote)
+{
+    try {
+        if(quote){
+            auto stmt = con->prepareStatement("SELECT SUM(quote) FROM bidding WHERE uni=?, course<>?");
+            stmt->setString(1, uni);
+            stmt->setString(2, course);
+            auto res = stmt->executeQuery();
+            while(res->next()){
+                auto balance = res->getInt(1);
+                if(balance + quote > 1000){
+                    cout << "Balance insufficient! Current remaining quota: " << (1000-balance) << endl;
+                    if(res)delete res, res = nullptr;
+                    if(stmt)delete stmt, stmt = nullptr;
+                    return 0;
+                }
+            }
+            if(res)delete res, res = nullptr;
+            if(stmt)delete stmt, stmt = nullptr;
+
+            stmt = con->prepareStatement("INSERT INTO bidding(uni, course, quote) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE quote=?");
+            stmt->setString(1, uni);
+            stmt->setString(2, course);
+            stmt->setInt(3, quote);
+            stmt->setInt(4, quote);
+            stmt->execute();
+            if(stmt)delete stmt, stmt = nullptr;
+        }else{
+            auto stmt = con->prepareStatement("DELETE FROM bidding WHERE uni=?, course=?");
+            stmt->setString(1, uni);
+            stmt->setString(2, course);
+            stmt->execute();
+            if(stmt)delete stmt, stmt = nullptr;
+        }
     }catch (sql::SQLException &e) {
         cout << "# ERR: SQLException in " << __FILE__;
         cout << "(" << __FUNCTION__ << ") on line "

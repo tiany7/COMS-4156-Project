@@ -39,6 +39,18 @@ void InitMySqlV2(){
         auto stmt = con->createStatement();
         stmt->execute("CREATE DATABASE IF NOT EXISTS `coms4156_db`"); // could be changed to "ssol" or sth. like that
         stmt->execute("USE `coms4156_db`"); // same above
+        stmt->execute("DROP TABLE IF EXISTS `bidding`");
+        stmt->execute("CREATE TABLE IF NOT EXISTS `bidding` ("
+                      "`uni` VARCHAR(16) NOT NULL,"
+                      "`course` VARCHAR(16) NOT NULL,"
+                      "`quote` INT UNSIGNED NOT NULL,"
+                      "PRIMARY KEY (`uni`,`course`))");
+        stmt->execute("INSERT IGNORE INTO bidding VALUES"
+                      "('fg1121', 'COMS4156', 100),"
+                      "('fg1121', 'CSOR4231', 100),"
+                      "('fg2546', 'COMS4156', 200)"
+                      );
+        stmt->execute("DROP TABLE IF EXISTS `profpost`");
         stmt->execute("CREATE TABLE IF NOT EXISTS `profpost` ("
                       "`uni` VARCHAR(45) NOT NULL,"
                       "`content` VARCHAR(256) NOT NULL,"

@@ -14,6 +14,12 @@ message Faculty {
     string country = 4;
 }
 
+message Bidding {
+    string uni = 1;
+    string course = 2;
+    uint32 quote = 3;
+}
+
 message Profpost {
     string uni = 1;
     string content = 2;
@@ -33,6 +39,11 @@ message GetFacultyReq {
     Option option = 3;
 }
 
+message GetBidReq {
+    string course = 1;
+    uint32 capacity = 2;
+}
+
 message GetPostReq {
     string uni = 1;
 }
@@ -45,6 +56,10 @@ message FacultyRsp{
     repeated Faculty faculty = 1;
 }
 
+message BiddingRsp{
+    repeated Bidding bidding = 1;
+}
+
 message ProfpostRsp{
     repeated Profpost profpost = 1;
 }
@@ -53,7 +68,9 @@ service FacultyService {
     rpc GetFaculty(GetFacultyReq) returns (FacultyRsp);
     rpc GetFacultyByUni(GetFacultyReq) returns (FacultyRsp);
     rpc GetPost(GetPostReq) returns (ProfpostRsp);
+    rpc GetBid(GetBidReq) returns (BiddingRsp);
     rpc InsertFaculty(Faculty) returns (Faculty);
     rpc InsertPost(Profpost) returns (Profpost);
+    rpc InsertBid(Bidding) returns (Bidding);
     rpc DelPost(DelPostReq) returns (Profpost);
 }

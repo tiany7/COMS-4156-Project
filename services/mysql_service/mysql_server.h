@@ -47,6 +47,13 @@ class FacultyServiceServiceImpl final: public FacultyService::Service {
         return Status::OK;
     }
 
+    Status GetBid(ServerContext* context, const GetBidReq* request, BiddingRsp* reply){
+        auto course = request->course();
+        auto capacity = request->capacity();
+        int success = FacultyDBService().GetBid(course, reply);
+        return Status::OK;
+    }
+
     Status InsertFaculty(ServerContext* context, const Faculty* request,
                          Faculty* reply)
     {
@@ -65,6 +72,15 @@ class FacultyServiceServiceImpl final: public FacultyService::Service {
         auto status = request->status();
         auto postid = request->postid();
         int success = FacultyDBService().InsertPost(uni, content, status, postid);
+        return Status::OK;
+    }
+
+    Status InsertBid(ServerContext* context, const Bidding* request, Bidding* reply)
+    {
+        auto uni = request->uni();
+        auto course = request->course();
+        auto quote = request->quote();
+        int success = FacultyDBService().InsertBid(uni, course, quote);
         return Status::OK;
     }
 
