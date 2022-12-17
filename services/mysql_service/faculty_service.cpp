@@ -104,7 +104,7 @@ int FacultyDBService::GetBid(string course, uint32_t capacity, BiddingRsp* reply
         char buffer[128] = {0};
         string sql = "SELECT * FROM bidding WHERE course = '%s' ORDER BY quote DESC";
         if(capacity){
-            sql += " LIMIT '%u'";
+            sql += " LIMIT %u";
             sprintf(buffer, sql.c_str(), course.c_str(), capacity);}
         else{
             sprintf(buffer, sql.c_str(), course.c_str());
@@ -183,7 +183,7 @@ int FacultyDBService::InsertBid(string uni, string course, uint32_t quote)
 {
     try {
         if(quote){
-            auto stmt = con->prepareStatement("SELECT SUM(quote) FROM bidding WHERE uni=?, course<>?");
+            auto stmt = con->prepareStatement("SELECT SUM(quote) FROM bidding WHERE uni=?, course<>'?'");
             stmt->setString(1, uni);
             stmt->setString(2, course);
             auto res = stmt->executeQuery();
