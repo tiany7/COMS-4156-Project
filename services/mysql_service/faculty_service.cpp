@@ -183,7 +183,7 @@ int FacultyDBService::InsertBid(string uni, string course, uint32_t quote)
 {
     try {
         if(quote){
-            auto stmt = con->prepareStatement("SELECT SUM(quote) FROM bidding WHERE uni=?, course<>'?'");
+            auto stmt = con->prepareStatement("SELECT SUM(quote) FROM bidding WHERE uni=? AND course <> '?'");
             stmt->setString(1, uni);
             stmt->setString(2, course);
             auto res = stmt->executeQuery();
