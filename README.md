@@ -500,6 +500,29 @@ curl http://0.0.0.0:8080/search_post?uni=my123
 #### DELETE requests:
 * /delete_post: available soon. take `postid` as input, delete the post with the `postid` if exists.
 
+
+### Bidding Service
+This service enables students to bid for classes. Each student has 1000 points to bid. An entry consists of: `uni` (of the student), `course` (a string, the course that student wanna take), `quote` (the bid the student offers.
+
+#### POST requests
+* /bid: take `uni`, `course`, `quote` as inputs, `username` and `accesstoken` also required. If the (`uni`,`course`) pair already exists in the database, it would replace the existing entry. When `quote` is 0, it would delete the entry (same effect as `remove_bid`). When `quote` is too large (larger than the student's remaining points), it would ignore student's request.
+* /remove_bid: take `uni`, `course` as inputs, `username` and `accesstoken` also required.
+
+Example:
+```
+curl -X POST http://0.0.0.0:8080/bid -H 'Content-Type: application/json' -d '{"uni":"my123","course":"cs101","quote":1,"username":"Backdoor","accesstoken":"any"}'
+```
+Note: If the `username` is `Backdoor`, any `accesstoken` will be accepted.
+
+#### GET requests
+* /get_bid: take `course` and `capacity` as input, returns students with the largest biddings. When `capacity` is 0, it would return all students who bid for the course.
+
+Example:
+```
+curl "http://0.0.0.0:8080/get_bid?course=cs101&capacity=0"
+```
+
+
 ### Person Service
 Entry point: PORT is 8083 (e.g. localhost:8083)
 
