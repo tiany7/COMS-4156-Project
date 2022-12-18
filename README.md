@@ -516,10 +516,12 @@ Note: If the `username` is `Backdoor`, any `accesstoken` will be accepted.
 
 #### GET requests
 * /get_bid: take `course` and `capacity` as input, returns students with the largest biddings. When `capacity` is 0, it would return all students who bid for the course.
+* /search_bid: take `uni` as input, returns all the biddings of the student.
 
 Example:
 ```
 curl "http://0.0.0.0:8080/get_bid?course=cs101&capacity=0"
+curl "http://0.0.0.0:8080/search_bid?uni=fg1121"
 ```
 
 
