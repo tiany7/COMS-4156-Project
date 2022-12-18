@@ -129,6 +129,33 @@ int FacultyDBService::GetBid(string course, uint32_t capacity, BiddingRsp* reply
     return 0;
 }
 
+int FacultyDBService::GetBidByUni(string uni, BiddingRsp* reply)
+{
+    try {
+        auto stmt = con->createStatement();
+        char buffer[128] = {0};
+        string sql = "SELECT * FROM bidding WHERE uni = '%s' ORDER BY course";
+        sprintf(buffer, sql.c_str(), uni.c_str());
+        auto res = stmt->executeQuery(string(buffer));
+        while (res->next()) {
+            auto bidding = reply->add_bidding();
+            bidding->set_uni(string(res->getString(1)));
+            bidding->set_course(string(res->getString(2)));
+            bidding->set_quote(res->getInt(3));
+        }
+        if(res)delete res, res = nullptr;
+        if(stmt)delete stmt, stmt = nullptr;
+    }catch (sql::SQLException &e) {
+        cout << "# ERR: SQLException in " << __FILE__;
+        cout << "(" << __FUNCTION__ << ") on line "
+             << __LINE__ << endl;
+        cout << "# ERR: " << e.what();
+        cout << " (MySQL error code: " << e.getErrorCode();
+        cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+    }
+    return 0;
+}
+
 int FacultyDBService::InsertFaculty( string name,  string dept,  string uni,  string  country)
 {
     try {

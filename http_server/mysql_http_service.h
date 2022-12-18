@@ -28,7 +28,8 @@ public:
     vector<Faculty> GetFaculty(string dept);
     vector<Faculty> GetFacultyByUni(const string &uni);
     vector<Profpost> GetPost(const string &uni);
-    vector<Bidding> GetBid(const string &uni, uint32_t capacity);
+    vector<Bidding> GetBid(const string &course, uint32_t capacity);
+    vector<Bidding> GetBidByUni(const string &uni);
     int InsertFaculty(const string &name, const string &dept, const string &uni, const string & country);
     int InsertPost(const string &uni, const string &content, const string &status, const string & postid);
     int InsertBid(const string &uni, const string &course, uint32_t quote);

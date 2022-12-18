@@ -33,6 +33,7 @@ public:
     int GetFacultyUni( string  uni, FacultyRsp* reply);
     int GetPost(string uni, ProfpostRsp* reply);
     int GetBid(string course, uint32_t capacity, BiddingRsp* reply);
+    int GetBidByUni(string uni, BiddingRsp* reply);
     int InsertFaculty( string  name,  string  dept,  string  uni,  string  country);
     int InsertPost(string uni, string content, string status, string postid);
     int InsertBid(string uni, string course, uint32_t quote);

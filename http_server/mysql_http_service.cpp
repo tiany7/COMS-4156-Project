@@ -115,6 +115,28 @@ public:
         }
     }
 
+    vector<Bidding> GetBidByUni(const string &uni){
+        GetPostReq request;
+        request.set_uni(uni);
+
+        BiddingRsp reply;
+
+        ClientContext context;
+        Status status = stub_->GetBidByUni(&context, request, &reply);
+
+        if (status.ok()) {
+            vector<Bidding> v;
+            for(auto it : *reply.mutable_bidding()){
+                v.push_back(it);
+            }
+            return v;
+        } else {
+            std::cout << status.error_code() << ": " << status.error_message()
+                      << std::endl;
+            return {};
+        }
+    }
+
     int InsertFaculty(const string &name, const string &dept, const string &uni, const string & country) {
         Faculty f;
         f.set_name(name);
@@ -366,6 +388,21 @@ int main(int argc, char** argv) {
         std::ostringstream os;
         for(auto it : v){
             os << it.postid()<<" | "<< it.uni()<< " | "<<it.content()<<" | "<<it.status()<< std::endl;
+        }
+        res.set_header("Access-Control-Allow-Credentials", "true");
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.set_header("Access-Control-Allow-Methods", "POST GET OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "x-requested-with,Content-Type,X-CSRF-Token");
+        res.set_content(os.str().c_str(), "text/plain");
+    });
+
+    svr.Get("/search_bid", [&](const httplib::Request & req, httplib::Response &res) {
+        auto body = req.get_param_value("uni");
+        auto v = facultyServiceClient.GetBidByUni(body);
+        std::ostringstream os;
+        for(auto it : v){
+            os << it.uni()<<" | "<< it.course()<< " | "<<it.quote()<< std::endl;
         }
         res.set_header("Access-Control-Allow-Credentials", "true");
         res.set_header("Access-Control-Allow-Origin", "*");

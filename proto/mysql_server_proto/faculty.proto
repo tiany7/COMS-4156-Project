@@ -69,6 +69,7 @@ service FacultyService {
     rpc GetFacultyByUni(GetFacultyReq) returns (FacultyRsp);
     rpc GetPost(GetPostReq) returns (ProfpostRsp);
     rpc GetBid(GetBidReq) returns (BiddingRsp);
+    rpc GetBidByUni(GetPostReq) returns (BiddingRsp);
     rpc InsertFaculty(Faculty) returns (Faculty);
     rpc InsertPost(Profpost) returns (Profpost);
     rpc InsertBid(Bidding) returns (Bidding);

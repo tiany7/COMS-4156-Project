@@ -54,6 +54,12 @@ class FacultyServiceServiceImpl final: public FacultyService::Service {
         return Status::OK;
     }
 
+    Status GetBidByUni(ServerContext* context, const GetPostReq* request, BiddingRsp* reply){
+        auto uni = request->uni();
+        FacultyDBService().GetBidByUni(uni, reply);
+        return Status::OK;
+    }
+
     Status InsertFaculty(ServerContext* context, const Faculty* request,
                          Faculty* reply)
     {
